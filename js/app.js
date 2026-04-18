@@ -10,6 +10,7 @@ import { EXAMPLES } from "./examples.js";
 import {
   runComposition, usedArgs, placeholderForType, RunError,
 } from "./runner.js";
+import { typeLabel } from "./type_labels.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature,
   signatureText, signatureTooltip, CatalogError,
@@ -115,7 +116,7 @@ function openRunModal() {
       row.className = "run-input-row";
       row.innerHTML = `
         <label>
-          <span class="run-input-label">${escapeHtml(arg.label)} <code>${escapeHtml(arg.type)}</code></span>
+          <span class="run-input-label">${escapeHtml(arg.label)} <code title="${escapeHtml(arg.type)}">${escapeHtml(typeLabel(arg.type))}</code></span>
           <input type="text" data-label="${escapeHtml(arg.label)}"
                  placeholder="${escapeHtml(placeholderForType(arg.type))}"
                  value="${escapeHtml(lastInputs[arg.label] ?? "")}">

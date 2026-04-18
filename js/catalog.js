@@ -82,16 +82,20 @@ export async function fetchFunctionSignature(zid, { signal } = {}) {
 }
 
 // ─── Signature formatting helpers ───────────────────────────────────
+import { typeLabel } from "./type_labels.js";
+
 export function signatureText(sig) {
   if (!sig) return "";
-  const inputs = sig.args.map(a => a.type).join(", ");
-  return `(${inputs}) → ${sig.output}`;
+  const inputs = sig.args.map(a => typeLabel(a.type)).join(", ");
+  return `(${inputs}) → ${typeLabel(sig.output)}`;
 }
 
 export function signatureTooltip(sig) {
   if (!sig) return "";
-  const inputs = sig.args.map(a => `${a.label}: ${a.type}`).join(", ");
-  return `(${inputs}) → ${sig.output}`;
+  const inputs = sig.args.map(a =>
+    `${a.label}: ${typeLabel(a.type, { withZid: true })}`
+  ).join(", ");
+  return `(${inputs}) → ${typeLabel(sig.output, { withZid: true })}`;
 }
 
 // ─── Parse ──────────────────────────────────────────────────────────

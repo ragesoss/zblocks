@@ -11,6 +11,8 @@
 
 export const LITERAL_COLOUR = 160;
 
+const wfPage = (zid) => `https://www.wikifunctions.org/wiki/${zid}`;
+
 export const LITERAL_BLOCKS = [
   {
     type: "wf_string",
@@ -19,6 +21,7 @@ export const LITERAL_BLOCKS = [
     output: ["Z6", "Z1"],
     colour: LITERAL_COLOUR,
     tooltip: "String literal (Z6)",
+    helpUrl: wfPage("Z6"),
   },
   {
     type: "wf_integer",
@@ -26,7 +29,8 @@ export const LITERAL_BLOCKS = [
     args0: [{ type: "field_number", name: "VALUE", value: 0, precision: 1 }],
     output: ["Z16683", "Z1"],
     colour: LITERAL_COLOUR,
-    tooltip: "Integer literal (Z16683)",
+    tooltip: "Integer literal (Z16683) — sign + natural-number digits",
+    helpUrl: wfPage("Z16683"),
   },
   {
     type: "wf_natural",
@@ -35,6 +39,7 @@ export const LITERAL_BLOCKS = [
     output: ["Z13518", "Z1"],
     colour: LITERAL_COLOUR,
     tooltip: "Natural number literal (Z13518)",
+    helpUrl: wfPage("Z13518"),
   },
   {
     type: "wf_float",
@@ -42,7 +47,8 @@ export const LITERAL_BLOCKS = [
     args0: [{ type: "field_number", name: "VALUE", value: 0 }],
     output: ["Z20838", "Z1"],
     colour: LITERAL_COLOUR,
-    tooltip: "Float64 literal (Z20838) — emits a full IEEE-754 decomposition",
+    tooltip: "Float64 literal (Z20838) — full IEEE-754 decomposition",
+    helpUrl: wfPage("Z20838"),
   },
   {
     type: "wf_boolean",
@@ -54,6 +60,7 @@ export const LITERAL_BLOCKS = [
     output: ["Z40", "Z1"],
     colour: LITERAL_COLOUR,
     tooltip: "Boolean (Z40): Z41 = true, Z42 = false",
+    helpUrl: wfPage("Z40"),
   },
   {
     type: "wf_item_ref",
@@ -62,6 +69,7 @@ export const LITERAL_BLOCKS = [
     output: ["Z6091", "Z1"],
     colour: LITERAL_COLOUR,
     tooltip: "Wikidata item reference (Z6091) — e.g. Q17087764",
+    helpUrl: wfPage("Z6091"),
   },
   {
     type: "wf_property_ref",
@@ -70,6 +78,7 @@ export const LITERAL_BLOCKS = [
     output: ["Z6092", "Z1"],
     colour: LITERAL_COLOUR,
     tooltip: "Wikidata property reference (Z6092) — e.g. P361",
+    helpUrl: wfPage("Z6092"),
   },
 ];
 

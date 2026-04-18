@@ -15,6 +15,7 @@
 
 import { FUNCTIONS, CATEGORIES } from "./functions.js";
 import { LITERAL_BLOCKS, LITERAL_TOOLBOX, SHADOW_FOR_TYPE } from "./literals.js";
+import { typeLabel } from "./type_labels.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
 
@@ -55,23 +56,27 @@ function inputCheck(type) {
 }
 
 function functionBlockDef(fn, colour) {
+  const argList = fn.args.map(a =>
+    `${a.label}: ${typeLabel(a.type, { withZid: true })}`
+  ).join(", ");
+  const outputLabel = typeLabel(fn.output, { withZid: true });
   const def = {
     type: `wf_${fn.zid}`,
     colour,
     output: outputCheck(fn.output),
     inputsInline: false,
     extensions: [SHADOW_EXTENSION],
-    tooltip: `${fn.label} — ${fn.zid}\n${fn.args.map(a => a.type).join(", ")} → ${fn.output}`,
+    tooltip: `${fn.label} — ${fn.zid}\n(${argList}) → ${outputLabel}`,
     helpUrl: `https://www.wikifunctions.org/wiki/${fn.zid}`,
   };
 
-  // Row 0: title only.
-  def.message0 = `${fn.label}`;
+  // Row 0: title with the output type as a soft hint.
+  def.message0 = `${fn.label} → ${typeLabel(fn.output)}`;
 
-  // Rows 1..N: one per arg, with label + input slot.
+  // Rows 1..N: one per arg, labelled with a human-readable type hint.
   fn.args.forEach((arg, i) => {
     const n = i + 1;
-    def[`message${n}`] = `${arg.label} %1`;
+    def[`message${n}`] = `${arg.label} (${typeLabel(arg.type)}) %1`;
     def[`args${n}`] = [{
       type: "input_value",
       name: arg.key,
