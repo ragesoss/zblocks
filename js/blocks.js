@@ -16,6 +16,7 @@
 import { FUNCTIONS, CATEGORIES } from "./functions.js";
 import { LITERAL_BLOCKS, LITERAL_TOOLBOX, SHADOW_FOR_TYPE } from "./literals.js";
 import { typeLabel } from "./type_labels.js";
+import { openSlotPicker } from "./slot_picker.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
 
@@ -106,6 +107,9 @@ export function registerAllBlocks() {
     return functionBlockDef(fn, colour);
   });
   define(defs);
+  // Attach the slot-picker context menu after defs are registered so
+  // Blockly.Blocks[type] exists for each.
+  for (const def of defs) attachSlotPickerMenu(def.type);
 }
 
 // Register a single function block at runtime. Used by the catalog
@@ -126,6 +130,36 @@ export function registerFunctionBlock(fn) {
   const define = (Blockly.common && Blockly.common.defineBlocksWithJsonArray)
     || Blockly.defineBlocksWithJsonArray;
   define([def]);
+  attachSlotPickerMenu(def.type);
+}
+
+// Attach a right-click context-menu contribution to a block type.
+// When the user right-clicks an instance, one "Fill '<arg>'…" item is
+// added per empty value input, each opening the slot picker for that
+// connection. Safe to re-run for the same type (overwrites).
+function attachSlotPickerMenu(blockType) {
+  const blockDef = Blockly.Blocks[blockType];
+  if (!blockDef) return;
+  blockDef.customContextMenu = function (options) {
+    const zid = this.type.startsWith("wf_Z") ? this.type.slice(3) : null;
+    const fn = zid ? FUNCTIONS.find(f => f.zid === zid) : null;
+    for (const input of this.inputList) {
+      if (!input.connection) continue;
+      if (input.connection.isConnected()) continue;
+      const argEntry = fn?.args.find(a => a.key === input.name);
+      const slotLabel = argEntry?.label || input.name;
+      const slotType  = argEntry?.type  || (input.connection.getCheck()?.[0]) || "Z1";
+      options.push({
+        text: `Fill "${slotLabel}"\u2026`,
+        enabled: true,
+        callback: () => openSlotPicker({
+          connection: input.connection,
+          slotLabel,
+          slotType,
+        }),
+      });
+    }
+  };
 }
 
 export function buildToolbox() {

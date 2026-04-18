@@ -16,6 +16,7 @@ import {
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
 import { importByZid, importFromJson, ImportError } from "./importer.js";
+import { initSlotPicker } from "./slot_picker.js";
 import {
   pinFunction, unpinFunction, isPinned,
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
@@ -46,6 +47,7 @@ const workspace = Blockly.inject("blocklyDiv", {
 });
 
 initShell(workspace);
+initSlotPicker();
 
 // ── Example loader ────────────────────────────────────────────────
 const exampleSelect = document.getElementById("load-example-select");
