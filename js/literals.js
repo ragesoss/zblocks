@@ -105,5 +105,22 @@ export const SHADOW_FOR_TYPE = {
   "Z40":    { type: "wf_boolean",      fields: { VALUE: "Z41" } },
   "Z6091":  { type: "wf_item_ref",     fields: { VALUE: "Q" } },
   "Z6092":  { type: "wf_property_ref", fields: { VALUE: "P" } },
+
+  // Compound shadows: types that have no direct literal form but are
+  // produced by a canonical fetch chain. Pre-filling the chain makes
+  // the QID/PID entry point visible without the user having to
+  // discover the right-click picker to wrap their ref.
+  "Z6001": {
+    type: "wf_Z6821",
+    inputs: {
+      Z6821K1: { shadow: { type: "wf_item_ref", fields: { VALUE: "Q" } } },
+    },
+  },
+  "Z6002": {
+    type: "wf_Z6822",
+    inputs: {
+      Z6822K1: { shadow: { type: "wf_property_ref", fields: { VALUE: "P" } } },
+    },
+  },
 };
 
