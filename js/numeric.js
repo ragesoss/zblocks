@@ -82,3 +82,69 @@ export function encodeFloat64(num) {
 
   return buildZ20838(positive, exponent, mantissa, "Z20837");
 }
+
+// ─── Decoders (ZObject → JS number) ────────────────────────────────
+// Tolerate both expanded form (wrapped Z6 objects) and canonical form
+// (bare strings) for nested scalar fields, since the server accepts
+// either on write but normalises on read.
+
+function asScalar(v) {
+  if (v === undefined || v === null) return v;
+  if (typeof v === "object" && v.Z1K1 === "Z6" && typeof v.Z6K1 === "string") return v.Z6K1;
+  if (typeof v === "object" && typeof v.Z9K1 === "string") return v.Z9K1;
+  return v;
+}
+
+export function decodeNatural(z13518) {
+  const digits = asScalar(z13518?.Z13518K1);
+  if (typeof digits !== "string" || !/^\d+$/.test(digits)) {
+    throw new RangeError(`decodeNatural: invalid Z13518 payload ${JSON.stringify(z13518)}`);
+  }
+  return Number(digits);
+}
+
+export function decodeInteger(z16683) {
+  const sign = asScalar(z16683?.Z16683K1?.Z16659K1);
+  const n = decodeNatural(z16683?.Z16683K2);
+  if (sign === SIGN_NEG) return -n;
+  return n;
+}
+
+// Port of Z28867 from YoshiRulz's numeric_io.ts. Reassembles the
+// sign / biased-exponent / mantissa bit fields back into a Number
+// via DataView, including special cases.
+export function decodeFloat64(z20838) {
+  const special = asScalar(z20838?.Z20838K4?.Z20825K1);
+  if (special === "Z20829") return +0.0;
+  if (special === "Z20831") return -0.0;
+  if (special === "Z20832") return Number.POSITIVE_INFINITY;
+  if (special === "Z20833") return Number.NEGATIVE_INFINITY;
+  if (special === "Z20834" || special === "Z20835" || special === "Z20836") return Number.NaN;
+
+  const sign = asScalar(z20838?.Z20838K1?.Z16659K1);
+  const positive = sign === SIGN_POS ? 0n : 1n;
+  const signBit = positive << 63n;
+
+  const expMagnitude = BigInt(decodeNatural(z20838?.Z20838K2?.Z16683K2));
+  const expSignZid = asScalar(z20838?.Z20838K2?.Z16683K1?.Z16659K1);
+  const exponent = (expSignZid === SIGN_NEG ? -1n : 1n) * expMagnitude;
+  if (exponent > 1023n || exponent < -1023n) return Number.NaN;
+
+  const mantValue = BigInt(asScalar(z20838?.Z20838K3?.Z13518K1));
+
+  let exponentBits, mantissaBits;
+  if (exponent === -1023n) {
+    exponentBits = 0n;
+    mantissaBits = mantValue;
+  } else {
+    exponentBits = ((exponent + 1023n) & 0x7FFn) << 52n;
+    const MANT_MASK = (1n << 52n) - 1n;
+    mantissaBits = mantValue & MANT_MASK;
+  }
+  const floatBits = signBit | exponentBits | mantissaBits;
+
+  const buffer = new ArrayBuffer(8);
+  const view = new DataView(buffer);
+  view.setBigUint64(0, floatBits, false);
+  return view.getFloat64(0, false);
+}

@@ -14,6 +14,7 @@ import {
   searchFunctions, fetchSignatureCached, cachedSignature,
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
+import { importByZid, importFromJson, ImportError } from "./importer.js";
 import {
   pinFunction, unpinFunction, isPinned,
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
@@ -229,6 +230,51 @@ document.getElementById("result-close").addEventListener("click", () => {
 document.getElementById("result-rerun").addEventListener("click", () => {
   document.getElementById("result-modal").close();
   openRunModal();
+});
+
+// ── Import (round-trip existing Z14) ──────────────────────────────
+document.getElementById("import-btn").addEventListener("click", () => {
+  document.getElementById("import-zid").value = "";
+  document.getElementById("import-json").value = "";
+  document.getElementById("import-error").textContent = "";
+  document.getElementById("import-modal").showModal();
+  document.getElementById("import-zid").focus();
+});
+document.getElementById("import-cancel").addEventListener("click", () => {
+  document.getElementById("import-modal").close();
+});
+document.getElementById("import-submit").addEventListener("click", async () => {
+  const zidRaw = document.getElementById("import-zid").value.trim();
+  const jsonRaw = document.getElementById("import-json").value.trim();
+  const errEl = document.getElementById("import-error");
+  errEl.textContent = "";
+  if (!zidRaw && !jsonRaw) {
+    errEl.textContent = "Provide a ZID or paste composition JSON.";
+    return;
+  }
+  const isDirty = workspace.getAllBlocks(false).length > 0;
+  if (isDirty && !confirm("Import will replace the current workspace. Continue?")) return;
+
+  const btn = document.getElementById("import-submit");
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Importing\u2026";
+  try {
+    const { state } = zidRaw ? await importByZid(zidRaw) : await importFromJson(jsonRaw);
+    workspace.clear();
+    Blockly.serialization.workspaces.load(state, workspace);
+    document.getElementById("import-modal").close();
+  } catch (e) {
+    if (e instanceof ImportError || e instanceof CatalogError) {
+      errEl.textContent = e.message;
+    } else {
+      errEl.textContent = `Unexpected: ${e.message}`;
+      console.error(e);
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = orig;
+  }
 });
 
 // ── Add function (search + pin) ───────────────────────────────────

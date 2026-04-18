@@ -14,6 +14,7 @@
       <option value="">Load example…</option>
     </select>
     <button id="add-function-btn" title="Search Wikifunctions and pin a function to the sidebar">+ Add function</button>
+    <button id="import-btn" title="Import an existing Z14 composition into the workspace">Import</button>
     <button id="open-shell-btn">Declare function shell</button>
     <button id="run-btn" title="Execute the composition via the Wikifunctions API">Run</button>
     <button id="export-btn">Export ZObject</button>
@@ -47,6 +48,33 @@
     <menu>
       <button type="button" id="shell-cancel">Cancel</button>
       <button type="button" id="shell-save">Save shell</button>
+    </menu>
+  </dialog>
+
+  <!-- ── Import: load an existing Z14 ─────────────────────────────── -->
+  <dialog id="import-modal">
+    <h2>Import composition</h2>
+    <p class="hint">
+      Load an existing Z14 implementation (or a Z8 function's first
+      implementation) into the workspace. Referenced functions are
+      fetched and registered automatically; the shell is populated
+      from Z14K1's parent Z8 when available.
+    </p>
+    <div class="import-tabs">
+      <label>
+        <span>Fetch by ZID:</span>
+        <input id="import-zid" type="text" placeholder="Z33608 or Z33682" autocomplete="off" spellcheck="false">
+      </label>
+      <label>
+        <span>Or paste JSON (Z2 wrapper, Z14, or bare composition):</span>
+        <textarea id="import-json" rows="6" spellcheck="false"
+          placeholder='{"Z1K1":"Z7","Z7K1":"Z21032",...}'></textarea>
+      </label>
+    </div>
+    <div id="import-error" class="error"></div>
+    <menu>
+      <button type="button" id="import-cancel">Cancel</button>
+      <button type="button" id="import-submit">Import</button>
     </menu>
   </dialog>
 
