@@ -2,7 +2,7 @@
 // persistent state lives here to avoid import cycles between the
 // modules that read and write it.
 
-const PINNED_KEY = "zblocks.pinned";
+export const PINNED_KEY = "zblocks.pinned";
 
 export function loadPinnedZids() {
   try {

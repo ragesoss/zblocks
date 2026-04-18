@@ -8,9 +8,42 @@ import { fetchSignatureCached, CatalogError } from "./catalog.js";
 import { registerFunctionBlock } from "./blocks.js";
 import { rebuildToolbox } from "./shell.js";
 import { FUNCTIONS } from "./functions.js";
-import { loadPinnedZids, savePinnedZids } from "./storage.js";
+import { loadPinnedZids, savePinnedZids, PINNED_KEY } from "./storage.js";
 
 export { loadPinnedZids };
+
+// First-run starter kit: functions that together cover the most
+// common Wikidata pipelines (fetch item → get statement value →
+// cast → format). A user with a Wikidata mental model but no prior
+// Wikifunctions experience sees a working palette on landing.
+//
+// Half of these are already in the hardcoded FUNCTIONS registry and
+// just need to be pinned (no fetch). The other half (Z32097, Z28297,
+// Z31120, Z33592) are fetched live on first load.
+const STARTER_KIT = [
+  "Z6821",   // Fetch Wikidata Item
+  "Z22220",  // claims from item
+  "Z23459",  // statement value with highest rank
+  "Z28297",  // value of claim
+  "Z32097",  // filter claims by predicate
+  "Z21449",  // value of first property claim
+  "Z31120",  // string from object
+  "Z33592",  // integer from object
+  "Z23753",  // label of item reference in language
+  "Z802",    // if
+  "Z866",    // equals (generic)
+  "Z25073",  // integer to string
+  "Z20915",  // string to float64
+];
+
+// Seed the pin list on first-ever load (null localStorage entry).
+// If the user has intentionally cleared it (empty array), we respect
+// that and don't re-seed. Returns true if seeded, false otherwise.
+export function seedStarterKitIfFirstRun() {
+  if (localStorage.getItem(PINNED_KEY) !== null) return false;
+  savePinnedZids(STARTER_KIT);
+  return true;
+}
 
 export function isPinned(zid) {
   return loadPinnedZids().includes(zid);
@@ -48,20 +81,28 @@ export function unpinFunction(zid) {
   rebuildToolbox();
 }
 
-// Called once at startup. Re-fetches each pinned function and
-// registers its block. Failures (404, network) are logged and the
-// ZID is dropped from the pinned list so the next reload doesn't
-// retry indefinitely.
+// Called once at startup. Fetches any pinned ZIDs that aren't
+// already in the hardcoded FUNCTIONS registry and registers their
+// blocks. Parallel fetches — first load with the starter kit needs
+// ~5 requests, finishes in ~300ms on a warm CDN.
+//
+// Failures (404, network) are logged and the ZID is dropped from
+// the pinned list so the next reload doesn't retry indefinitely.
 export async function rehydratePinnedFunctions() {
   const zids = loadPinnedZids();
   if (zids.length === 0) return { loaded: 0, failed: [] };
+  const toFetch = zids.filter(zid => !FUNCTIONS.some(f => f.zid === zid));
+  const settled = await Promise.allSettled(
+    toFetch.map(zid => fetchSignatureCached(zid).then(fn => ({ zid, fn })))
+  );
   const failed = [];
-  for (const zid of zids) {
-    try {
-      const fn = await fetchSignatureCached(zid);
-      registerFunctionBlock(fn);
-    } catch (e) {
-      const reason = e instanceof CatalogError ? e.message : String(e);
+  for (let i = 0; i < settled.length; i++) {
+    const r = settled[i];
+    if (r.status === "fulfilled") {
+      registerFunctionBlock(r.value.fn);
+    } else {
+      const zid = toFetch[i];
+      const reason = r.reason instanceof CatalogError ? r.reason.message : String(r.reason);
       console.warn(`Failed to rehydrate ${zid}: ${reason}`);
       failed.push({ zid, reason });
     }

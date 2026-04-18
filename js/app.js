@@ -15,10 +15,16 @@ import {
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
 import {
-  pinFunction, unpinFunction, isPinned, rehydratePinnedFunctions,
+  pinFunction, unpinFunction, isPinned,
+  rehydratePinnedFunctions, seedStarterKitIfFirstRun,
 } from "./pins.js";
 
 registerAllBlocks();
+
+// On first-ever load, seed the pin list with a Wikidata-friendly
+// starter kit. After that, respect the user's curation (including an
+// empty list — we don't re-seed if they've cleared it intentionally).
+seedStarterKitIfFirstRun();
 
 // Rehydrate pinned functions from localStorage before injecting Blockly,
 // so the Pinned category is populated on first render. Failures (404s
