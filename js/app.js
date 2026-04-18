@@ -13,8 +13,10 @@ import {
 import { typeLabel } from "./type_labels.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
+  fetchFunctionTests, argValueToString,
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
+import { SHELL } from "./shell.js";
 import { importByZid, importFromJson, ImportError } from "./importer.js";
 import { initSlotPicker } from "./slot_picker.js";
 import {
@@ -103,6 +105,7 @@ document.getElementById("export-close").addEventListener("click", () => {
 
 // ── Run flow ──────────────────────────────────────────────────────
 let lastInputs = {};  // remember per-arg values between runs
+let currentTests = [];  // tests loaded for the current shell function
 
 function openRunModal() {
   const args = usedArgs(workspace);
@@ -110,6 +113,7 @@ function openRunModal() {
   const errEl = document.getElementById("run-error");
   errEl.textContent = "";
   inputsDiv.innerHTML = "";
+  maybeLoadTestsForShell(args);
   if (args.length === 0) {
     inputsDiv.innerHTML = "<p class=\"hint\">No arg references in the workspace — running with no inputs.</p>";
   } else {
@@ -221,6 +225,57 @@ function renderMetadata(m) {
   if (timing.length) bits.push(timing.join(", "));
   return bits.length ? `<div class="result-meta">${bits.join(" \u00b7 ")}</div>` : "";
 }
+
+// Async populate the "Prefill from test" dropdown using the shell
+// function's attached Z20 testers. Hidden if the shell isn't set to a
+// real ZID or the function has no tests.
+async function maybeLoadTestsForShell(args) {
+  const loaderEl = document.getElementById("run-test-loader");
+  const selectEl = document.getElementById("run-test-select");
+  currentTests = [];
+  if (!args.length || !/^Z\d+$/.test(SHELL.zid || "")) {
+    loaderEl.hidden = true;
+    return;
+  }
+  loaderEl.hidden = false;
+  selectEl.disabled = true;
+  selectEl.innerHTML = '<option value="">loading tests\u2026</option>';
+  try {
+    const tests = await fetchFunctionTests(SHELL.zid);
+    if (tests.length === 0) {
+      selectEl.innerHTML = '<option value="">(no tests on this function)</option>';
+      return;
+    }
+    currentTests = tests;
+    selectEl.innerHTML =
+      '<option value="">choose a test\u2026</option>' +
+      tests.map((t, i) =>
+        `<option value="${i}">${escapeHtml(t.label)} \u2014 ${escapeHtml(t.testZid)}</option>`
+      ).join("");
+    selectEl.disabled = false;
+  } catch (e) {
+    selectEl.innerHTML = `<option value="">(test fetch failed: ${escapeHtml(e.message || String(e))})</option>`;
+  }
+}
+
+document.getElementById("run-test-select").addEventListener("change", (e) => {
+  const idx = Number(e.target.value);
+  if (!Number.isInteger(idx) || !currentTests[idx]) return;
+  const test = currentTests[idx];
+  const rows = document.querySelectorAll("#run-inputs input[data-label]");
+  rows.forEach(inputEl => {
+    const label = inputEl.dataset.label;
+    const shellArgIdx = SHELL.args.findIndex(a => a.label === label);
+    if (shellArgIdx < 0) return;
+    const argKey = `${SHELL.zid}K${shellArgIdx + 1}`;
+    const val = test.argValues[argKey];
+    if (val === undefined) return;
+    const str = argValueToString(val);
+    if (str === "") return;
+    inputEl.value = str;
+    lastInputs[label] = str;
+  });
+});
 
 document.getElementById("run-btn").addEventListener("click", openRunModal);
 document.getElementById("run-cancel").addEventListener("click", () => {

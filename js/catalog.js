@@ -17,6 +17,8 @@ const WF_API = "https://www.wikifunctions.org/w/api.php";
 
 export class CatalogError extends Error {}
 
+import { decodeInteger, decodeFloat64 } from "./numeric.js";
+
 // ─── Search ─────────────────────────────────────────────────────────
 export async function searchFunctions(query, { limit = 15, outputType, inputTypes, signal } = {}) {
   const params = new URLSearchParams({
@@ -63,6 +65,99 @@ export async function fetchSignatureCached(zid, opts = {}) {
 // envelope so callers can handle Z14s (implementations) and other
 // non-function Z-objects gracefully instead of getting a "not a
 // function" error. Populates the signature cache for Z8s.
+// ─── Function tests (Z20 objects attached via Z8K3) ────────────────
+// Fetch the testers attached to a function and extract their input
+// values per arg key. Useful for seeding the Run modal with known-good
+// inputs — tests are literally pre-curated input sets.
+//
+// Returns [{ testZid, label, argValues: { <argKey>: ZObject, ... } }].
+// Each argValues entry keys off the tested function's arg keys
+// (e.g., Z33605K1, Z33605K2, …), the same keys SHELL uses.
+
+const TEST_CACHE = new Map();  // zid → resolved tests
+
+export async function fetchFunctionTests(zid) {
+  if (TEST_CACHE.has(zid)) return TEST_CACHE.get(zid);
+  const fn = await lookupByZid(zid);
+  if (fn.kind !== "Z8") throw new CatalogError(`${zid} is not a function`);
+  const refs = (fn.object.Z8K3 || []).slice(1);  // skip "Z20" head marker
+  const testZids = refs.map(r => typeof r === "string" ? r : r?.Z6K1).filter(Boolean);
+  if (testZids.length === 0) {
+    TEST_CACHE.set(zid, []);
+    return [];
+  }
+  // Batch fetch — wikilambda_fetch takes pipe-separated zids.
+  const params = new URLSearchParams({
+    action: "wikilambda_fetch",
+    zids: testZids.join("|"),
+    format: "json",
+    origin: "*",
+  });
+  const resp = await fetch(`${WF_API}?${params.toString()}`);
+  if (!resp.ok) throw new CatalogError(`Test batch fetch failed: HTTP ${resp.status}`);
+  const data = await resp.json();
+  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+
+  const tests = [];
+  for (const tzid of testZids) {
+    const raw = data?.[tzid]?.wikilambda_fetch;
+    if (!raw) continue;
+    let z2;
+    try { z2 = JSON.parse(raw); } catch { continue; }
+    const z20 = z2?.Z1K1 === "Z2" ? z2.Z2K2 : z2;
+    if (z20?.Z1K1 !== "Z20") continue;
+    const call = z20.Z20K2;
+    if (!call || call.Z1K1 !== "Z7") continue;
+    const target = typeof call.Z7K1 === "string" ? call.Z7K1 : call.Z7K1?.Z6K1;
+    if (target !== zid) continue;   // defensive: tests for other functions slip in occasionally
+    const argValues = {};
+    for (const key of Object.keys(call)) {
+      if (key === "Z7K1" || key === "Z1K1") continue;
+      if (key.startsWith(target + "K")) argValues[key] = call[key];
+    }
+    tests.push({
+      testZid: tzid,
+      label: extractEnLabel(z2?.Z2K3) || tzid,
+      argValues,
+    });
+  }
+  TEST_CACHE.set(zid, tests);
+  return tests;
+}
+
+// Decode a ZObject arg value into a human-friendly string suitable
+// for the Run modal's text input. Returns "" on failure; unrecognised
+// shapes fall back to pretty JSON so the input-side JSON-passthrough
+// handler still accepts them.
+export function argValueToString(zobj) {
+  if (zobj == null) return "";
+  if (typeof zobj === "string") return zobj;
+  if (typeof zobj !== "object") return String(zobj);
+  const t = zobj.Z1K1;
+  if (t === "Z6")     return zobj.Z6K1 ?? "";
+  if (t === "Z6091")  return zobj.Z6091K1 ?? "";
+  if (t === "Z6092")  return zobj.Z6092K1 ?? "";
+  if (t === "Z13518") return String(zobj.Z13518K1 ?? "");
+  if (t === "Z16683") { try { return String(decodeInteger(zobj)); } catch { return ""; } }
+  if (t === "Z20838") { try { return String(decodeFloat64(zobj)); } catch { return ""; } }
+  if (t === "Z40") {
+    const v = typeof zobj.Z40K1 === "string" ? zobj.Z40K1 : zobj.Z40K1?.Z9K1;
+    return v === "Z41" ? "true" : v === "Z42" ? "false" : "";
+  }
+  if (t === "Z7") {
+    // Recognise common fetch/wrapper functions so tests expressed as
+    // Z6821(Q…) come through as plain QIDs matching runner.js's
+    // auto-wrap convention for Z6001 inputs.
+    const target = typeof zobj.Z7K1 === "string" ? zobj.Z7K1 : zobj.Z7K1?.Z6K1;
+    if (target === "Z6821")  return argValueToString(zobj.Z6821K1);   // fetch item
+    if (target === "Z6822")  return argValueToString(zobj.Z6822K1);   // fetch property
+    if (target === "Z20915") return argValueToString(zobj.Z20915K1);  // legacy float
+  }
+  // Fallback: pretty JSON. runner.js treats any value starting with
+  // { or [ as raw JSON passthrough.
+  try { return JSON.stringify(zobj); } catch { return ""; }
+}
+
 export async function lookupByZid(zid) {
   if (!/^Z\d+$/.test(zid)) throw new CatalogError(`Invalid ZID: ${zid}`);
   const params = new URLSearchParams({
