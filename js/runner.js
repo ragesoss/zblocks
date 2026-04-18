@@ -16,6 +16,7 @@
 
 import { emitWorkspace } from "./emitter.js";
 import { SHELL, ARG_REF_META } from "./shell.js";
+import { encodeInteger, encodeNatural, encodeFloat64 } from "./numeric.js";
 
 export const WF_API = "https://www.wikifunctions.org/w/api.php";
 export const RUN_TIMEOUT_MS = 120_000;
@@ -132,17 +133,18 @@ export function encodeInput(raw, type, label = "?") {
     case "Z6":
       return { Z1K1: "Z6", Z6K1: String(s) };
     case "Z16683":
-      return encodeInteger(Number(s), label);
-    case "Z13518": {
+      try { return encodeInteger(Number(s)); }
+      catch (e) { throw new RunError(`Expected integer for "${label}" (Z16683), got ${JSON.stringify(s)}`); }
+    case "Z13518":
+      try { return encodeNatural(Number(s)); }
+      catch (e) { throw new RunError(`Expected non-negative integer for "${label}" (Z13518), got ${JSON.stringify(s)}`); }
+    case "Z20838": {
       const n = Number(s);
-      if (!Number.isInteger(n) || n < 0) {
-        throw new RunError(`Expected non-negative integer for "${label}" (Z13518), got ${JSON.stringify(s)}`);
+      if (Number.isNaN(n) && String(s).toLowerCase() !== "nan") {
+        throw new RunError(`Expected float for "${label}" (Z20838), got ${JSON.stringify(s)}`);
       }
-      return { Z1K1: "Z13518", Z13518K1: String(n) };
+      return encodeFloat64(n);
     }
-    case "Z20838":
-      // Wrap a stringified float in Z20915.
-      return { Z1K1: "Z7", Z7K1: "Z20915", Z20915K1: { Z1K1: "Z6", Z6K1: String(s) } };
     case "Z40": {
       const b = String(s).toLowerCase();
       if (b === "true"  || b === "z41") return "Z41";
@@ -172,26 +174,14 @@ export function encodeInput(raw, type, label = "?") {
       return String(s);
     case "Z1":
       // Wildcard — best-effort guess.
-      if (typeof s === "number") return encodeInteger(s, label);
-      if (/^-?\d+$/.test(s))     return encodeInteger(Number(s), label);
+      if (typeof s === "number") return encodeInteger(s);
+      if (/^-?\d+$/.test(s))     return encodeInteger(Number(s));
       if (/^Q\d+$/.test(s))      return { Z1K1: "Z6091", Z6091K1: String(s) };
       if (/^P\d+$/.test(s))      return { Z1K1: "Z6092", Z6092K1: String(s) };
       return { Z1K1: "Z6", Z6K1: String(s) };
     default:
       throw new RunError(`No automatic encoder for type ${type} on "${label}". Paste raw JSON (starting with { or [).`);
   }
-}
-
-function encodeInteger(n, label) {
-  if (!Number.isFinite(n) || !Number.isInteger(n)) {
-    throw new RunError(`Expected integer for "${label}", got ${JSON.stringify(n)}`);
-  }
-  const sign = n > 0 ? "Z16660" : n < 0 ? "Z16662" : "Z16661";
-  return {
-    Z1K1: "Z16683",
-    Z16683K1: { Z1K1: "Z16659", Z16659K1: sign },
-    Z16683K2: { Z1K1: "Z13518", Z13518K1: String(Math.abs(n)) },
-  };
 }
 
 // ─── API ───────────────────────────────────────────────────────────

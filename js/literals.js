@@ -42,7 +42,7 @@ export const LITERAL_BLOCKS = [
     args0: [{ type: "field_number", name: "VALUE", value: 0 }],
     output: ["Z20838", "Z1"],
     colour: LITERAL_COLOUR,
-    tooltip: "Float64 literal (Z20838, emitted as Z20915-wrapped string)",
+    tooltip: "Float64 literal (Z20838) — emits a full IEEE-754 decomposition",
   },
   {
     type: "wf_boolean",

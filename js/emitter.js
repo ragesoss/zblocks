@@ -16,10 +16,7 @@
 
 import { functionByZid } from "./functions.js";
 import { ARG_REF_META } from "./shell.js";
-
-const SIGN_POS = "Z16660";
-const SIGN_ZERO = "Z16661";
-const SIGN_NEG = "Z16662";
+import { encodeInteger, encodeNatural, encodeFloat64 } from "./numeric.js";
 
 export class EmitError extends Error {}
 
@@ -76,35 +73,28 @@ function emitString(block) {
 function emitInteger(block) {
   const raw = block.getFieldValue("VALUE");
   const n = Number(raw);
-  if (!Number.isFinite(n) || !Number.isInteger(n)) {
-    throw new EmitError(`Invalid integer literal: ${JSON.stringify(raw)}`);
-  }
-  const sign = n > 0 ? SIGN_POS : n < 0 ? SIGN_NEG : SIGN_ZERO;
-  return {
-    Z1K1: "Z16683",
-    Z16683K1: { Z1K1: "Z16659", Z16659K1: sign },
-    Z16683K2: { Z1K1: "Z13518", Z13518K1: String(Math.abs(n)) },
-  };
+  try { return encodeInteger(n); }
+  catch (e) { throw new EmitError(`Invalid integer literal: ${JSON.stringify(raw)}`); }
 }
 
 function emitNatural(block) {
   const raw = block.getFieldValue("VALUE");
   const n = Number(raw);
-  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 0) {
-    throw new EmitError(`Invalid natural-number literal: ${JSON.stringify(raw)} (must be a non-negative integer)`);
-  }
-  return { Z1K1: "Z13518", Z13518K1: String(n) };
+  try { return encodeNatural(n); }
+  catch (e) { throw new EmitError(`Invalid natural-number literal: ${JSON.stringify(raw)} (must be a non-negative integer)`); }
 }
 
 function emitFloat(block) {
   const raw = block.getFieldValue("VALUE");
-  const str = String(raw);
-  // Never emit Z20838 directly. Wrap via Z20915 "string to float64".
-  return {
-    Z1K1: "Z7",
-    Z7K1: "Z20915",
-    Z20915K1: { Z1K1: "Z6", Z6K1: str },
-  };
+  const n = Number(raw);
+  if (!Number.isFinite(n) && !Number.isNaN(n)) {
+    // ±Infinity is a valid Z20838 value; NaN is too. But field_number
+    // can also produce NaN from empty input — catch the parse error.
+  }
+  if (raw === "" || raw === null || raw === undefined) {
+    throw new EmitError("Empty float literal.");
+  }
+  return encodeFloat64(n);
 }
 
 function emitBoolean(block) {
