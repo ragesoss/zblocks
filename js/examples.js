@@ -15,6 +15,13 @@ export const EXAMPLES = [
     id: "frequency-of-midi-note",
     label: "frequency of MIDI note (Z33682)",
     summary: "ref_freq × 2^((midi − ref_midi) / 12) — mirrors zobjects/frequency_of_midi_note.comp.json",
+    // Test inputs pre-loaded into the Run modal so the example is
+    // click-Run-and-go without the user having to fill anything in.
+    // Q17087764 is the A440 pitch standard; MIDI 69 is A4 → 440 Hz.
+    defaultInputs: {
+      "midi note number": "69",
+      "pitch standard":   "Q17087764",
+    },
     load(workspace) {
       // Clear before setShell — unregisterArgRefBlocks leaves any
       // lingering arg-ref instances on the workspace without a type

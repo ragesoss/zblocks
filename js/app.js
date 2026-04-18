@@ -56,6 +56,11 @@ exampleSelect.addEventListener("change", () => {
     return;
   }
   ex.load(workspace);
+  // Seed the Run modal with the example's default test inputs so it's
+  // click-Run-and-go. Replaces (not merges) any prior values.
+  if (ex.defaultInputs) {
+    lastInputs = { ...ex.defaultInputs };
+  }
   exampleSelect.value = "";  // reset so reselecting reloads
 });
 
