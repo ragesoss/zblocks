@@ -221,11 +221,83 @@ document.getElementById("result-rerun").addEventListener("click", () => {
 const searchInputEl = document.getElementById("search-input");
 const searchStatusEl = document.getElementById("search-status");
 const searchResultsEl = document.getElementById("search-results");
+const filterOutputEl = document.getElementById("filter-output");
+const filterInputEl  = document.getElementById("filter-input");
 let searchAbort = null;
 let searchDebounce = null;
 
+// Quick-select types — covers the common plumbing cases.
+const COMMON_TYPES = [
+  { zid: "Z6",     label: "String"   },
+  { zid: "Z16683", label: "Integer"  },
+  { zid: "Z20838", label: "Float64"  },
+  { zid: "Z40",    label: "Boolean"  },
+  { zid: "Z6001",  label: "WD Item"  },
+  { zid: "Z6091",  label: "Item Ref" },
+  { zid: "Z6092",  label: "Prop Ref" },
+  { zid: "Z6007",  label: "Claim"    },
+  { zid: "Z881",   label: "List"     },
+];
+
+function populateFilterChips() {
+  for (const row of document.querySelectorAll(".filter-row")) {
+    const chipsEl = row.querySelector(".filter-chips");
+    const filterInput = row.querySelector(".filter-input");
+    chipsEl.innerHTML = COMMON_TYPES.map(t =>
+      `<button type="button" class="filter-chip" data-zid="${t.zid}" title="${escapeHtml(t.label)} (${t.zid})">${escapeHtml(t.zid)}</button>`
+    ).join("");
+    chipsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".filter-chip");
+      if (!btn) return;
+      const zid = btn.dataset.zid;
+      // Toggle: if already selected, clear; otherwise set (or append for takes).
+      if (row.dataset.filter === "input") {
+        const current = filterInput.value.split(",").map(s => s.trim()).filter(Boolean);
+        if (current.includes(zid)) {
+          filterInput.value = current.filter(z => z !== zid).join(", ");
+        } else {
+          filterInput.value = [...current, zid].join(", ");
+        }
+      } else {
+        filterInput.value = filterInput.value === zid ? "" : zid;
+      }
+      syncChipState(row);
+      triggerSearch();
+    });
+    filterInput.addEventListener("input", () => {
+      syncChipState(row);
+      triggerSearch();
+    });
+  }
+}
+
+function syncChipState(row) {
+  const current = row.querySelector(".filter-input").value
+    .split(",").map(s => s.trim()).filter(Boolean);
+  for (const btn of row.querySelectorAll(".filter-chip")) {
+    btn.classList.toggle("active", current.includes(btn.dataset.zid));
+  }
+}
+
+function currentSearchArgs() {
+  const query = searchInputEl.value.trim();
+  const outRaw = filterOutputEl.value.trim();
+  const inRaw  = filterInputEl.value.trim();
+  const outputType = /^Z\d+$/.test(outRaw) ? outRaw : undefined;
+  const inputZids = inRaw
+    ? inRaw.split(",").map(s => s.trim()).filter(z => /^Z\d+$/.test(z))
+    : [];
+  const inputTypes = inputZids.length ? inputZids.join(",") : undefined;
+  return { query, outputType, inputTypes, hasFilters: Boolean(outputType || inputTypes) };
+}
+
+populateFilterChips();
+
 document.getElementById("add-function-btn").addEventListener("click", () => {
   searchInputEl.value = "";
+  filterOutputEl.value = "";
+  filterInputEl.value = "";
+  for (const row of document.querySelectorAll(".filter-row")) syncChipState(row);
   searchResultsEl.innerHTML = "";
   searchStatusEl.textContent = "";
   document.getElementById("add-function-modal").showModal();
@@ -236,23 +308,29 @@ document.getElementById("search-close").addEventListener("click", () => {
   document.getElementById("add-function-modal").close();
 });
 
-searchInputEl.addEventListener("input", () => {
+searchInputEl.addEventListener("input", triggerSearch);
+
+function triggerSearch() {
   clearTimeout(searchDebounce);
-  const q = searchInputEl.value.trim();
-  if (!q) {
+  const args = currentSearchArgs();
+  if (!args.query && !args.hasFilters) {
     searchResultsEl.innerHTML = "";
     searchStatusEl.textContent = "";
     return;
   }
   searchStatusEl.textContent = "searching\u2026";
-  searchDebounce = setTimeout(() => performSearch(q), 200);
-});
+  searchDebounce = setTimeout(() => performSearch(args), 200);
+}
 
-async function performSearch(query) {
+async function performSearch({ query, outputType, inputTypes }) {
   if (searchAbort) searchAbort.abort();
   searchAbort = new AbortController();
   try {
-    const results = await searchFunctions(query, { signal: searchAbort.signal, limit: 20 });
+    const results = await searchFunctions(query, {
+      signal: searchAbort.signal,
+      limit: 20,
+      outputType, inputTypes,
+    });
     renderSearchResults(results);
     searchStatusEl.textContent = results.length ? `${results.length} result${results.length === 1 ? "" : "s"}` : "no matches";
   } catch (e) {

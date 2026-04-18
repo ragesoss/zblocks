@@ -9,9 +9,9 @@
 <body>
   <header>
     <h1>zblocks</h1>
-    <div id="shell-status">\u{1F449} New? Try <b>Load example</b> to see a worked composition, or <b>Declare function shell</b> to begin.</div>
+    <div id="shell-status">👉 New? Try <b>Load example</b> to see a worked composition, or <b>Declare function shell</b> to begin.</div>
     <select id="load-example-select" title="Load a worked example">
-      <option value="">Load example\u2026</option>
+      <option value="">Load example…</option>
     </select>
     <button id="add-function-btn" title="Search Wikifunctions and pin a function to the sidebar">+ Add function</button>
     <button id="open-shell-btn">Declare function shell</button>
@@ -58,8 +58,18 @@
       <strong>Pinned</strong> category in your sidebar.
     </p>
     <div class="search-row">
-      <input id="search-input" type="text" placeholder="Search by label, e.g. \u201Cfilter claims\u201D" autocomplete="off">
+      <input id="search-input" type="text" placeholder="Search by label, e.g. “filter claims” (optional with a type filter)" autocomplete="off">
       <span id="search-status" class="hint"></span>
+    </div>
+    <div class="filter-row" data-filter="output">
+      <label>returns</label>
+      <input class="filter-input" id="filter-output" type="text" placeholder="any" autocomplete="off" spellcheck="false">
+      <div class="filter-chips"></div>
+    </div>
+    <div class="filter-row" data-filter="input">
+      <label>takes</label>
+      <input class="filter-input" id="filter-input" type="text" placeholder="any (comma-separate for multiple)" autocomplete="off" spellcheck="false">
+      <div class="filter-chips"></div>
     </div>
     <div id="search-results"></div>
     <menu>
