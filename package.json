@@ -1,0 +1,7 @@
+{
+  "name": "zblocks",
+  "version": "0.1.0",
+  "description": "Block-based composition editor for Wikifunctions",
+  "private": true,
+  "type": "module"
+}

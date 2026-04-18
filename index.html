@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>zblocks — Wikifunctions composition editor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/blockly@11/blockly.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>zblocks</h1>
+    <div id="shell-status">\u{1F449} New? Try <b>Load example</b> to see a worked composition, or <b>Declare function shell</b> to begin.</div>
+    <select id="load-example-select" title="Load a worked example">
+      <option value="">Load example\u2026</option>
+    </select>
+    <button id="open-shell-btn">Declare function shell</button>
+    <button id="run-btn" title="Execute the composition via the Wikifunctions API">Run</button>
+    <button id="export-btn">Export ZObject</button>
+  </header>
+
+  <main>
+    <div id="blocklyDiv"></div>
+  </main>
+
+  <!-- ── Function-shell declaration modal ────────────────────────── -->
+  <dialog id="shell-modal">
+    <h2>Function shell</h2>
+    <p class="hint">
+      Declare the Z8 that this composition implements. The function
+      ZID and argument positions are used to synthesise Z18 argument
+      references (<code>Z18K1 = &lt;functionZID&gt;Kn</code>).
+    </p>
+    <div class="shell-header">
+      <label>Function ZID
+        <input id="shell-zid" type="text" placeholder="Z33682">
+      </label>
+      <label>Output type
+        <input id="shell-output" type="text" placeholder="Z20838">
+      </label>
+    </div>
+    <fieldset>
+      <legend>Arguments (in order)</legend>
+      <div id="shell-args"></div>
+      <button type="button" id="shell-add-arg">+ Add argument</button>
+    </fieldset>
+    <menu>
+      <button type="button" id="shell-cancel">Cancel</button>
+      <button type="button" id="shell-save">Save shell</button>
+    </menu>
+  </dialog>
+
+  <!-- ── Run: collect inputs ────────────────────────────────────── -->
+  <dialog id="run-modal">
+    <h2>Run composition</h2>
+    <p class="hint">
+      Executes the workspace via <code>wikilambda_function_call</code>.
+      Values replace Z18 arg references in-flight; nothing is written
+      to Wikifunctions.
+    </p>
+    <div id="run-inputs"></div>
+    <div id="run-error" class="error"></div>
+    <menu>
+      <button type="button" id="run-cancel">Cancel</button>
+      <button type="button" id="run-submit">Run</button>
+    </menu>
+  </dialog>
+
+  <!-- ── Run: result ────────────────────────────────────────────── -->
+  <dialog id="result-modal">
+    <h2 id="result-heading">Result</h2>
+    <div id="result-value"></div>
+    <details>
+      <summary>Raw ZObject</summary>
+      <pre id="result-raw"></pre>
+    </details>
+    <menu>
+      <button type="button" id="result-close">Close</button>
+      <button type="button" id="result-rerun">Run again</button>
+    </menu>
+  </dialog>
+
+  <!-- ── Export modal ────────────────────────────────────────────── -->
+  <dialog id="export-modal">
+    <h2>Exported ZObject</h2>
+    <p class="hint">
+      Paste this into the <code>Z14K2</code> slot of an existing
+      implementation via the <em>Edit Raw JSON</em> userscript on
+      Wikifunctions.
+    </p>
+    <textarea id="export-json" readonly spellcheck="false"></textarea>
+    <div id="export-error" class="error"></div>
+    <menu>
+      <button type="button" id="export-close">Close</button>
+      <button type="button" id="export-copy">Copy to clipboard</button>
+    </menu>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

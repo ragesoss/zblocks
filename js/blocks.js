@@ -1,0 +1,133 @@
+// Synthesize Blockly block definitions from the function registry and
+// register them. Also builds the initial toolbox.
+//
+// Design notes:
+//  - Type matching: every input check and output check includes "Z1".
+//    This models Z1 as a bidirectional wildcard — the runtime treats
+//    Z1 inputs/outputs as accepting anything; Blockly's overlap-check
+//    rule ("connections match if they share any string, or either is
+//    null") gives us the same behaviour.
+//  - Layout: one label row for the function title, then one row per
+//    argument with its label and an external value input. This scales
+//    cleanly to N args and makes arg order unambiguous at a glance.
+//    Tradeoff vs inline Scratch-style: more vertical space, less
+//    ambiguity — worth it for compositions that can be 5 levels deep.
+
+import { FUNCTIONS, CATEGORIES } from "./functions.js";
+import { LITERAL_BLOCKS, LITERAL_TOOLBOX, SHADOW_FOR_TYPE } from "./literals.js";
+
+const SHADOW_EXTENSION = "wf_attach_shadows";
+
+// Registered once; attaches a shadow literal to every input whose
+// declared type matches SHADOW_FOR_TYPE. Runs on each block instance
+// after jsonInit, so it fires both when dragged from the toolbox and
+// when deserialized from workspace state.
+function registerShadowExtension() {
+  if (Blockly.Extensions.isRegistered(SHADOW_EXTENSION)) return;
+  Blockly.Extensions.register(SHADOW_EXTENSION, function () {
+    // `this` is the freshly-initialised block.
+    for (const input of this.inputList) {
+      if (!input.connection) continue;
+      const check = input.connection.getCheck();
+      if (!check) continue;
+      const primaryType = check[0];
+      const shadow = SHADOW_FOR_TYPE[primaryType];
+      if (!shadow) continue;
+      try {
+        input.connection.setShadowState(shadow);
+      } catch (e) {
+        // Shadow state rejected (e.g. block type not yet registered).
+        // Non-fatal — the slot just stays empty.
+        console.warn(`Could not attach shadow to ${this.type}.${input.name}:`, e);
+      }
+    }
+  });
+}
+
+function outputCheck(type) {
+  // "Z1" means accept-anywhere; declare the bare type + Z1 so slots
+  // typed for this specific type also match.
+  return type === "Z1" ? ["Z1"] : [type, "Z1"];
+}
+
+function inputCheck(type) {
+  return type === "Z1" ? null : [type, "Z1"];
+}
+
+function functionBlockDef(fn, colour) {
+  const def = {
+    type: `wf_${fn.zid}`,
+    colour,
+    output: outputCheck(fn.output),
+    inputsInline: false,
+    extensions: [SHADOW_EXTENSION],
+    tooltip: `${fn.label} — ${fn.zid}\n${fn.args.map(a => a.type).join(", ")} → ${fn.output}`,
+    helpUrl: `https://www.wikifunctions.org/wiki/${fn.zid}`,
+  };
+
+  // Row 0: title only.
+  def.message0 = `${fn.label}`;
+
+  // Rows 1..N: one per arg, with label + input slot.
+  fn.args.forEach((arg, i) => {
+    const n = i + 1;
+    def[`message${n}`] = `${arg.label} %1`;
+    def[`args${n}`] = [{
+      type: "input_value",
+      name: arg.key,
+      check: inputCheck(arg.type),
+      align: "RIGHT",
+    }];
+  });
+
+  return def;
+}
+
+export function registerAllBlocks() {
+  const define = (Blockly.common && Blockly.common.defineBlocksWithJsonArray)
+    || Blockly.defineBlocksWithJsonArray;
+
+  // Shadow extension must be registered before any block that uses it
+  // is defined.
+  registerShadowExtension();
+
+  // Literals first (so shadow attachments can reference them by type).
+  define(LITERAL_BLOCKS);
+
+  // Function blocks, coloured by category.
+  const defs = FUNCTIONS.map(fn => {
+    const cat = CATEGORIES.find(c => c.name === fn.category);
+    const colour = cat ? cat.colour : 0;
+    return functionBlockDef(fn, colour);
+  });
+  define(defs);
+}
+
+export function buildToolbox() {
+  const categories = CATEGORIES.map(cat => ({
+    kind: "category",
+    name: cat.name,
+    colour: cat.colour,
+    contents: FUNCTIONS
+      .filter(fn => fn.category === cat.name)
+      .map(fn => ({ kind: "block", type: `wf_${fn.zid}` })),
+  }));
+
+  // Literals as their own category.
+  categories.push(LITERAL_TOOLBOX);
+
+  // Arguments category — populated dynamically by shell.js when the
+  // user declares their function shell. Start empty; shell.js calls
+  // workspace.updateToolbox with the filled-in version.
+  categories.push({
+    kind: "category",
+    name: "Function arguments",
+    colour: 60,
+    contents: [],
+  });
+
+  return {
+    kind: "categoryToolbox",
+    contents: categories,
+  };
+}
