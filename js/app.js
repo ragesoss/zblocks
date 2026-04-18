@@ -424,13 +424,26 @@ async function performZidLookup(zid) {
       const targetLink = target
         ? `<a href="https://www.wikifunctions.org/wiki/${escapeHtml(target)}" target="_blank" rel="noopener">${escapeHtml(target)}</a>`
         : "?";
+      // Fetch the parent Z8 so we can show it as a pinnable result below
+      // the info message — which is what the user almost certainly wanted.
+      let parentSig = null;
+      if (target) {
+        try {
+          const parent = await lookupByZid(target);
+          if (parent.kind === "Z8") parentSig = parent.signature;
+        } catch { /* fall through — show info-only */ }
+      }
       searchResultsEl.innerHTML = `
         <div class="search-info">
           <strong>${escapeHtml(zid)}</strong> is an implementation (Z14) of function ${targetLink}.
-          Search is for pinning functions. To load this specific implementation
-          into the workspace, use the <b>Import</b> button instead.
+          Pin the parent function below, or use <b>Import</b> to load this
+          specific implementation into the workspace.
         </div>`;
-      searchStatusEl.textContent = "";
+      if (parentSig) {
+        appendResultRow({ zid: target, label: parentSig.label });
+        decorateResultsWithSignatures([{ zid: target }], new AbortController().signal);
+      }
+      searchStatusEl.textContent = parentSig ? "parent function available to pin" : "";
     } else {
       searchResultsEl.innerHTML = `
         <div class="search-info">
@@ -476,26 +489,32 @@ function renderSearchResults(results) {
     searchResultsEl.innerHTML = "";
     return;
   }
-  searchResultsEl.innerHTML = results.map(r => {
-    const pinned = isPinned(r.zid);
-    const cached = cachedSignature(r.zid);
-    const sigText = cached ? escapeHtml(signatureText(cached)) : "";
-    const sigTitle = cached ? ` title="${escapeHtml(signatureTooltip(cached))}"` : "";
-    return `
-      <div class="search-result" data-zid="${escapeHtml(r.zid)}">
-        <div class="search-result-main">
-          <span class="search-result-label">${escapeHtml(r.label)}</span>
-          <div class="search-result-sub">
-            <a class="search-result-zid" href="https://www.wikifunctions.org/wiki/${escapeHtml(r.zid)}" target="_blank" rel="noopener">${escapeHtml(r.zid)}</a>
-            <span class="search-result-signature"${sigTitle}>${sigText}</span>
-          </div>
+  searchResultsEl.innerHTML = results.map(renderResultRowHtml).join("");
+}
+
+function renderResultRowHtml(r) {
+  const pinned = isPinned(r.zid);
+  const cached = cachedSignature(r.zid);
+  const sigText = cached ? escapeHtml(signatureText(cached)) : "";
+  const sigTitle = cached ? ` title="${escapeHtml(signatureTooltip(cached))}"` : "";
+  return `
+    <div class="search-result" data-zid="${escapeHtml(r.zid)}">
+      <div class="search-result-main">
+        <span class="search-result-label">${escapeHtml(r.label)}</span>
+        <div class="search-result-sub">
+          <a class="search-result-zid" href="https://www.wikifunctions.org/wiki/${escapeHtml(r.zid)}" target="_blank" rel="noopener">${escapeHtml(r.zid)}</a>
+          <span class="search-result-signature"${sigTitle}>${sigText}</span>
         </div>
-        <button class="search-result-pin ${pinned ? "pinned" : ""}" data-zid="${escapeHtml(r.zid)}" data-pinned="${pinned}">
-          ${pinned ? "Unpin" : "Pin"}
-        </button>
       </div>
-    `;
-  }).join("");
+      <button class="search-result-pin ${pinned ? "pinned" : ""}" data-zid="${escapeHtml(r.zid)}" data-pinned="${pinned}">
+        ${pinned ? "Unpin" : "Pin"}
+      </button>
+    </div>
+  `;
+}
+
+function appendResultRow(r) {
+  searchResultsEl.insertAdjacentHTML("beforeend", renderResultRowHtml(r));
 }
 
 searchResultsEl.addEventListener("click", async (e) => {
