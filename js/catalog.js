@@ -59,6 +59,34 @@ export async function fetchSignatureCached(zid, opts = {}) {
   return sig;  // fetchFunctionSignature populates the cache.
 }
 
+// Look up whatever is at a ZID — not just Z8s. Returns a typed
+// envelope so callers can handle Z14s (implementations) and other
+// non-function Z-objects gracefully instead of getting a "not a
+// function" error. Populates the signature cache for Z8s.
+export async function lookupByZid(zid) {
+  if (!/^Z\d+$/.test(zid)) throw new CatalogError(`Invalid ZID: ${zid}`);
+  const params = new URLSearchParams({
+    action: "wikilambda_fetch", zids: zid, format: "json", origin: "*",
+  });
+  const resp = await fetch(`${WF_API}?${params.toString()}`);
+  if (!resp.ok) throw new CatalogError(`Fetch ${zid} failed: HTTP ${resp.status}`);
+  const data = await resp.json();
+  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+  const rawStr = data?.[zid]?.wikilambda_fetch;
+  if (!rawStr) throw new CatalogError(`${zid}: empty wikilambda_fetch payload`);
+  const z2 = JSON.parse(rawStr);
+  const obj = z2?.Z1K1 === "Z2" ? z2.Z2K2 : z2;
+  const result = { zid, kind: obj?.Z1K1, object: obj };
+  if (obj?.Z1K1 === "Z8") {
+    const sig = parseZ8ToSignature(z2);
+    SIGNATURE_CACHE.set(zid, sig);
+    result.signature = sig;
+  } else if (obj?.Z1K1 === "Z14") {
+    result.targetZid = typeof obj.Z14K1 === "string" ? obj.Z14K1 : obj.Z14K1?.Z6K1;
+  }
+  return result;
+}
+
 export async function fetchFunctionSignature(zid, { signal } = {}) {
   if (!/^Z\d+$/.test(zid)) throw new CatalogError(`Invalid ZID: ${zid}`);
   const params = new URLSearchParams({

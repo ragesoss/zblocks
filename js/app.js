@@ -12,7 +12,7 @@ import {
 } from "./runner.js";
 import { typeLabel } from "./type_labels.js";
 import {
-  searchFunctions, fetchSignatureCached, cachedSignature,
+  searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
 import { importByZid, importFromJson, ImportError } from "./importer.js";
@@ -389,6 +389,13 @@ async function performSearch({ query, outputType, inputTypes }) {
   if (searchAbort) searchAbort.abort();
   searchAbort = new AbortController();
   const { signal } = searchAbort;
+
+  // If the query is a bare ZID and there are no filters, short-circuit
+  // to a direct fetch — label search doesn't match ZIDs.
+  if (/^Z\d+$/.test(query) && !outputType && !inputTypes) {
+    return performZidLookup(query);
+  }
+
   try {
     const results = await searchFunctions(query, {
       signal, limit: 20, outputType, inputTypes,
@@ -398,6 +405,42 @@ async function performSearch({ query, outputType, inputTypes }) {
     decorateResultsWithSignatures(results, signal);
   } catch (e) {
     if (e.name === "AbortError") return;
+    searchStatusEl.textContent = "";
+    searchResultsEl.innerHTML = `<div class="search-error">${escapeHtml(e.message || String(e))}</div>`;
+  }
+}
+
+async function performZidLookup(zid) {
+  searchStatusEl.textContent = "fetching\u2026";
+  try {
+    const result = await lookupByZid(zid);
+    if (result.kind === "Z8") {
+      renderSearchResults([{ zid, label: result.signature.label }]);
+      searchStatusEl.textContent = "direct ZID match";
+      // Signature cache is warm from lookupByZid, so decorate renders immediately.
+      decorateResultsWithSignatures([{ zid }], new AbortController().signal);
+    } else if (result.kind === "Z14") {
+      const target = result.targetZid;
+      const targetLink = target
+        ? `<a href="https://www.wikifunctions.org/wiki/${escapeHtml(target)}" target="_blank" rel="noopener">${escapeHtml(target)}</a>`
+        : "?";
+      searchResultsEl.innerHTML = `
+        <div class="search-info">
+          <strong>${escapeHtml(zid)}</strong> is an implementation (Z14) of function ${targetLink}.
+          Search is for pinning functions. To load this specific implementation
+          into the workspace, use the <b>Import</b> button instead.
+        </div>`;
+      searchStatusEl.textContent = "";
+    } else {
+      searchResultsEl.innerHTML = `
+        <div class="search-info">
+          <strong>${escapeHtml(zid)}</strong> is a
+          <code>${escapeHtml(result.kind || "?")}</code>, not a function.
+          Only Z8 functions can be pinned here.
+        </div>`;
+      searchStatusEl.textContent = "";
+    }
+  } catch (e) {
     searchStatusEl.textContent = "";
     searchResultsEl.innerHTML = `<div class="search-error">${escapeHtml(e.message || String(e))}</div>`;
   }
