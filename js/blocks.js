@@ -71,8 +71,9 @@ function functionBlockDef(fn, colour) {
     helpUrl: `https://www.wikifunctions.org/wiki/${fn.zid}`,
   };
 
-  // Row 0: title with the output type as a soft hint.
-  def.message0 = `${fn.label} → ${typeLabel(fn.output)}`;
+  // Row 0: label · ZID → output. The ZID is explicit so you can
+  // cross-reference the Wikifunctions page or paste into search.
+  def.message0 = `${fn.label} \u00B7 ${fn.zid} → ${typeLabel(fn.output)}`;
 
   // Rows 1..N: one per arg, labelled with a human-readable type hint.
   fn.args.forEach((arg, i) => {
@@ -160,6 +161,22 @@ function attachSlotPickerMenu(blockType) {
           slotLabel,
           slotType,
         }),
+      });
+    }
+    // For function-call blocks, offer a "Fill slots from test" entry
+    // so the user can grab known-good inputs (QIDs, integers, etc.)
+    // from the function's own Z20 testers without hunting them down
+    // manually.
+    if (zid && fn && fn.args.length > 0) {
+      const block = this;
+      options.push({
+        text: `Fill slots from test\u2026`,
+        enabled: true,
+        callback: () => {
+          document.dispatchEvent(new CustomEvent("zblocks-fill-slots", {
+            detail: { block, zid, fn },
+          }));
+        },
       });
     }
     // Only offer Run for value blocks (which all wf_* blocks are).

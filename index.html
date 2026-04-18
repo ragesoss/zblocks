@@ -51,6 +51,24 @@
     </menu>
   </dialog>
 
+  <!-- ── Fill slots from test: pull known-good inputs ────────────── -->
+  <dialog id="fill-slots-modal">
+    <h2 id="fill-slots-heading">Fill slots from test</h2>
+    <p class="hint" id="fill-slots-hint">Loading the function's tests\u2026</p>
+    <label class="fill-slots-picker">
+      Test:
+      <select id="fill-slots-select" disabled>
+        <option value="">loading\u2026</option>
+      </select>
+    </label>
+    <div id="fill-slots-preview"></div>
+    <div id="fill-slots-error" class="error"></div>
+    <menu>
+      <button type="button" id="fill-slots-cancel">Cancel</button>
+      <button type="button" id="fill-slots-apply" disabled>Apply</button>
+    </menu>
+  </dialog>
+
   <!-- ── Slot picker: fill an empty input slot ───────────────────── -->
   <dialog id="slot-picker-modal">
     <h2 id="slot-picker-heading">Fill slot</h2>

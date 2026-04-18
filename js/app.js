@@ -18,7 +18,7 @@ import {
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
 import { SHELL } from "./shell.js";
-import { importByZid, importFromJson, ImportError } from "./importer.js";
+import { importByZid, importFromJson, ImportError, exprToBlockSpec } from "./importer.js";
 import { initSlotPicker } from "./slot_picker.js";
 import {
   pinFunction, unpinFunction, isPinned,
@@ -298,6 +298,132 @@ document.getElementById("run-btn").addEventListener("click", () => openRunModal(
 document.addEventListener("zblocks-run-block", (e) => {
   const block = e.detail?.block;
   if (block) openRunModal(block);
+});
+
+// ── Fill block slots from test ────────────────────────────────────
+let fillSlotsContext = null;  // { block, zid, fn, tests, selectedIdx }
+
+document.addEventListener("zblocks-fill-slots", async (e) => {
+  const { block, zid, fn } = e.detail || {};
+  if (!block || !zid || !fn) return;
+  fillSlotsContext = { block, zid, fn, tests: [], selectedIdx: -1 };
+
+  const dialog = document.getElementById("fill-slots-modal");
+  const heading = document.getElementById("fill-slots-heading");
+  const hint = document.getElementById("fill-slots-hint");
+  const selectEl = document.getElementById("fill-slots-select");
+  const previewEl = document.getElementById("fill-slots-preview");
+  const errEl = document.getElementById("fill-slots-error");
+  const applyBtn = document.getElementById("fill-slots-apply");
+
+  heading.textContent = `Fill slots from test — ${fn.label}`;
+  hint.innerHTML = `Tests attached to <code>${escapeHtml(zid)}</code> carry known-good inputs. Pick one to populate the block's empty (or shadow-default) slots.`;
+  selectEl.innerHTML = '<option value="">loading\u2026</option>';
+  selectEl.disabled = true;
+  previewEl.innerHTML = "";
+  errEl.textContent = "";
+  applyBtn.disabled = true;
+  dialog.showModal();
+
+  try {
+    const tests = await fetchFunctionTests(zid);
+    fillSlotsContext.tests = tests;
+    if (tests.length === 0) {
+      selectEl.innerHTML = '<option value="">(no tests on this function)</option>';
+      return;
+    }
+    selectEl.innerHTML = '<option value="">choose a test\u2026</option>' +
+      tests.map((t, i) => `<option value="${i}">${escapeHtml(t.label)} \u2014 ${escapeHtml(t.testZid)}</option>`).join("");
+    selectEl.disabled = false;
+  } catch (err) {
+    errEl.textContent = `Couldn't load tests: ${err.message || err}`;
+  }
+});
+
+document.getElementById("fill-slots-select").addEventListener("change", (e) => {
+  const idx = Number(e.target.value);
+  if (!Number.isInteger(idx) || !fillSlotsContext?.tests[idx]) {
+    document.getElementById("fill-slots-preview").innerHTML = "";
+    document.getElementById("fill-slots-apply").disabled = true;
+    return;
+  }
+  fillSlotsContext.selectedIdx = idx;
+  renderFillSlotsPreview();
+});
+
+function renderFillSlotsPreview() {
+  const previewEl = document.getElementById("fill-slots-preview");
+  const { block, fn, tests, selectedIdx } = fillSlotsContext;
+  const test = tests[selectedIdx];
+  if (!test) { previewEl.innerHTML = ""; return; }
+
+  const rows = fn.args.map(arg => {
+    const input = block.inputList.find(i => i.name === arg.key);
+    const current = input?.connection?.targetBlock();
+    const isOverridable = !current || current.isShadow();
+    const testValue = test.argValues[arg.key];
+    const valStr = testValue !== undefined ? argValueToString(testValue) : "(not in test)";
+    const fate = !testValue
+      ? `<span class="fill-fate skip">skip (no test value)</span>`
+      : !isOverridable
+        ? `<span class="fill-fate skip">keep current (non-shadow)</span>`
+        : `<span class="fill-fate will">will set</span>`;
+    return `
+      <div class="fill-slots-row">
+        <span class="fill-arg-label">${escapeHtml(arg.label)}</span>
+        <span class="fill-arg-type"><code>${escapeHtml(arg.type)}</code></span>
+        <span class="fill-arg-value">${escapeHtml(valStr)}</span>
+        ${fate}
+      </div>
+    `;
+  }).join("");
+  previewEl.innerHTML = rows;
+  document.getElementById("fill-slots-apply").disabled = false;
+}
+
+document.getElementById("fill-slots-cancel").addEventListener("click", () => {
+  document.getElementById("fill-slots-modal").close();
+});
+
+document.getElementById("fill-slots-apply").addEventListener("click", () => {
+  const { block, fn, tests, selectedIdx } = fillSlotsContext || {};
+  const test = tests?.[selectedIdx];
+  if (!block || !test) return;
+
+  // Save the current block state, splice in test-derived children at
+  // empty/shadow slots, dispose the old block, and rebuild from state.
+  // This keeps position and preserves real non-shadow children.
+  const state = Blockly.serialization.blocks.save(block);
+  state.inputs = state.inputs || {};
+
+  const errors = [];
+  for (const arg of fn.args) {
+    const input = block.inputList.find(i => i.name === arg.key);
+    const current = input?.connection?.targetBlock();
+    if (current && !current.isShadow()) continue;  // keep real children
+    const value = test.argValues[arg.key];
+    if (value === undefined) continue;
+    const spec = exprToBlockSpec(value);
+    if (typeof spec === "string") {
+      errors.push(`${arg.label}: ${spec}`);
+      continue;
+    }
+    state.inputs[arg.key] = { block: spec };
+  }
+
+  if (errors.length) {
+    document.getElementById("fill-slots-error").innerHTML =
+      "Some slots couldn't be filled:<br>" + errors.map(escapeHtml).join("<br>");
+    return;
+  }
+
+  // Replace the block in place.
+  const xy = block.getRelativeToSurfaceXY();
+  state.x = xy.x;
+  state.y = xy.y;
+  block.dispose(false);
+  Blockly.serialization.blocks.append(state, workspace);
+  document.getElementById("fill-slots-modal").close();
 });
 document.getElementById("run-cancel").addEventListener("click", () => {
   document.getElementById("run-modal").close();
