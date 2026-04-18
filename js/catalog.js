@@ -44,7 +44,22 @@ export async function searchFunctions(query, { limit = 15, outputType, inputType
 }
 
 // ─── Fetch ──────────────────────────────────────────────────────────
-export async function fetchFunctionSignature(zid) {
+// Module-level signature cache. Populated by fetchFunctionSignature
+// and fetchSignatureCached; consumed by the search UI's signature
+// decoration and by pinFunction (avoids a duplicate fetch on pin).
+const SIGNATURE_CACHE = new Map();
+
+export function cachedSignature(zid) {
+  return SIGNATURE_CACHE.get(zid);
+}
+
+export async function fetchSignatureCached(zid, opts = {}) {
+  if (SIGNATURE_CACHE.has(zid)) return SIGNATURE_CACHE.get(zid);
+  const sig = await fetchFunctionSignature(zid, opts);
+  return sig;  // fetchFunctionSignature populates the cache.
+}
+
+export async function fetchFunctionSignature(zid, { signal } = {}) {
   if (!/^Z\d+$/.test(zid)) throw new CatalogError(`Invalid ZID: ${zid}`);
   const params = new URLSearchParams({
     action: "wikilambda_fetch",
@@ -52,7 +67,7 @@ export async function fetchFunctionSignature(zid) {
     format: "json",
     origin: "*",
   });
-  const resp = await fetch(`${WF_API}?${params.toString()}`);
+  const resp = await fetch(`${WF_API}?${params.toString()}`, { signal });
   if (!resp.ok) throw new CatalogError(`Fetch ${zid} failed: HTTP ${resp.status}`);
   const data = await resp.json();
   if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
@@ -61,7 +76,22 @@ export async function fetchFunctionSignature(zid) {
   let z2;
   try { z2 = JSON.parse(rawStr); }
   catch (e) { throw new CatalogError(`${zid}: invalid JSON from wikilambda_fetch: ${e.message}`); }
-  return parseZ8ToSignature(z2);
+  const sig = parseZ8ToSignature(z2);
+  SIGNATURE_CACHE.set(zid, sig);
+  return sig;
+}
+
+// ─── Signature formatting helpers ───────────────────────────────────
+export function signatureText(sig) {
+  if (!sig) return "";
+  const inputs = sig.args.map(a => a.type).join(", ");
+  return `(${inputs}) → ${sig.output}`;
+}
+
+export function signatureTooltip(sig) {
+  if (!sig) return "";
+  const inputs = sig.args.map(a => `${a.label}: ${a.type}`).join(", ");
+  return `(${inputs}) → ${sig.output}`;
 }
 
 // ─── Parse ──────────────────────────────────────────────────────────

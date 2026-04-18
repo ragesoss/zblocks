@@ -272,14 +272,34 @@ dialog menu button:hover { background: #f7fafc; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.search-result-sub {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  min-width: 0;
+}
 .search-result-zid {
   font-family: ui-monospace, monospace;
-  font-size: 0.8rem;
   color: #718096;
   text-decoration: none;
-  width: fit-content;
+  flex-shrink: 0;
 }
 .search-result-zid:hover { color: #2a4365; text-decoration: underline; }
+.search-result-signature {
+  font-family: ui-monospace, monospace;
+  color: #4a5568;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.search-result-signature::before {
+  content: "·";
+  margin-right: 0.35rem;
+  color: #cbd5e0;
+}
+.search-result-signature:empty::before { content: ""; }
 .search-result-pin {
   flex-shrink: 0;
   margin-left: 0.75rem;

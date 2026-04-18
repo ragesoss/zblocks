@@ -4,7 +4,7 @@
 // Each pinned ZID is re-fetched and re-registered on startup so the
 // blocks exist in Blockly before any workspace state tries to use them.
 
-import { fetchFunctionSignature, CatalogError } from "./catalog.js";
+import { fetchSignatureCached, CatalogError } from "./catalog.js";
 import { registerFunctionBlock } from "./blocks.js";
 import { rebuildToolbox } from "./shell.js";
 import { FUNCTIONS } from "./functions.js";
@@ -24,7 +24,7 @@ export async function pinFunction(zid) {
   const existing = FUNCTIONS.find(f => f.zid === zid);
   let fn = existing;
   if (!existing) {
-    fn = await fetchFunctionSignature(zid);
+    fn = await fetchSignatureCached(zid);
     registerFunctionBlock(fn);
   }
   const zids = loadPinnedZids();
@@ -58,7 +58,7 @@ export async function rehydratePinnedFunctions() {
   const failed = [];
   for (const zid of zids) {
     try {
-      const fn = await fetchFunctionSignature(zid);
+      const fn = await fetchSignatureCached(zid);
       registerFunctionBlock(fn);
     } catch (e) {
       const reason = e instanceof CatalogError ? e.message : String(e);

@@ -10,7 +10,10 @@ import { EXAMPLES } from "./examples.js";
 import {
   runComposition, usedArgs, placeholderForType, RunError,
 } from "./runner.js";
-import { searchFunctions, CatalogError } from "./catalog.js";
+import {
+  searchFunctions, fetchSignatureCached, cachedSignature,
+  signatureText, signatureTooltip, CatalogError,
+} from "./catalog.js";
 import {
   pinFunction, unpinFunction, isPinned, rehydratePinnedFunctions,
 } from "./pins.js";
@@ -330,19 +333,44 @@ function triggerSearch() {
 async function performSearch({ query, outputType, inputTypes }) {
   if (searchAbort) searchAbort.abort();
   searchAbort = new AbortController();
+  const { signal } = searchAbort;
   try {
     const results = await searchFunctions(query, {
-      signal: searchAbort.signal,
-      limit: 20,
-      outputType, inputTypes,
+      signal, limit: 20, outputType, inputTypes,
     });
     renderSearchResults(results);
     searchStatusEl.textContent = results.length ? `${results.length} result${results.length === 1 ? "" : "s"}` : "no matches";
+    decorateResultsWithSignatures(results, signal);
   } catch (e) {
     if (e.name === "AbortError") return;
     searchStatusEl.textContent = "";
     searchResultsEl.innerHTML = `<div class="search-error">${escapeHtml(e.message || String(e))}</div>`;
   }
+}
+
+// Parallel-fetch Z8 signatures for each result row and decorate the
+// DOM as they arrive. Cached in-memory so repeat searches don't
+// re-fetch. Aborts in flight when a new search supersedes this one.
+function decorateResultsWithSignatures(results, signal) {
+  for (const r of results) {
+    const cached = cachedSignature(r.zid);
+    if (cached) {
+      paintSignature(r.zid, cached);
+      continue;
+    }
+    fetchSignatureCached(r.zid, { signal })
+      .then(sig => { if (!signal.aborted) paintSignature(r.zid, sig); })
+      .catch(() => { /* ignore: deleted, network, aborted */ });
+  }
+}
+
+function paintSignature(zid, sig) {
+  const row = searchResultsEl.querySelector(`.search-result[data-zid="${CSS.escape(zid)}"]`);
+  if (!row) return;
+  const slot = row.querySelector(".search-result-signature");
+  if (!slot) return;
+  slot.textContent = signatureText(sig);
+  slot.title = signatureTooltip(sig);
 }
 
 function renderSearchResults(results) {
@@ -352,11 +380,17 @@ function renderSearchResults(results) {
   }
   searchResultsEl.innerHTML = results.map(r => {
     const pinned = isPinned(r.zid);
+    const cached = cachedSignature(r.zid);
+    const sigText = cached ? escapeHtml(signatureText(cached)) : "";
+    const sigTitle = cached ? ` title="${escapeHtml(signatureTooltip(cached))}"` : "";
     return `
       <div class="search-result" data-zid="${escapeHtml(r.zid)}">
         <div class="search-result-main">
           <span class="search-result-label">${escapeHtml(r.label)}</span>
-          <a class="search-result-zid" href="https://www.wikifunctions.org/wiki/${escapeHtml(r.zid)}" target="_blank" rel="noopener">${escapeHtml(r.zid)}</a>
+          <div class="search-result-sub">
+            <a class="search-result-zid" href="https://www.wikifunctions.org/wiki/${escapeHtml(r.zid)}" target="_blank" rel="noopener">${escapeHtml(r.zid)}</a>
+            <span class="search-result-signature"${sigTitle}>${sigText}</span>
+          </div>
         </div>
         <button class="search-result-pin ${pinned ? "pinned" : ""}" data-zid="${escapeHtml(r.zid)}" data-pinned="${pinned}">
           ${pinned ? "Unpin" : "Pin"}
