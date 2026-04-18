@@ -8,7 +8,8 @@ import { initShell } from "./shell.js";
 import { emitWorkspace, EmitError } from "./emitter.js";
 import { EXAMPLES } from "./examples.js";
 import {
-  runComposition, usedArgs, placeholderForType, RunError,
+  runComposition, runBlock, usedArgs, usedArgsInBlock,
+  placeholderForType, RunError,
 } from "./runner.js";
 import { typeLabel } from "./type_labels.js";
 import {
@@ -106,16 +107,30 @@ document.getElementById("export-close").addEventListener("click", () => {
 // ── Run flow ──────────────────────────────────────────────────────
 let lastInputs = {};  // remember per-arg values between runs
 let currentTests = [];  // tests loaded for the current shell function
+let runTargetBlock = null;  // set to a block when scope is subtree; null = full workspace
 
-function openRunModal() {
-  const args = usedArgs(workspace);
+function openRunModal(targetBlock = null) {
+  runTargetBlock = targetBlock;
+  const args = targetBlock ? usedArgsInBlock(targetBlock) : usedArgs(workspace);
   const inputsDiv = document.getElementById("run-inputs");
   const errEl = document.getElementById("run-error");
   errEl.textContent = "";
   inputsDiv.innerHTML = "";
   maybeLoadTestsForShell(args);
+  // Add a scope banner when running a specific block.
+  if (targetBlock) {
+    const scopeDiv = document.createElement("div");
+    scopeDiv.className = "run-scope-banner";
+    scopeDiv.innerHTML = `<strong>Running subtree:</strong> ${escapeHtml(targetBlock.toString().slice(0, 80))}`;
+    inputsDiv.appendChild(scopeDiv);
+  }
   if (args.length === 0) {
-    inputsDiv.innerHTML = "<p class=\"hint\">No arg references in the workspace — running with no inputs.</p>";
+    const p = document.createElement("p");
+    p.className = "hint";
+    p.textContent = targetBlock
+      ? "This subtree doesn't reference any shell arguments — running as-is."
+      : "No arg references in the workspace — running with no inputs.";
+    inputsDiv.appendChild(p);
   } else {
     args.forEach(arg => {
       const row = document.createElement("div");
@@ -157,7 +172,9 @@ async function submitRun() {
   submit.disabled = true;
   submit.textContent = "Running\u2026";
   try {
-    const result = await runComposition(workspace, inputs);
+    const result = runTargetBlock
+      ? await runBlock(runTargetBlock, inputs)
+      : await runComposition(workspace, inputs);
     document.getElementById("run-modal").close();
     showResult(result);
   } catch (e) {
@@ -277,7 +294,11 @@ document.getElementById("run-test-select").addEventListener("change", (e) => {
   });
 });
 
-document.getElementById("run-btn").addEventListener("click", openRunModal);
+document.getElementById("run-btn").addEventListener("click", () => openRunModal(null));
+document.addEventListener("zblocks-run-block", (e) => {
+  const block = e.detail?.block;
+  if (block) openRunModal(block);
+});
 document.getElementById("run-cancel").addEventListener("click", () => {
   document.getElementById("run-modal").close();
 });
@@ -287,7 +308,8 @@ document.getElementById("result-close").addEventListener("click", () => {
 });
 document.getElementById("result-rerun").addEventListener("click", () => {
   document.getElementById("result-modal").close();
-  openRunModal();
+  // Preserve the previous scope (block subtree or full workspace).
+  openRunModal(runTargetBlock);
 });
 
 // ── Import (round-trip existing Z14) ──────────────────────────────

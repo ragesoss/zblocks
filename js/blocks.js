@@ -134,9 +134,12 @@ export function registerFunctionBlock(fn) {
 }
 
 // Attach a right-click context-menu contribution to a block type.
-// When the user right-clicks an instance, one "Fill '<arg>'…" item is
-// added per empty value input, each opening the slot picker for that
-// connection. Safe to re-run for the same type (overwrites).
+// Contributes two kinds of items:
+//   - "Fill '<arg>'…" once per empty value input, opens the slot
+//     picker for that connection.
+//   - "Run this block" at the bottom, dispatches a DOM event that
+//     app.js picks up to open the Run modal scoped to this subtree.
+// Safe to re-run for the same type (overwrites).
 function attachSlotPickerMenu(blockType) {
   const blockDef = Blockly.Blocks[blockType];
   if (!blockDef) return;
@@ -157,6 +160,19 @@ function attachSlotPickerMenu(blockType) {
           slotLabel,
           slotType,
         }),
+      });
+    }
+    // Only offer Run for value blocks (which all wf_* blocks are).
+    if (this.outputConnection) {
+      const block = this;
+      options.push({
+        text: "Run this block",
+        enabled: true,
+        callback: () => {
+          document.dispatchEvent(new CustomEvent("zblocks-run-block", {
+            detail: { block },
+          }));
+        },
       });
     }
   };

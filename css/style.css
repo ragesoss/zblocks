@@ -425,6 +425,19 @@ header #add-function-btn {
 header #add-function-btn:hover { background: #fbd38d; }
 
 /* ── run modal ─────────────────────────────────────────────────── */
+.run-scope-banner {
+  padding: 0.5rem 0.75rem;
+  background: #fffaf0;
+  border: 1px solid #feebc8;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #744210;
+  margin-bottom: 0.75rem;
+  font-family: ui-monospace, monospace;
+  word-break: break-word;
+}
+.run-scope-banner strong { color: #975a16; font-family: system-ui, sans-serif; margin-right: 0.4rem; }
+
 .run-test-loader {
   margin-bottom: 0.75rem;
   padding: 0.5rem 0.75rem;

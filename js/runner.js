@@ -14,7 +14,7 @@
 //
 // Mirrors ../scripts/composition_run.py behaviour.
 
-import { emitWorkspace } from "./emitter.js";
+import { emitWorkspace, emitBlock } from "./emitter.js";
 import { SHELL, ARG_REF_META } from "./shell.js";
 import { encodeInteger, encodeNatural, encodeFloat64 } from "./numeric.js";
 
@@ -75,6 +75,28 @@ export function usedArgs(workspace) {
   return SHELL.args.filter(a => used.has(a.label));
 }
 
+// Arg-refs actually referenced inside a specific block's subtree.
+// Used for scoping the Run modal when the user triggers "Run this
+// block" from the context menu.
+export function usedArgsInBlock(block) {
+  const labels = new Set();
+  walkBlockTree(block, b => {
+    if (b.type.startsWith("wf_arg_")) {
+      const meta = ARG_REF_META[b.type];
+      if (meta) labels.add(meta.label);
+    }
+  });
+  return SHELL.args.filter(a => labels.has(a.label));
+}
+
+function walkBlockTree(block, fn) {
+  fn(block);
+  for (const input of block.inputList) {
+    const child = input.connection?.targetBlock();
+    if (child) walkBlockTree(child, fn);
+  }
+}
+
 // Placeholder hint for the input field, based on declared arg type.
 export function placeholderForType(type) {
   switch (type) {
@@ -100,8 +122,20 @@ export async function runComposition(workspace, inputs) {
   return await interpretResult(z22);
 }
 
+// Run a specific block's subtree. Same argRefResolver + API call
+// machinery as runComposition, just scoped to a single block.
+export async function runBlock(block, inputs) {
+  const call = emitBlock(block, argRefOpts(inputs));
+  const z22 = await callApi(call);
+  return await interpretResult(z22);
+}
+
 export function buildRunnableCall(workspace, inputs) {
-  return emitWorkspace(workspace, {
+  return emitWorkspace(workspace, argRefOpts(inputs));
+}
+
+function argRefOpts(inputs) {
+  return {
     argRefResolver: (block) => {
       const meta = ARG_REF_META[block.type];
       if (!meta) {
@@ -112,7 +146,7 @@ export function buildRunnableCall(workspace, inputs) {
       }
       return encodeInput(inputs[meta.label], meta.type, meta.label);
     },
-  });
+  };
 }
 
 // ─── Input encoding (user text → ZObject) ──────────────────────────
