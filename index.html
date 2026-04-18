@@ -13,6 +13,7 @@
     <select id="load-example-select" title="Load a worked example">
       <option value="">Load example\u2026</option>
     </select>
+    <button id="add-function-btn" title="Search Wikifunctions and pin a function to the sidebar">+ Add function</button>
     <button id="open-shell-btn">Declare function shell</button>
     <button id="run-btn" title="Execute the composition via the Wikifunctions API">Run</button>
     <button id="export-btn">Export ZObject</button>
@@ -46,6 +47,23 @@
     <menu>
       <button type="button" id="shell-cancel">Cancel</button>
       <button type="button" id="shell-save">Save shell</button>
+    </menu>
+  </dialog>
+
+  <!-- ── Add function: search Wikifunctions ──────────────────────── -->
+  <dialog id="add-function-modal">
+    <h2>Add function from Wikifunctions</h2>
+    <p class="hint">
+      Search the live catalog. Pin any function to the
+      <strong>Pinned</strong> category in your sidebar.
+    </p>
+    <div class="search-row">
+      <input id="search-input" type="text" placeholder="Search by label, e.g. \u201Cfilter claims\u201D" autocomplete="off">
+      <span id="search-status" class="hint"></span>
+    </div>
+    <div id="search-results"></div>
+    <menu>
+      <button type="button" id="search-close">Close</button>
     </menu>
   </dialog>
 

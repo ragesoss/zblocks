@@ -12,6 +12,8 @@
 // for a prototype.
 
 import { buildToolbox } from "./blocks.js";
+import { FUNCTIONS } from "./functions.js";
+import { loadPinnedZids } from "./storage.js";
 
 export const SHELL = {
   zid: "",           // empty until declared
@@ -27,6 +29,9 @@ let workspace = null;
 export function initShell(ws) {
   workspace = ws;
   wireModal();
+  // Populate Pinned tab from the rehydrated pin list now that the
+  // workspace is available.
+  rebuildToolbox();
 }
 
 function wireModal() {
@@ -132,14 +137,34 @@ function registerArgRefBlocks() {
   });
 }
 
-function rebuildToolbox() {
+// Exported so other modules (e.g. catalog pin/unpin flow) can trigger
+// a full toolbox refresh that preserves both arg-ref and FUNCTIONS state.
+// No-op if called before initShell() — buildToolbox() reads the live
+// FUNCTIONS registry so any pre-injection mutations are picked up
+// automatically by the initial Blockly.inject toolbox build.
+export function rebuildToolbox() {
+  if (!workspace) return;
   const toolbox = buildToolbox();
+
+  // Patch "Function arguments" from SHELL.args.
   const argCat = toolbox.contents.find(c => c.name === "Function arguments");
   if (argCat) {
     argCat.contents = SHELL.args.map((_, i) => ({
       kind: "block", type: `wf_arg_${i}`,
     }));
   }
+
+  // Patch "Pinned" from the persisted pin list. Hardcoded functions
+  // that the user has pinned (e.g. Z21032) appear here in addition to
+  // their native category.
+  const pinnedCat = toolbox.contents.find(c => c.name === "Pinned");
+  if (pinnedCat) {
+    const pinnedZids = loadPinnedZids();
+    pinnedCat.contents = pinnedZids
+      .filter(zid => FUNCTIONS.some(f => f.zid === zid))
+      .map(zid => ({ kind: "block", type: `wf_${zid}` }));
+  }
+
   workspace.updateToolbox(toolbox);
 }
 

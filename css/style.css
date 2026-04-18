@@ -172,6 +172,101 @@ dialog menu button:hover { background: #f7fafc; }
   white-space: pre-wrap;
 }
 
+/* ── add-function / search modal ───────────────────────────────── */
+#add-function-modal { max-width: 720px; }
+.search-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+#search-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+#search-input:focus {
+  outline: 2px solid #2a4365;
+  outline-offset: -1px;
+}
+#search-status {
+  font-size: 0.8rem;
+  color: #718096;
+  min-width: 6rem;
+  text-align: right;
+}
+#search-results {
+  max-height: 380px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #f7fafc;
+}
+#search-results:empty { display: none; }
+.search-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #edf2f7;
+  background: #fff;
+}
+.search-result:last-child { border-bottom: 0; }
+.search-result-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.search-result-label {
+  font-weight: 500;
+  color: #1a202c;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.search-result-zid {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: #718096;
+  text-decoration: none;
+  width: fit-content;
+}
+.search-result-zid:hover { color: #2a4365; text-decoration: underline; }
+.search-result-pin {
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid #2a4365;
+  background: #2a4365;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  min-width: 5rem;
+}
+.search-result-pin:hover:not(:disabled) { background: #1a365d; }
+.search-result-pin:disabled { opacity: 0.6; cursor: wait; }
+.search-result-pin.pinned {
+  background: #fff;
+  color: #2a4365;
+}
+.search-result-pin.pinned:hover:not(:disabled) { background: #fed7d7; color: #c53030; border-color: #c53030; }
+.search-error {
+  padding: 0.75rem;
+  color: #c53030;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+}
+header #add-function-btn {
+  background: #fef5e7;
+  color: #744210;
+}
+header #add-function-btn:hover { background: #fbd38d; }
+
 /* ── run modal ─────────────────────────────────────────────────── */
 .run-input-row { margin-bottom: 0.75rem; }
 .run-input-row label { display: flex; flex-direction: column; gap: 0.25rem; }

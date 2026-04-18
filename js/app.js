@@ -10,8 +10,17 @@ import { EXAMPLES } from "./examples.js";
 import {
   runComposition, usedArgs, placeholderForType, RunError,
 } from "./runner.js";
+import { searchFunctions, CatalogError } from "./catalog.js";
+import {
+  pinFunction, unpinFunction, isPinned, rehydratePinnedFunctions,
+} from "./pins.js";
 
 registerAllBlocks();
+
+// Rehydrate pinned functions from localStorage before injecting Blockly,
+// so the Pinned category is populated on first render. Failures (404s
+// from deleted functions, network) are dropped from the stored list.
+await rehydratePinnedFunctions();
 
 const workspace = Blockly.inject("blocklyDiv", {
   toolbox: buildToolbox(),
@@ -206,6 +215,100 @@ document.getElementById("result-close").addEventListener("click", () => {
 document.getElementById("result-rerun").addEventListener("click", () => {
   document.getElementById("result-modal").close();
   openRunModal();
+});
+
+// ── Add function (search + pin) ───────────────────────────────────
+const searchInputEl = document.getElementById("search-input");
+const searchStatusEl = document.getElementById("search-status");
+const searchResultsEl = document.getElementById("search-results");
+let searchAbort = null;
+let searchDebounce = null;
+
+document.getElementById("add-function-btn").addEventListener("click", () => {
+  searchInputEl.value = "";
+  searchResultsEl.innerHTML = "";
+  searchStatusEl.textContent = "";
+  document.getElementById("add-function-modal").showModal();
+  searchInputEl.focus();
+});
+
+document.getElementById("search-close").addEventListener("click", () => {
+  document.getElementById("add-function-modal").close();
+});
+
+searchInputEl.addEventListener("input", () => {
+  clearTimeout(searchDebounce);
+  const q = searchInputEl.value.trim();
+  if (!q) {
+    searchResultsEl.innerHTML = "";
+    searchStatusEl.textContent = "";
+    return;
+  }
+  searchStatusEl.textContent = "searching\u2026";
+  searchDebounce = setTimeout(() => performSearch(q), 200);
+});
+
+async function performSearch(query) {
+  if (searchAbort) searchAbort.abort();
+  searchAbort = new AbortController();
+  try {
+    const results = await searchFunctions(query, { signal: searchAbort.signal, limit: 20 });
+    renderSearchResults(results);
+    searchStatusEl.textContent = results.length ? `${results.length} result${results.length === 1 ? "" : "s"}` : "no matches";
+  } catch (e) {
+    if (e.name === "AbortError") return;
+    searchStatusEl.textContent = "";
+    searchResultsEl.innerHTML = `<div class="search-error">${escapeHtml(e.message || String(e))}</div>`;
+  }
+}
+
+function renderSearchResults(results) {
+  if (results.length === 0) {
+    searchResultsEl.innerHTML = "";
+    return;
+  }
+  searchResultsEl.innerHTML = results.map(r => {
+    const pinned = isPinned(r.zid);
+    return `
+      <div class="search-result" data-zid="${escapeHtml(r.zid)}">
+        <div class="search-result-main">
+          <span class="search-result-label">${escapeHtml(r.label)}</span>
+          <a class="search-result-zid" href="https://www.wikifunctions.org/wiki/${escapeHtml(r.zid)}" target="_blank" rel="noopener">${escapeHtml(r.zid)}</a>
+        </div>
+        <button class="search-result-pin ${pinned ? "pinned" : ""}" data-zid="${escapeHtml(r.zid)}" data-pinned="${pinned}">
+          ${pinned ? "Unpin" : "Pin"}
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+searchResultsEl.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".search-result-pin");
+  if (!btn) return;
+  const zid = btn.dataset.zid;
+  const wasPinned = btn.dataset.pinned === "true";
+  btn.disabled = true;
+  const origText = btn.textContent;
+  btn.textContent = wasPinned ? "Unpinning\u2026" : "Pinning\u2026";
+  try {
+    if (wasPinned) {
+      unpinFunction(zid);
+      btn.dataset.pinned = "false";
+      btn.classList.remove("pinned");
+      btn.textContent = "Pin";
+    } else {
+      await pinFunction(zid);
+      btn.dataset.pinned = "true";
+      btn.classList.add("pinned");
+      btn.textContent = "Unpin";
+    }
+  } catch (err) {
+    btn.textContent = origText;
+    alert(`${wasPinned ? "Unpin" : "Pin"} ${zid} failed: ${err.message || err}`);
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 document.getElementById("export-copy").addEventListener("click", async () => {

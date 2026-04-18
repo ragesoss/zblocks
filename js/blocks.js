@@ -103,12 +103,35 @@ export function registerAllBlocks() {
   define(defs);
 }
 
+// Register a single function block at runtime. Used by the catalog
+// search flow when a user pins a new function from Wikifunctions.
+// Safe to call multiple times for the same ZID — the second registration
+// just overwrites the first block definition.
+export function registerFunctionBlock(fn) {
+  if (!FUNCTIONS.some(f => f.zid === fn.zid)) {
+    FUNCTIONS.push(fn);
+  } else {
+    // Update the existing registry entry (e.g. after a signature change).
+    const idx = FUNCTIONS.findIndex(f => f.zid === fn.zid);
+    FUNCTIONS[idx] = fn;
+  }
+  const cat = CATEGORIES.find(c => c.name === fn.category);
+  const colour = cat ? cat.colour : 180;
+  const def = functionBlockDef(fn, colour);
+  const define = (Blockly.common && Blockly.common.defineBlocksWithJsonArray)
+    || Blockly.defineBlocksWithJsonArray;
+  define([def]);
+}
+
 export function buildToolbox() {
   const categories = CATEGORIES.map(cat => ({
     kind: "category",
     name: cat.name,
     colour: cat.colour,
-    contents: FUNCTIONS
+    // Pinned is driven by the pin list (localStorage), patched in by
+    // rebuildToolbox. Leave it empty here to avoid double-entry for
+    // catalog-fetched functions (which carry category === "Pinned").
+    contents: cat.name === "Pinned" ? [] : FUNCTIONS
       .filter(fn => fn.category === cat.name)
       .map(fn => ({ kind: "block", type: `wf_${fn.zid}` })),
   }));

@@ -9,6 +9,7 @@
 // have to match Wikifunctions' labels exactly, but closer is friendlier.
 
 export const CATEGORIES = [
+  { name: "Pinned",           colour: 15  },  // user-added via search
   { name: "Music theory",     colour: 290 },
   { name: "Math (float64)",   colour: 210 },
   { name: "Math (integer)",   colour: 230 },
