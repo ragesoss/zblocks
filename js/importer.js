@@ -12,7 +12,7 @@
 //   importFromJson(string)  — same, but start from pasted JSON
 //   exprToBlockSpec(expr)   — the core recursive walker
 
-import { fetchFunctionSignature } from "./catalog.js";
+import { fetchFunctionSignature, extractLabel } from "./catalog.js";
 import { registerFunctionBlock } from "./blocks.js";
 import { FUNCTIONS } from "./functions.js";
 import { setShell, ARG_REF_META, SHELL } from "./shell.js";
@@ -60,7 +60,7 @@ async function interpretTopLevel(obj, { sourceZid = null, rootZ2 = null } = {}) 
     const shell = targetZid ? await fetchShellFromZ8(targetZid) : null;
     if (shell) {
       shell.sourceZid = sourceZid;
-      shell.sourceLabel = rootZ2 ? (extractEnLabel(rootZ2.Z2K3) || null) : null;
+      shell.sourceLabel = rootZ2 ? (extractLabel(rootZ2.Z2K3) || null) : null;
     }
     const state = await compositionToState(composition, shell);
     return { shell, state };
@@ -97,7 +97,7 @@ async function fetchShellFromZ8(targetZid) {
     const a = argList[i];
     if (!a) continue;
     args.push({
-      label: extractEnLabel(a.Z17K3) || a.Z17K2 || `arg${i}`,
+      label: extractLabel(a.Z17K3) || a.Z17K2 || `arg${i}`,
       type: zidOfType(a.Z17K1),
     });
   }
@@ -105,7 +105,7 @@ async function fetchShellFromZ8(targetZid) {
     zid: targetZid,
     outputType: zidOfType(z8.Z8K2),
     args,
-    label: extractEnLabel(z2?.Z2K3) || null,
+    label: extractLabel(z2?.Z2K3) || null,
   };
 }
 
@@ -114,16 +114,6 @@ function zidOfType(t) {
   if (t?.Z1K1 === "Z7" && t.Z7K1) return t.Z7K1;
   if (t?.Z1K1?.Z7K1) return t.Z1K1.Z7K1;
   return t?.Z1K1 || "Z1";
-}
-
-function extractEnLabel(z12) {
-  const entries = z12?.Z12K1;
-  if (!Array.isArray(entries)) return null;
-  for (let i = 1; i < entries.length; i++) {
-    const e = entries[i];
-    if (e?.Z11K1 === "Z1002" && typeof e.Z11K2 === "string") return e.Z11K2;
-  }
-  return null;
 }
 
 // ─── Composition → workspace state ─────────────────────────────────

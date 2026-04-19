@@ -19,27 +19,43 @@
 //   <input data-i18n-placeholder="search.placeholder">
 //   <span data-i18n-title="header.buttons.run_title">Run</span>
 
+import { languageInfo } from "./languages.js";
+
 let messages = {};
+let fallbackMessages = {};   // always en, used when a key is missing from `messages`
 let language = "en";
 
 export async function initI18n(lang) {
   language = lang || "en";
-  const resp = await fetch(`./i18n/${language}.json`);
-  if (!resp.ok) {
-    console.warn(`i18n: can't load ${language}.json (HTTP ${resp.status}); falling back to keys.`);
-    return;
+  // Always load English as the fallback pool so partial translations
+  // (common during language ramp-up) don't show raw keys in the UI.
+  if (language !== "en") {
+    try { fallbackMessages = await loadCatalog("en"); }
+    catch (e) { console.warn("i18n: couldn't load en.json fallback:", e); }
   }
-  messages = await resp.json();
+  try {
+    messages = await loadCatalog(language);
+  } catch (e) {
+    console.warn(`i18n: couldn't load ${language}.json:`, e);
+    messages = {};   // user-selected lang is missing; fallbackMessages carries English through
+  }
   applyDomTranslations(document);
 }
 
-export function currentLanguage() { return language; }
+async function loadCatalog(iso) {
+  const resp = await fetch(`./i18n/${iso}.json`);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  return resp.json();
+}
 
-// Look up a key and substitute parameters. params is an object like
-// {1: "Z33605", 2: 3}. Missing key → returns the key itself so it's
-// visible in the UI that it's untranslated.
+export function currentLanguage() { return language; }
+export function currentLanguageZid() { return languageInfo(language).wfZid; }
+
+// Look up a key. Order: current language → English fallback → the key
+// itself (so the UI flags untranslated strings but never shows null).
+// params is an object like {1: "Z33605", 2: 3}.
 export function msg(key, params = {}) {
-  const template = messages[key];
+  const template = messages[key] ?? fallbackMessages[key];
   if (template === undefined) {
     console.warn(`i18n: missing key "${key}"`);
     return key;

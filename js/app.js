@@ -13,6 +13,7 @@ import {
 } from "./runner.js";
 import { typeLabel } from "./type_labels.js";
 import { initI18n, msg } from "./i18n.js";
+import { LANGUAGES, detectLanguage, saveLanguagePreference, languageInfo } from "./languages.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
   fetchFunctionTests, argValueToString, fetchErrorTypeInfo, normalizeZid,
@@ -27,10 +28,16 @@ import {
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
 } from "./pins.js";
 
-// Load the message catalog and fill every data-i18n attribute in
-// the static HTML before anything renders. English-only for now;
-// language negotiation is a Phase-2 concern (see docs/i18n-plan.md).
-await initI18n("en");
+// Detect + apply the user's language before anything renders.
+// Detection chain: ?lang=xx → localStorage → navigator.language → "en".
+// Wikifunctions content (type labels, function labels, error labels)
+// localises via the fetches parameterised on currentLanguageZid();
+// UI chrome falls back to English when a translation file is missing.
+const language = detectLanguage();
+const langInfo = languageInfo(language);
+document.documentElement.lang = language;
+document.documentElement.dir = langInfo.rtl ? "rtl" : "ltr";
+await initI18n(language);
 
 registerAllBlocks();
 
@@ -58,6 +65,23 @@ const workspace = Blockly.inject("blocklyDiv", {
 
 initShell(workspace);
 initSlotPicker();
+initLanguagePicker();
+
+function initLanguagePicker() {
+  const sel = document.getElementById("language-picker");
+  if (!sel) return;
+  sel.innerHTML = LANGUAGES.map(l =>
+    `<option value="${l.iso}"${l.iso === language ? " selected" : ""}>${l.native}</option>`
+  ).join("");
+  sel.addEventListener("change", (e) => {
+    const iso = e.target.value;
+    saveLanguagePreference(iso);
+    // Simplest way to switch: reload. Re-rendering the DOM walker, all
+    // block definitions (for message0 text), and Blockly state reactively
+    // is significantly more fragile than a full reload for a rare action.
+    location.reload();
+  });
+}
 initWikidataSearch();
 
 // ── Example loader ────────────────────────────────────────────────

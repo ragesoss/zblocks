@@ -28,6 +28,7 @@ export function normalizeZid(s) {
 }
 
 import { decodeInteger, decodeFloat64 } from "./numeric.js";
+import { currentLanguage, currentLanguageZid } from "./i18n.js";
 
 // ─── Search ─────────────────────────────────────────────────────────
 export async function searchFunctions(query, { limit = 15, outputType, inputTypes, signal } = {}) {
@@ -35,7 +36,7 @@ export async function searchFunctions(query, { limit = 15, outputType, inputType
     action: "query",
     list: "wikilambdasearch_functions",
     wikilambdasearch_functions_search: query,
-    wikilambdasearch_functions_language: "en",
+    wikilambdasearch_functions_language: currentLanguage(),
     wikilambdasearch_functions_limit: String(limit),
     format: "json",
     origin: "*",
@@ -127,7 +128,7 @@ export async function fetchFunctionTests(zid) {
     }
     tests.push({
       testZid: tzid,
-      label: extractEnLabel(z2?.Z2K3) || tzid,
+      label: extractLabel(z2?.Z2K3) || tzid,
       argValues,
     });
   }
@@ -188,8 +189,8 @@ export async function fetchErrorTypeInfo(zid) {
     const rawStr = data?.[zid]?.wikilambda_fetch;
     if (!rawStr) return null;
     const z2 = JSON.parse(rawStr);
-    const label = extractEnLabel(z2?.Z2K3) || null;
-    const description = extractEnLabel(z2?.Z2K5) || null;
+    const label = extractLabel(z2?.Z2K3) || null;
+    const description = extractLabel(z2?.Z2K5) || null;
     const keyLabels = {};
     const z2k2 = z2?.Z2K2;
     // Error types are Z50s whose Z50K1 is a typed list of Z3 key
@@ -197,7 +198,7 @@ export async function fetchErrorTypeInfo(zid) {
     if (z2k2?.Z1K1 === "Z50" && Array.isArray(z2k2.Z50K1)) {
       for (const k of z2k2.Z50K1.slice(1)) {
         if (k?.Z3K2 && k?.Z3K3) {
-          const kLabel = extractEnLabel(k.Z3K3);
+          const kLabel = extractLabel(k.Z3K3);
           if (kLabel) keyLabels[k.Z3K2] = kLabel;
         }
       }
@@ -280,7 +281,7 @@ export function parseZ8ToSignature(z2) {
   if (!z8 || z8.Z1K1 !== "Z8") {
     throw new CatalogError(`${zid || "(no zid)"} is not a function (Z1K1 = ${z8?.Z1K1 ?? "?"})`);
   }
-  const label = extractEnLabel(z2.Z2K3) || zid || "(unlabeled)";
+  const label = extractLabel(z2.Z2K3) || zid || "(unlabeled)";
   const args = parseArgs(z8.Z8K1 || []);
   const output = zidOfType(z8.Z8K2);
   return { zid, label, category: "Pinned", args, output };
@@ -296,7 +297,7 @@ function parseArgs(argList) {
     if (!key) continue;
     args.push({
       key,
-      label: extractEnLabel(arg.Z17K3) || key,
+      label: extractLabel(arg.Z17K3) || key,
       type:  zidOfType(arg.Z17K1),
     });
   }
@@ -325,14 +326,27 @@ function extractZid(z2k1) {
 
 // Z2K3 / Z17K3 are Z12 multilingual strings: {Z1K1:Z12, Z12K1:["Z11", entry, entry, ...]}
 // with entries of shape {Z11K1: langZid, Z11K2: "label string"}.
-function extractEnLabel(z12) {
+//
+// Lookup order: target language → English fallback → any available entry.
+// Exported so both catalog.js and importer.js share one implementation.
+export function extractLabel(z12, targetZid = null, fallbackZid = "Z1002") {
+  const target = targetZid || currentLanguageZid();
   const entries = z12?.Z12K1;
   if (!Array.isArray(entries)) return null;
+  // 1. Target language
   for (let i = 1; i < entries.length; i++) {
     const e = entries[i];
-    if (e?.Z11K1 === "Z1002" && typeof e.Z11K2 === "string") return e.Z11K2;
+    if (e?.Z11K1 === target && typeof e.Z11K2 === "string") return e.Z11K2;
   }
-  // Fall back to the first monolingual entry regardless of language.
+  // 2. Fallback (usually English)
+  if (fallbackZid && fallbackZid !== target) {
+    for (let i = 1; i < entries.length; i++) {
+      const e = entries[i];
+      if (e?.Z11K1 === fallbackZid && typeof e.Z11K2 === "string") return e.Z11K2;
+    }
+  }
+  // 3. Anything available — better than returning null when a Z-object
+  // has labels only in, say, Italian.
   for (let i = 1; i < entries.length; i++) {
     const e = entries[i];
     if (typeof e?.Z11K2 === "string") return e.Z11K2;

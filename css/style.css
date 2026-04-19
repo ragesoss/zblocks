@@ -37,6 +37,14 @@ header select {
 header button:hover,
 header select:hover { background: #ebf4ff; }
 header select { padding: 0.4rem 0.5rem; }
+header #language-picker {
+  margin-left: auto;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.85rem;
+}
+header #language-picker option { color: #1a202c; background: #fff; }
 #shell-status b { color: #fff; font-weight: 600; }
 #shell-status {
   flex: 1;
