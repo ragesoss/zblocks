@@ -97,21 +97,12 @@ export async function fetchFunctionTests(zid) {
     TEST_CACHE.set(zid, []);
     return [];
   }
-  // Batch fetch — wikilambda_fetch takes pipe-separated zids.
-  const params = new URLSearchParams({
-    action: "wikilambda_fetch",
-    zids: testZids.join("|"),
-    format: "json",
-    origin: "*",
-  });
-  const resp = await fetch(`${WF_API}?${params.toString()}`);
-  if (!resp.ok) throw new CatalogError(`Test batch fetch failed: HTTP ${resp.status}`);
-  const data = await resp.json();
-  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+  // Chunked batch fetch (wikilambda_fetch caps at 50 per request).
+  const raws = await wikilambdaFetchChunked(testZids);
 
   const tests = [];
   for (const tzid of testZids) {
-    const raw = data?.[tzid]?.wikilambda_fetch;
+    const raw = raws[tzid];
     if (!raw) continue;
     let z2;
     try { z2 = JSON.parse(raw); } catch { continue; }
@@ -235,33 +226,47 @@ export async function lookupByZid(zid) {
   return result;
 }
 
-// Batch version of fetchFunctionSignature. Uses wikilambda_fetch's
-// pipe-separated zids parameter to pull many Z8s in one HTTP round
-// trip. Cheaper than Promise.all(fetchFunctionSignature × N) when
+// Server-side cap: wikilambda_fetch rejects >50 ZIDs per request with
+// "toomanyvalues". Everything that batch-fetches needs to chunk.
+const WF_FETCH_BATCH_CAP = 50;
+
+async function wikilambdaFetchChunked(zids) {
+  const all = {};
+  for (let i = 0; i < zids.length; i += WF_FETCH_BATCH_CAP) {
+    const chunk = zids.slice(i, i + WF_FETCH_BATCH_CAP);
+    const params = new URLSearchParams({
+      action: "wikilambda_fetch",
+      zids: chunk.join("|"),
+      format: "json",
+      origin: "*",
+    });
+    const resp = await fetch(`${WF_API}?${params.toString()}`);
+    if (!resp.ok) throw new CatalogError(`Batch fetch failed: HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+    for (const zid of chunk) {
+      const raw = data?.[zid]?.wikilambda_fetch;
+      if (raw) all[zid] = raw;
+    }
+  }
+  return all;
+}
+
+// Batch version of fetchFunctionSignature. Chunked at the API's 50-ZID
+// ceiling; cheaper than Promise.all(fetchFunctionSignature × N) when
 // translating the entire built-in registry at page load.
 export async function fetchFunctionSignatures(zids) {
   if (zids.length === 0) return {};
-  const params = new URLSearchParams({
-    action: "wikilambda_fetch",
-    zids: zids.join("|"),
-    format: "json",
-    origin: "*",
-  });
-  const resp = await fetch(`${WF_API}?${params.toString()}`);
-  if (!resp.ok) throw new CatalogError(`Batch fetch failed: HTTP ${resp.status}`);
-  const data = await resp.json();
-  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+  const raws = await wikilambdaFetchChunked(zids);
   const out = {};
-  for (const zid of zids) {
-    const raw = data?.[zid]?.wikilambda_fetch;
-    if (!raw) continue;
+  for (const [zid, raw] of Object.entries(raws)) {
     try {
       const z2 = JSON.parse(raw);
       const sig = parseZ8ToSignature(z2);
       SIGNATURE_CACHE.set(zid, sig);
       out[zid] = sig;
     } catch (e) {
-      // Skip entries that don't parse as a Z8 (deleted, typed changes).
+      // Skip entries that don't parse as a Z8 (deleted, type changes).
       // The caller falls back to hardcoded data for unmatched ZIDs.
     }
   }
@@ -273,20 +278,9 @@ export async function fetchFunctionSignatures(zids) {
 // translate the type-name map without the overhead of Z8-parsing.
 export async function fetchLabels(zids) {
   if (zids.length === 0) return {};
-  const params = new URLSearchParams({
-    action: "wikilambda_fetch",
-    zids: zids.join("|"),
-    format: "json",
-    origin: "*",
-  });
-  const resp = await fetch(`${WF_API}?${params.toString()}`);
-  if (!resp.ok) throw new CatalogError(`Label batch failed: HTTP ${resp.status}`);
-  const data = await resp.json();
-  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+  const raws = await wikilambdaFetchChunked(zids);
   const out = {};
-  for (const zid of zids) {
-    const raw = data?.[zid]?.wikilambda_fetch;
-    if (!raw) continue;
+  for (const [zid, raw] of Object.entries(raws)) {
     try {
       const z2 = JSON.parse(raw);
       const label = extractLabel(z2?.Z2K3);
