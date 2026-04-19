@@ -12,6 +12,7 @@ import {
   placeholderForType, RunError,
 } from "./runner.js";
 import { typeLabel } from "./type_labels.js";
+import { initI18n, msg } from "./i18n.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
   fetchFunctionTests, argValueToString, fetchErrorTypeInfo, normalizeZid,
@@ -25,6 +26,11 @@ import {
   pinFunction, unpinFunction, isPinned,
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
 } from "./pins.js";
+
+// Load the message catalog and fill every data-i18n attribute in
+// the static HTML before anything renders. English-only for now;
+// language negotiation is a Phase-2 concern (see docs/i18n-plan.md).
+await initI18n("en");
 
 registerAllBlocks();
 
@@ -69,7 +75,7 @@ exampleSelect.addEventListener("change", () => {
   const ex = EXAMPLES.find(e => e.id === id);
   if (!ex) return;
   const isDirty = workspace.getAllBlocks(false).length > 0;
-  if (isDirty && !confirm("Load example will replace the current workspace. Continue?")) {
+  if (isDirty && !confirm(msg("import_modal.confirm_replace"))) {
     exampleSelect.value = "";
     return;
   }
@@ -123,15 +129,13 @@ function openRunModal(targetBlock = null) {
   if (targetBlock) {
     const scopeDiv = document.createElement("div");
     scopeDiv.className = "run-scope-banner";
-    scopeDiv.innerHTML = `<strong>Running subtree:</strong> ${escapeHtml(targetBlock.toString().slice(0, 80))}`;
+    scopeDiv.innerHTML = `<strong>${escapeHtml(msg("run_modal.scope_banner"))}</strong> ${escapeHtml(targetBlock.toString().slice(0, 80))}`;
     inputsDiv.appendChild(scopeDiv);
   }
   if (args.length === 0) {
     const p = document.createElement("p");
     p.className = "hint";
-    p.textContent = targetBlock
-      ? "This subtree doesn't reference any shell arguments — running as-is."
-      : "No arg references in the workspace — running with no inputs.";
+    p.textContent = msg(targetBlock ? "run_modal.no_args_subtree" : "run_modal.no_args_workspace");
     inputsDiv.appendChild(p);
   } else {
     args.forEach(arg => {
@@ -172,7 +176,7 @@ async function submitRun() {
   const submit = document.getElementById("run-submit");
   const origText = submit.textContent;
   submit.disabled = true;
-  submit.textContent = "Running\u2026";
+  submit.textContent = msg("run_modal.submit_busy");
   try {
     const result = runTargetBlock
       ? await runBlock(runTargetBlock, inputs)
@@ -197,13 +201,13 @@ function showResult(result) {
   const val = document.getElementById("result-value");
   const raw = document.getElementById("result-raw");
   if (result.ok) {
-    heading.textContent = "Result";
+    heading.textContent = msg("result_modal.title_ok");
     heading.className = "";
     val.innerHTML =
       `<div class="result-formatted">${escapeHtml(result.formatted ?? "")}</div>` +
       renderMetadata(result.metadata);
   } else {
-    heading.textContent = "Error";
+    heading.textContent = msg("result_modal.title_error");
     heading.className = "error";
     val.innerHTML = renderError(result) + renderMetadata(result.metadata);
     // Fire-and-forget fetch for the error-type's Z50 definition.
@@ -300,22 +304,22 @@ async function maybeLoadTestsForShell(args) {
   }
   loaderEl.hidden = false;
   selectEl.disabled = true;
-  selectEl.innerHTML = '<option value="">loading tests\u2026</option>';
+  selectEl.innerHTML = `<option value="">${escapeHtml(msg("run_modal.test_loading"))}</option>`;
   try {
     const tests = await fetchFunctionTests(SHELL.zid);
     if (tests.length === 0) {
-      selectEl.innerHTML = '<option value="">(no tests on this function)</option>';
+      selectEl.innerHTML = `<option value="">${escapeHtml(msg("run_modal.test_none"))}</option>`;
       return;
     }
     currentTests = tests;
     selectEl.innerHTML =
-      '<option value="">choose a test\u2026</option>' +
+      `<option value="">${escapeHtml(msg("run_modal.test_pick"))}</option>` +
       tests.map((t, i) =>
         `<option value="${i}">${escapeHtml(t.label)} \u2014 ${escapeHtml(t.testZid)}</option>`
       ).join("");
     selectEl.disabled = false;
   } catch (e) {
-    selectEl.innerHTML = `<option value="">(test fetch failed: ${escapeHtml(e.message || String(e))})</option>`;
+    selectEl.innerHTML = `<option value="">${escapeHtml(msg("run_modal.test_fetch_failed", { 1: e.message || String(e) }))}</option>`;
   }
 }
 
@@ -360,9 +364,9 @@ document.addEventListener("zblocks-fill-slots", async (e) => {
   const errEl = document.getElementById("fill-slots-error");
   const applyBtn = document.getElementById("fill-slots-apply");
 
-  heading.textContent = `Fill slots from test — ${fn.label}`;
-  hint.innerHTML = `Tests attached to <code>${escapeHtml(zid)}</code> carry known-good inputs. Pick one to populate the block's empty (or shadow-default) slots.`;
-  selectEl.innerHTML = '<option value="">loading\u2026</option>';
+  heading.textContent = msg("fill_slots.title", { 1: fn.label });
+  hint.innerHTML = msg("fill_slots.hint", { 1: escapeHtml(zid) });
+  selectEl.innerHTML = `<option value="">${escapeHtml(msg("fill_slots.loading"))}</option>`;
   selectEl.disabled = true;
   previewEl.innerHTML = "";
   errEl.textContent = "";
@@ -373,14 +377,14 @@ document.addEventListener("zblocks-fill-slots", async (e) => {
     const tests = await fetchFunctionTests(zid);
     fillSlotsContext.tests = tests;
     if (tests.length === 0) {
-      selectEl.innerHTML = '<option value="">(no tests on this function)</option>';
+      selectEl.innerHTML = `<option value="">${escapeHtml(msg("fill_slots.none"))}</option>`;
       return;
     }
-    selectEl.innerHTML = '<option value="">choose a test\u2026</option>' +
+    selectEl.innerHTML = `<option value="">${escapeHtml(msg("fill_slots.pick"))}</option>` +
       tests.map((t, i) => `<option value="${i}">${escapeHtml(t.label)} \u2014 ${escapeHtml(t.testZid)}</option>`).join("");
     selectEl.disabled = false;
   } catch (err) {
-    errEl.textContent = `Couldn't load tests: ${err.message || err}`;
+    errEl.textContent = msg("fill_slots.fetch_failed", { 1: err.message || err });
   }
 });
 
@@ -408,10 +412,10 @@ function renderFillSlotsPreview() {
     const testValue = test.argValues[arg.key];
     const valStr = testValue !== undefined ? argValueToString(testValue) : "(not in test)";
     const fate = !testValue
-      ? `<span class="fill-fate skip">skip (no test value)</span>`
+      ? `<span class="fill-fate skip">${escapeHtml(msg("fill_slots.fate.skip_no_value"))}</span>`
       : !isOverridable
-        ? `<span class="fill-fate skip">keep current (non-shadow)</span>`
-        : `<span class="fill-fate will">will set</span>`;
+        ? `<span class="fill-fate skip">${escapeHtml(msg("fill_slots.fate.skip_has_real"))}</span>`
+        : `<span class="fill-fate will">${escapeHtml(msg("fill_slots.fate.will"))}</span>`;
     return `
       <div class="fill-slots-row">
         <span class="fill-arg-label">${escapeHtml(arg.label)}</span>
@@ -457,7 +461,7 @@ document.getElementById("fill-slots-apply").addEventListener("click", () => {
 
   if (errors.length) {
     document.getElementById("fill-slots-error").innerHTML =
-      "Some slots couldn't be filled:<br>" + errors.map(escapeHtml).join("<br>");
+      escapeHtml(msg("fill_slots.partial_fail")) + "<br>" + errors.map(escapeHtml).join("<br>");
     return;
   }
 
@@ -499,22 +503,22 @@ document.getElementById("import-submit").addEventListener("click", async () => {
   const errEl = document.getElementById("import-error");
   errEl.textContent = "";
   if (!zidRaw && !jsonRaw) {
-    errEl.textContent = "Provide a ZID or paste composition JSON.";
+    errEl.textContent = msg("import_modal.need_input");
     return;
   }
   // Accept lowercase Z-IDs like "z32582" too.
   const normalizedZid = normalizeZid(zidRaw);
   if (zidRaw && !normalizedZid) {
-    errEl.textContent = `"${zidRaw}" doesn't look like a ZID (expected Z followed by digits).`;
+    errEl.textContent = msg("import_modal.invalid_zid", { 1: zidRaw });
     return;
   }
   const isDirty = workspace.getAllBlocks(false).length > 0;
-  if (isDirty && !confirm("Import will replace the current workspace. Continue?")) return;
+  if (isDirty && !confirm(msg("import_modal.confirm_replace"))) return;
 
   const btn = document.getElementById("import-submit");
   const orig = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "Importing\u2026";
+  btn.textContent = msg("import_modal.submit_busy");
   try {
     const { state } = normalizedZid ? await importByZid(normalizedZid) : await importFromJson(jsonRaw);
     workspace.clear();
@@ -634,7 +638,7 @@ function triggerSearch() {
     searchStatusEl.textContent = "";
     return;
   }
-  searchStatusEl.textContent = "searching\u2026";
+  searchStatusEl.textContent = msg("search_modal.status.searching");
   searchDebounce = setTimeout(() => performSearch(args), 200);
 }
 
@@ -656,7 +660,9 @@ async function performSearch({ query, outputType, inputTypes }) {
       signal, limit: 20, outputType, inputTypes,
     });
     renderSearchResults(results);
-    searchStatusEl.textContent = results.length ? `${results.length} result${results.length === 1 ? "" : "s"}` : "no matches";
+    searchStatusEl.textContent = results.length
+      ? msg("search_modal.status.count", { 1: results.length })
+      : msg("search_modal.status.none");
     decorateResultsWithSignatures(results, signal);
   } catch (e) {
     if (e.name === "AbortError") return;
@@ -666,12 +672,12 @@ async function performSearch({ query, outputType, inputTypes }) {
 }
 
 async function performZidLookup(zid) {
-  searchStatusEl.textContent = "fetching\u2026";
+  searchStatusEl.textContent = msg("search_modal.status.fetching");
   try {
     const result = await lookupByZid(zid);
     if (result.kind === "Z8") {
       renderSearchResults([{ zid, label: result.signature.label }]);
-      searchStatusEl.textContent = "direct ZID match";
+      searchStatusEl.textContent = msg("search_modal.status.zid_match");
       // Signature cache is warm from lookupByZid, so decorate renders immediately.
       decorateResultsWithSignatures([{ zid }], new AbortController().signal);
     } else if (result.kind === "Z14") {
@@ -690,21 +696,17 @@ async function performZidLookup(zid) {
       }
       searchResultsEl.innerHTML = `
         <div class="search-info">
-          <strong>${escapeHtml(zid)}</strong> is an implementation (Z14) of function ${targetLink}.
-          Pin the parent function below, or use <b>Import</b> to load this
-          specific implementation into the workspace.
+          ${msg("search_modal.zid_is_impl", { 1: escapeHtml(zid), 2: targetLink })}
         </div>`;
       if (parentSig) {
         appendResultRow({ zid: target, label: parentSig.label });
         decorateResultsWithSignatures([{ zid: target }], new AbortController().signal);
       }
-      searchStatusEl.textContent = parentSig ? "parent function available to pin" : "";
+      searchStatusEl.textContent = parentSig ? msg("search_modal.status.parent_available") : "";
     } else {
       searchResultsEl.innerHTML = `
         <div class="search-info">
-          <strong>${escapeHtml(zid)}</strong> is a
-          <code>${escapeHtml(result.kind || "?")}</code>, not a function.
-          Only Z8 functions can be pinned here.
+          ${msg("search_modal.zid_is_other", { 1: escapeHtml(zid), 2: escapeHtml(result.kind || "?") })}
         </div>`;
       searchStatusEl.textContent = "";
     }
@@ -762,7 +764,7 @@ function renderResultRowHtml(r) {
         </div>
       </div>
       <button class="search-result-pin ${pinned ? "pinned" : ""}" data-zid="${escapeHtml(r.zid)}" data-pinned="${pinned}">
-        ${pinned ? "Unpin" : "Pin"}
+        ${escapeHtml(msg(pinned ? "search_modal.result.unpin" : "search_modal.result.pin"))}
       </button>
     </div>
   `;
@@ -779,18 +781,18 @@ searchResultsEl.addEventListener("click", async (e) => {
   const wasPinned = btn.dataset.pinned === "true";
   btn.disabled = true;
   const origText = btn.textContent;
-  btn.textContent = wasPinned ? "Unpinning\u2026" : "Pinning\u2026";
+  btn.textContent = msg(wasPinned ? "search_modal.result.unpin_busy" : "search_modal.result.pin_busy");
   try {
     if (wasPinned) {
       unpinFunction(zid);
       btn.dataset.pinned = "false";
       btn.classList.remove("pinned");
-      btn.textContent = "Pin";
+      btn.textContent = msg("search_modal.result.pin");
     } else {
       await pinFunction(zid);
       btn.dataset.pinned = "true";
       btn.classList.add("pinned");
-      btn.textContent = "Unpin";
+      btn.textContent = msg("search_modal.result.unpin");
     }
   } catch (err) {
     btn.textContent = origText;
@@ -807,7 +809,7 @@ document.getElementById("export-copy").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(out.value);
     const orig = btn.textContent;
-    btn.textContent = "Copied!";
+    btn.textContent = msg("export_modal.copy_success");
     setTimeout(() => { btn.textContent = orig; }, 1500);
   } catch (e) {
     alert(`Copy failed: ${e.message}. Select the text manually.`);

@@ -9,15 +9,21 @@
 <body>
   <header>
     <h1>zblocks</h1>
-    <div id="shell-status">👉 New? Try <b>Load example</b> to see a worked composition, or <b>Declare function shell</b> to begin.</div>
+    <div id="shell-status"></div>
     <select id="load-example-select" title="Load a worked example">
-      <option value="">Load example…</option>
+      <option value="" data-i18n="header.example_picker_default"></option>
     </select>
-    <button id="add-function-btn" title="Search Wikifunctions and pin a function to the sidebar">+ Add function</button>
-    <button id="import-btn" title="Import an existing Z14 composition into the workspace">Import</button>
-    <button id="open-shell-btn">Declare function shell</button>
-    <button id="run-btn" title="Execute the composition via the Wikifunctions API">Run</button>
-    <button id="export-btn">Export ZObject</button>
+    <button id="add-function-btn"
+            data-i18n="header.buttons.add_function"
+            data-i18n-title="header.buttons.add_function_title"></button>
+    <button id="import-btn"
+            data-i18n="header.buttons.import"
+            data-i18n-title="header.buttons.import_title"></button>
+    <button id="open-shell-btn" data-i18n="header.buttons.declare_shell"></button>
+    <button id="run-btn"
+            data-i18n="header.buttons.run"
+            data-i18n-title="header.buttons.run_title"></button>
+    <button id="export-btn" data-i18n="header.buttons.export"></button>
   </header>
 
   <main>
@@ -26,57 +32,57 @@
 
   <!-- ── Function-shell declaration modal ────────────────────────── -->
   <dialog id="shell-modal">
-    <h2>Function shell</h2>
-    <p class="hint">
-      Declare the Z8 that this composition implements. The function
-      ZID and argument positions are used to synthesise Z18 argument
-      references (<code>Z18K1 = &lt;functionZID&gt;Kn</code>).
-    </p>
+    <h2 data-i18n="shell_modal.title"></h2>
+    <p class="hint" data-i18n-html="shell_modal.hint"></p>
     <div class="shell-header">
-      <label>Function ZID
+      <label>
+        <span data-i18n="shell_modal.field.zid"></span>
         <input id="shell-zid" type="text" placeholder="Z33682">
       </label>
-      <label>Output type
+      <label>
+        <span data-i18n="shell_modal.field.output"></span>
         <input id="shell-output" type="text" placeholder="Z20838">
       </label>
     </div>
     <fieldset>
-      <legend>Arguments (in order)</legend>
+      <legend data-i18n="shell_modal.args.legend"></legend>
       <div id="shell-args"></div>
-      <button type="button" id="shell-add-arg">+ Add argument</button>
+      <button type="button" id="shell-add-arg" data-i18n="shell_modal.args.add"></button>
     </fieldset>
     <menu>
-      <button type="button" id="shell-cancel">Cancel</button>
-      <button type="button" id="shell-save">Save shell</button>
+      <button type="button" id="shell-cancel" data-i18n="shell_modal.cancel"></button>
+      <button type="button" id="shell-save" data-i18n="shell_modal.save"></button>
     </menu>
   </dialog>
 
   <!-- ── Fill slots from test: pull known-good inputs ────────────── -->
   <dialog id="fill-slots-modal">
-    <h2 id="fill-slots-heading">Fill slots from test</h2>
-    <p class="hint" id="fill-slots-hint">Loading the function's tests\u2026</p>
+    <h2 id="fill-slots-heading" data-i18n="fill_slots.title"></h2>
+    <p class="hint" id="fill-slots-hint" data-i18n="fill_slots.loading"></p>
     <label class="fill-slots-picker">
-      Test:
+      <span data-i18n="fill_slots.test_label"></span>
       <select id="fill-slots-select" disabled>
-        <option value="">loading\u2026</option>
+        <option value="" data-i18n="fill_slots.loading"></option>
       </select>
     </label>
     <div id="fill-slots-preview"></div>
     <div id="fill-slots-error" class="error"></div>
     <menu>
-      <button type="button" id="fill-slots-cancel">Cancel</button>
-      <button type="button" id="fill-slots-apply" disabled>Apply</button>
+      <button type="button" id="fill-slots-cancel" data-i18n="fill_slots.cancel"></button>
+      <button type="button" id="fill-slots-apply" disabled data-i18n="fill_slots.apply"></button>
     </menu>
   </dialog>
 
   <!-- ── Slot picker: fill an empty input slot ───────────────────── -->
   <dialog id="slot-picker-modal">
-    <h2 id="slot-picker-heading">Fill slot</h2>
+    <h2 id="slot-picker-heading" data-i18n="slot_picker.title"></h2>
     <p class="hint" id="slot-picker-hint"></p>
-    <input id="slot-picker-input" type="text" placeholder="Filter by label or ZID…" autocomplete="off">
+    <input id="slot-picker-input" type="text"
+           data-i18n-placeholder="slot_picker.filter_placeholder"
+           autocomplete="off">
     <div id="slot-picker-results"></div>
     <menu>
-      <button type="button" id="slot-picker-close">Close</button>
+      <button type="button" id="slot-picker-close" data-i18n="slot_picker.close"></button>
     </menu>
   </dialog>
 
@@ -84,7 +90,7 @@
   <dialog id="wikidata-search-modal">
     <h2 id="wikidata-search-heading">Search Wikidata</h2>
     <p class="hint" id="wikidata-search-hint"></p>
-    <input id="wikidata-search-input" type="text" placeholder="Search Wikidata\u2026" autocomplete="off" spellcheck="false">
+    <input id="wikidata-search-input" type="text" placeholder="Search Wikidata…" autocomplete="off" spellcheck="false">
     <div id="wikidata-search-results"></div>
     <menu>
       <button type="button" id="wikidata-search-close">Close</button>
@@ -93,108 +99,101 @@
 
   <!-- ── Import: load an existing Z14 ─────────────────────────────── -->
   <dialog id="import-modal">
-    <h2>Import composition</h2>
-    <p class="hint">
-      Load an existing Z14 implementation (or a Z8 function's first
-      implementation) into the workspace. Referenced functions are
-      fetched and registered automatically; the shell is populated
-      from Z14K1's parent Z8 when available.
-    </p>
+    <h2 data-i18n="import_modal.title"></h2>
+    <p class="hint" data-i18n="import_modal.hint"></p>
     <div class="import-tabs">
       <label>
-        <span>Fetch by ZID:</span>
-        <input id="import-zid" type="text" placeholder="Z33608 or Z33682" autocomplete="off" spellcheck="false">
+        <span data-i18n="import_modal.zid_label"></span>
+        <input id="import-zid" type="text"
+               data-i18n-placeholder="import_modal.zid_placeholder"
+               autocomplete="off" spellcheck="false">
       </label>
       <label>
-        <span>Or paste JSON (Z2 wrapper, Z14, or bare composition):</span>
+        <span data-i18n="import_modal.json_label"></span>
         <textarea id="import-json" rows="6" spellcheck="false"
           placeholder='{"Z1K1":"Z7","Z7K1":"Z21032",...}'></textarea>
       </label>
     </div>
     <div id="import-error" class="error"></div>
     <menu>
-      <button type="button" id="import-cancel">Cancel</button>
-      <button type="button" id="import-submit">Import</button>
+      <button type="button" id="import-cancel" data-i18n="import_modal.cancel"></button>
+      <button type="button" id="import-submit" data-i18n="import_modal.submit"></button>
     </menu>
   </dialog>
 
   <!-- ── Add function: search Wikifunctions ──────────────────────── -->
   <dialog id="add-function-modal">
-    <h2>Add function from Wikifunctions</h2>
-    <p class="hint">
-      Search the live catalog. Pin any function to the
-      <strong>Pinned</strong> category in your sidebar.
-    </p>
+    <h2 data-i18n="search_modal.title"></h2>
+    <p class="hint" data-i18n-html="search_modal.hint"></p>
     <div class="search-row">
-      <input id="search-input" type="text" placeholder="Search by label, e.g. “filter claims” (optional with a type filter)" autocomplete="off">
+      <input id="search-input" type="text"
+             data-i18n-placeholder="search_modal.search_placeholder"
+             autocomplete="off">
       <span id="search-status" class="hint"></span>
     </div>
     <div class="filter-row" data-filter="output">
-      <label>returns</label>
-      <input class="filter-input" id="filter-output" type="text" placeholder="any" autocomplete="off" spellcheck="false">
+      <label data-i18n="search_modal.filter.returns"></label>
+      <input class="filter-input" id="filter-output" type="text"
+             data-i18n-placeholder="search_modal.filter.placeholder_any"
+             autocomplete="off" spellcheck="false">
       <div class="filter-chips"></div>
     </div>
     <div class="filter-row" data-filter="input">
-      <label>takes</label>
-      <input class="filter-input" id="filter-input" type="text" placeholder="any (comma-separate for multiple)" autocomplete="off" spellcheck="false">
+      <label data-i18n="search_modal.filter.takes"></label>
+      <input class="filter-input" id="filter-input" type="text"
+             data-i18n-placeholder="search_modal.filter.placeholder_any_multi"
+             autocomplete="off" spellcheck="false">
       <div class="filter-chips"></div>
     </div>
     <div id="search-results"></div>
     <menu>
-      <button type="button" id="search-close">Close</button>
+      <button type="button" id="search-close" data-i18n="search_modal.close"></button>
     </menu>
   </dialog>
 
   <!-- ── Run: collect inputs ────────────────────────────────────── -->
   <dialog id="run-modal">
-    <h2>Run composition</h2>
-    <p class="hint">
-      Executes the workspace via <code>wikilambda_function_call</code>.
-      Values replace Z18 arg references in-flight; nothing is written
-      to Wikifunctions.
-    </p>
+    <h2 data-i18n="run_modal.title"></h2>
+    <p class="hint" data-i18n-html="run_modal.hint"></p>
     <div id="run-test-loader" class="run-test-loader" hidden>
-      <label>Prefill from test:
+      <label>
+        <span data-i18n="run_modal.test_label"></span>
         <select id="run-test-select" disabled>
-          <option value="">(not checked)</option>
+          <option value="" data-i18n="run_modal.test_unchecked"></option>
         </select>
       </label>
     </div>
     <div id="run-inputs"></div>
     <div id="run-error" class="error"></div>
     <menu>
-      <button type="button" id="run-cancel">Cancel</button>
-      <button type="button" id="run-submit">Run</button>
+      <button type="button" id="run-cancel" data-i18n="run_modal.cancel"></button>
+      <button type="button" id="run-submit" data-i18n="run_modal.submit"></button>
     </menu>
   </dialog>
 
   <!-- ── Run: result ────────────────────────────────────────────── -->
   <dialog id="result-modal">
-    <h2 id="result-heading">Result</h2>
+    <h2 id="result-heading" data-i18n="result_modal.title_ok"></h2>
     <div id="result-value"></div>
     <details>
-      <summary>Raw ZObject</summary>
+      <summary data-i18n="result_modal.raw_details"></summary>
       <pre id="result-raw"></pre>
     </details>
     <menu>
-      <button type="button" id="result-close">Close</button>
-      <button type="button" id="result-rerun">Run again</button>
+      <button type="button" id="result-close" data-i18n="result_modal.close"></button>
+      <button type="button" id="result-rerun" data-i18n="result_modal.rerun"></button>
     </menu>
   </dialog>
 
   <!-- ── Export modal ────────────────────────────────────────────── -->
   <dialog id="export-modal">
-    <h2>Exported ZObject</h2>
-    <p class="hint">
-      Paste this into the <code>Z14K2</code> slot of an existing
-      implementation via the <em>Edit Raw JSON</em> userscript on
-      Wikifunctions.
-    </p>
+    <h2 data-i18n="export_modal.title"></h2>
+    <p class="hint" data-i18n-html="export_modal.hint"></p>
     <textarea id="export-json" readonly spellcheck="false"></textarea>
     <div id="export-error" class="error"></div>
     <menu>
-      <button type="button" id="export-close">Close</button>
-      <button type="button" id="export-copy">Copy to clipboard</button>
+      <button type="button" id="export-close" data-i18n="export_modal.close"></button>
+      <button type="button" id="export-copy" data-i18n="export_modal.copy"></button>
     </menu>
   </dialog>
 

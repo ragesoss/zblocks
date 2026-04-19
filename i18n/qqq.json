@@ -1,0 +1,49 @@
+{
+  "@metadata": {
+    "authors": ["zblocks contributors"],
+    "note": "Translator documentation. Each key maps to a short note for translators explaining intent, parameters, and where the string appears."
+  },
+
+  "header.buttons.add_function":     "Header button. Opens the search-and-pin modal. The leading + is literal punctuation signalling additivity.",
+  "header.buttons.import":           "Header button. Opens the import-existing-Z14 modal.",
+  "header.buttons.declare_shell":    "Header button. Opens the declare-function-shell modal.",
+  "header.buttons.run":              "Header button. Runs the composition against the Wikifunctions API.",
+  "header.buttons.export":           "Header button. Opens the export-ZObject-JSON modal.",
+  "header.status.empty":             "Status line shown when no shell has been declared. Double quotes are around UI button names.",
+  "header.status.editing_impl":      "Suffix on the shell status line when a composition was imported from a specific Z14. $1 is the Z14 ZID.",
+  "header.status.editing_impl_labeled": "Same as editing_impl but with a human label. $1 = Z14 ZID, $2 = Z14 label.",
+  "header.example_picker_default":   "First option in the Load Example dropdown. Ellipsis indicates more options follow.",
+
+  "shell_modal.title":               "Title of the shell-declaration modal.",
+  "shell_modal.hint":                "Brief explanation of what the shell is. Contains HTML: <code> and angle-bracket-escaped < >.",
+  "shell_modal.invalid_zid":         "Alert shown when user enters a non-ZID in the function ZID field. $1 = the bad input.",
+  "shell_modal.confirm_clear":       "Confirmation shown when saving a shell change that will invalidate existing arg-ref blocks.",
+
+  "import_modal.title":              "Title of the import-existing-composition modal.",
+  "import_modal.zid_label":           "Label for the ZID input field. Colon is literal.",
+  "import_modal.invalid_zid":         "Error shown when user pastes something that isn't a ZID. $1 = the bad input. Phrasing intentionally informal.",
+  "import_modal.confirm_replace":     "Confirmation when importing will clobber current workspace contents.",
+
+  "run_modal.scope_banner":          "Label prefix when the run is scoped to a subtree (via right-click on a block). Followed by the subtree's rendered toString().",
+  "run_modal.test_label":            "Label for the test-prefill dropdown. Used above the args list in the Run modal.",
+
+  "result_modal.raw_details":        "Summary text for the collapsible showing the raw Z22 envelope.",
+
+  "export_modal.hint":                "Single-sentence explanation of where to paste the exported JSON. <code> and <em> are allowed.",
+
+  "search_modal.hint":                "Describes the search-and-pin flow. <strong> wraps the category name.",
+  "search_modal.status.count":        "Result count status. $1 = result count; the PLURAL magic selects singular/plural for English; translators should adapt using their language's CLDR rules (all banana-i18n plural forms available).",
+  "search_modal.zid_is_impl":         "Shown when the user searches for a Z14 ZID. $1 = typed Z14 ZID, $2 = HTML link to the parent Z8. Explains that we fetched the parent function and show it below for one-click pinning.",
+
+  "fill_slots.title":                  "Title of the fill-slots-from-test modal. $1 = function label.",
+  "fill_slots.hint":                   "Explains that the modal pulls values from the function's attached Z20 testers. $1 = function ZID.",
+
+  "slot_picker.title":                 "Title of the slot-picker. $1 = argument label of the target slot.",
+  "slot_picker.hint":                  "Explains the filter rule. $1 = human-readable type + ZID combo.",
+
+  "context_menu.fill_slot":            "Right-click menu item on a function block with empty value inputs. $1 = argument label.",
+
+  "error.no_root_block":               "Emission error: workspace is empty or has nothing that outputs a value.",
+  "error.multiple_roots":              "Emission error: user has multiple unattached value blocks. $1 = the count.",
+  "error.shell_def_empty":             "Emission error: shell-def frame has no composition plugged into its body slot."
+}

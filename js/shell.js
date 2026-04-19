@@ -16,6 +16,7 @@ import { FUNCTIONS } from "./functions.js";
 import { loadPinnedZids } from "./storage.js";
 import { refreshAllShellDefBlocks, ensureShellDefBlock } from "./shell_def.js";
 import { typeLabel } from "./type_labels.js";
+import { msg } from "./i18n.js";
 
 export const SHELL = {
   zid: "",           // empty until declared
@@ -65,11 +66,14 @@ function addArgRow(_event, preset) {
   const row = document.createElement("div");
   row.className = "shell-arg";
   row.innerHTML = `
-    <input type="text" class="shell-arg-label" placeholder="argument name"
-           value="${preset?.label ?? ""}">
-    <input type="text" class="shell-arg-type" placeholder="type ZID (e.g. Z20838)"
-           value="${preset?.type ?? ""}">
-    <button type="button" class="shell-arg-remove" aria-label="Remove">\u00D7</button>
+    <input type="text" class="shell-arg-label"
+           placeholder="${escapeHtml(msg("shell_modal.args.name_placeholder"))}"
+           value="${escapeHtml(preset?.label ?? "")}">
+    <input type="text" class="shell-arg-type"
+           placeholder="${escapeHtml(msg("shell_modal.args.type_placeholder"))}"
+           value="${escapeHtml(preset?.type ?? "")}">
+    <button type="button" class="shell-arg-remove"
+            aria-label="${escapeHtml(msg("shell_modal.args.remove_label"))}">\u00D7</button>
   `;
   row.querySelector(".shell-arg-remove").addEventListener("click", () => row.remove());
   document.getElementById("shell-args").appendChild(row);
@@ -85,13 +89,13 @@ function saveShell() {
   })).filter(a => a.label);
 
   if (!/^Z\d+$/.test(zid)) {
-    alert(`Function ZID must look like Z123 (got: ${JSON.stringify(zid)})`);
+    alert(msg("shell_modal.invalid_zid", { 1: JSON.stringify(zid) }));
     return;
   }
 
   const hadArgRefs = workspace.getAllBlocks(false).some(b => b.type.startsWith("wf_arg_"));
   if (hadArgRefs) {
-    if (!confirm("Changing the shell will clear the workspace. Continue?")) return;
+    if (!confirm(msg("shell_modal.confirm_clear"))) return;
     workspace.clear();
   }
 
@@ -193,21 +197,22 @@ function updateShellStatus() {
   const el = document.getElementById("shell-status");
   if (!el) return;
   if (!SHELL.zid) {
-    el.textContent = "No function shell declared \u2014 click \u201CDeclare function shell\u201D or \u201CImport\u201D to begin.";
+    el.textContent = msg("header.status.empty");
     return;
   }
   const signature = SHELL.args.length === 0
-    ? "no arguments declared"
-    : SHELL.args.map(a => `${a.label}: ${escapeHtml(typeLabel(a.type, { withZid: true }))}`).join(", ");
+    ? escapeHtml(msg("header.status.no_args"))
+    : SHELL.args.map(a => `${escapeHtml(a.label)}: ${escapeHtml(typeLabel(a.type, { withZid: true }))}`).join(", ");
   const labelPart = SHELL.label
     ? `<b>${escapeHtml(SHELL.label)}</b> \u00B7 `
     : "";
   const sigPart = `${escapeHtml(SHELL.zid)}(${signature}) \u2192 ${escapeHtml(typeLabel(SHELL.outputType, { withZid: true }))}`;
-  const sourcePart = SHELL.sourceZid
-    ? (SHELL.sourceLabel
-        ? ` \u2014 editing impl <b>${escapeHtml(SHELL.sourceLabel)}</b> (${escapeHtml(SHELL.sourceZid)})`
-        : ` \u2014 editing impl <b>${escapeHtml(SHELL.sourceZid)}</b>`)
-    : "";
+  let sourcePart = "";
+  if (SHELL.sourceZid) {
+    sourcePart = " " + (SHELL.sourceLabel
+      ? msg("header.status.editing_impl_labeled", { 1: escapeHtml(SHELL.sourceZid), 2: escapeHtml(SHELL.sourceLabel) })
+      : msg("header.status.editing_impl", { 1: escapeHtml(SHELL.sourceZid) }));
+  }
   el.innerHTML = labelPart + sigPart + sourcePart;
 }
 

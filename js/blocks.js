@@ -18,6 +18,7 @@ import { LITERAL_BLOCKS, LITERAL_TOOLBOX, SHADOW_FOR_TYPE } from "./literals.js"
 import { typeLabel } from "./type_labels.js";
 import { openSlotPicker } from "./slot_picker.js";
 import { registerShellDefBlock } from "./shell_def.js";
+import { msg } from "./i18n.js";
 import { openWikidataSearch } from "./wikidata_search.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
@@ -163,7 +164,7 @@ function attachSlotPickerMenu(blockType) {
       const slotLabel = argEntry?.label || input.name;
       const slotType  = argEntry?.type  || (input.connection.getCheck()?.[0]) || "Z1";
       options.push({
-        text: `Fill "${slotLabel}"\u2026`,
+        text: msg("context_menu.fill_slot", { 1: slotLabel }),
         enabled: true,
         callback: () => openSlotPicker({
           connection: input.connection,
@@ -179,7 +180,7 @@ function attachSlotPickerMenu(blockType) {
     if (zid && fn && fn.args.length > 0) {
       const block = this;
       options.push({
-        text: `Fill slots from test\u2026`,
+        text: msg("context_menu.fill_slots_from_test"),
         enabled: true,
         callback: () => {
           document.dispatchEvent(new CustomEvent("zblocks-fill-slots", {
@@ -192,7 +193,7 @@ function attachSlotPickerMenu(blockType) {
     if (this.outputConnection) {
       const block = this;
       options.push({
-        text: "Run this block",
+        text: msg("context_menu.run_block"),
         enabled: true,
         callback: () => {
           document.dispatchEvent(new CustomEvent("zblocks-run-block", {

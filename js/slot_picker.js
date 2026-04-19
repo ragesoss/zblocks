@@ -14,6 +14,7 @@ import { LITERAL_BLOCKS } from "./literals.js";
 import { SHELL, ARG_REF_META } from "./shell.js";
 import { typeLabel } from "./type_labels.js";
 import { openWikidataSearch } from "./wikidata_search.js";
+import { msg } from "./i18n.js";
 
 // Slot types where a Wikidata search makes sense. Each entry maps the
 // picked {Q|P}-number to the block structure the slot should receive.
@@ -116,9 +117,8 @@ export function openSlotPicker({ connection, slotLabel, slotType }) {
   const inputEl = document.getElementById("slot-picker-input");
   const resultsEl = document.getElementById("slot-picker-results");
 
-  heading.textContent = `Fill "${slotLabel}"`;
-  hint.innerHTML = `Slot expects <code>${escapeHtml(typeLabel(slotType, { withZid: true }))}</code>.
-    Compatible blocks below — any output-type match, or the universal <code>Z1</code>.`;
+  heading.textContent = msg("slot_picker.title", { 1: slotLabel });
+  hint.innerHTML = msg("slot_picker.hint", { 1: escapeHtml(typeLabel(slotType, { withZid: true })) });
   inputEl.value = "";
   resultsEl.innerHTML = "";
 
@@ -168,7 +168,7 @@ function renderCandidates(candidates, filterText = "") {
 
   if (filtered.length === 0) {
     resultsEl.innerHTML = wikidataRow +
-      `<div class="slot-picker-empty">No compatible blocks${filterText ? " match that query" : ""}.</div>`;
+      `<div class="slot-picker-empty">${escapeHtml(msg(filterText ? "slot_picker.empty_filtered" : "slot_picker.empty"))}</div>`;
     return;
   }
 
