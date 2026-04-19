@@ -1,0 +1,190 @@
+{
+  "@metadata": {
+    "note": "Maps UI keys to Wikidata concepts + lexical categories. The build script (scripts/build-i18n.mjs) resolves them through Z33668 'word for concept' to a lemma per language. This is the ONLY source of chrome strings — including English. Keys with concept+category are attempted; keys with skip: true are not.",
+    "authoritative": "This file is the single source of truth for what chrome zblocks translates and how. Changes here plus a rebuild propagate to every language.",
+    "category_quick_reference": {
+      "Q24905": "verb",
+      "Q1084": "noun",
+      "Q34698": "adjective",
+      "Q380057": "adverb"
+    }
+  },
+
+  "result_modal.title_error": {
+    "concept": "Q3847033",
+    "category": "Q1084",
+    "english": "Error"
+  },
+  "fill_slots.test_label": {
+    "concept": "Q1003030",
+    "category": "Q1084",
+    "english": "Test:"
+  },
+  "run_modal.test_label": {
+    "concept": "Q1003030",
+    "category": "Q1084",
+    "english": "Prefill from test:"
+  },
+
+  "header.buttons.import": {
+    "concept": "Q62955",
+    "category": "Q1084",
+    "english": "Import"
+  },
+  "import_modal.submit": {
+    "concept": "Q62955",
+    "category": "Q1084",
+    "english": "Import"
+  },
+  "export_modal.copy": {
+    "concept": "Q42282254",
+    "category": "Q1084",
+    "english": "Copy to clipboard"
+  },
+  "shell_modal.save": {
+    "concept": "Q3305941",
+    "category": "Q1084",
+    "english": "Save shell"
+  },
+
+  "shell_modal.args.legend": {
+    "concept": "Q186619",
+    "category": "Q1084",
+    "english": "Arguments (in order)"
+  },
+
+  "header.buttons.add_function":     { "skip": "lexeme-compound", "reason": "verb 'add' + noun 'function', needs decomposition or AW renderer", "english": "+ Add function" },
+  "header.buttons.add_function_title": { "skip": "prose", "english": "Search Wikifunctions and pin a function to the sidebar" },
+  "header.buttons.import_title":     { "skip": "prose", "english": "Import an existing Z14 composition into the workspace" },
+  "header.buttons.declare_shell":    { "skip": "lexeme-compound", "english": "Declare function shell" },
+  "header.buttons.run":              { "skip": "lexeme-verb", "reason": "English verb 'run' L279 lacks P5137", "english": "Run" },
+  "header.buttons.run_title":        { "skip": "prose", "english": "Execute the composition via the Wikifunctions API" },
+  "header.buttons.export":           { "skip": "lexeme-compound", "english": "Export ZObject" },
+  "header.status.empty":             { "skip": "prose", "english": "No function shell declared — click Declare function shell or Import to begin." },
+  "header.status.no_args":           { "skip": "lexeme-compound", "english": "no arguments declared" },
+  "header.status.editing_impl":      { "skip": "prose-template", "english": "— editing impl $1" },
+  "header.status.editing_impl_labeled": { "skip": "prose-template", "english": "— editing impl $1 ($2)" },
+  "header.example_picker_default":   { "skip": "lexeme-compound", "english": "Load example…" },
+
+  "shell_modal.title":               { "skip": "lexeme-compound", "english": "Function shell" },
+  "shell_modal.hint":                { "skip": "prose", "english": "The Z8 this composition implements. Arg keys become Z18 references…" },
+  "shell_modal.field.zid":           { "skip": "lexeme-compound", "english": "Function ZID" },
+  "shell_modal.field.output":        { "skip": "lexeme-compound", "english": "Output type" },
+  "shell_modal.args.add":            { "skip": "lexeme-compound", "english": "+ Add argument" },
+  "shell_modal.args.name_placeholder": { "skip": "lexeme-compound", "english": "argument name" },
+  "shell_modal.args.type_placeholder": { "skip": "prose", "english": "type ZID (e.g. Z20838)" },
+  "shell_modal.args.remove_label":   { "skip": "lexeme-verb", "reason": "English verb 'remove' lacks P5137", "english": "Remove" },
+  "shell_modal.cancel":              { "skip": "lexeme-verb", "reason": "English verb 'cancel' L13009 lacks useful P5137", "english": "Cancel" },
+  "shell_modal.confirm_clear":       { "skip": "prose", "english": "Changing the shell will clear the workspace. Continue?" },
+  "shell_modal.invalid_zid":         { "skip": "prose-template", "english": "Function ZID must look like Z123 (got: $1)" },
+
+  "import_modal.title":              { "skip": "lexeme-compound", "english": "Import composition" },
+  "import_modal.hint":                { "skip": "prose", "english": "Load an existing Z14 (or Z8's first impl)…" },
+  "import_modal.zid_label":           { "skip": "lexeme-compound", "english": "Fetch by ZID:" },
+  "import_modal.zid_placeholder":     { "skip": "app", "english": "Z33608 or Z33682" },
+  "import_modal.json_label":          { "skip": "prose", "english": "Or paste JSON (Z2 wrapper, Z14, or bare composition):" },
+  "import_modal.cancel":              { "skip": "lexeme-verb", "english": "Cancel" },
+  "import_modal.submit_busy":         { "skip": "lexeme-verb", "english": "Importing…" },
+  "import_modal.need_input":          { "skip": "prose", "english": "Provide a ZID or paste composition JSON." },
+  "import_modal.invalid_zid":         { "skip": "prose-template", "english": "\"$1\" doesn't look like a ZID (expected Z followed by digits)." },
+  "import_modal.confirm_replace":     { "skip": "prose", "english": "Import will replace the current workspace. Continue?" },
+
+  "run_modal.title":                 { "skip": "lexeme-compound", "english": "Run composition" },
+  "run_modal.hint":                  { "skip": "prose", "english": "Executes via wikilambda_function_call. Test values replace Z18 arg refs in-flight; nothing is written to Wikifunctions." },
+  "run_modal.scope_banner":          { "skip": "lexeme-compound", "english": "Running subtree:" },
+  "run_modal.no_args_subtree":       { "skip": "prose", "english": "This subtree doesn't reference any shell arguments — running as-is." },
+  "run_modal.no_args_workspace":     { "skip": "prose", "english": "No arg references in the workspace — running with no inputs." },
+  "run_modal.test_unchecked":        { "skip": "app", "english": "(not checked)" },
+  "run_modal.test_loading":          { "skip": "lexeme-verb", "english": "loading tests…" },
+  "run_modal.test_none":             { "skip": "prose", "english": "(no tests on this function)" },
+  "run_modal.test_pick":             { "skip": "prose", "english": "choose a test…" },
+  "run_modal.test_fetch_failed":     { "skip": "prose-template", "english": "(test fetch failed: $1)" },
+  "run_modal.cancel":                { "skip": "lexeme-verb", "english": "Cancel" },
+  "run_modal.submit":                { "skip": "lexeme-verb", "reason": "English verb 'run' L279 lacks P5137", "english": "Run" },
+  "run_modal.submit_busy":           { "skip": "lexeme-verb", "english": "Running…" },
+
+  "result_modal.title_ok":           { "skip": "lexeme-noun", "reason": "Q2995644 'result' returns the string 'Z575' from Z33668 — appears to be a data issue on Wikifunctions or Wikidata side", "english": "Result" },
+  "result_modal.raw_details":        { "skip": "lexeme-compound", "english": "Raw ZObject" },
+  "result_modal.close":              { "skip": "lexeme-verb", "english": "Close" },
+  "result_modal.rerun":              { "skip": "lexeme-compound", "english": "Run again" },
+
+  "export_modal.title":              { "skip": "lexeme-compound", "english": "Exported ZObject" },
+  "export_modal.hint":                { "skip": "prose", "english": "Paste into the Z14K2 slot of an existing implementation via the Edit Raw JSON userscript." },
+  "export_modal.close":               { "skip": "lexeme-verb", "english": "Close" },
+  "export_modal.copy_success":        { "skip": "app", "reason": "past-tense interjection", "english": "Copied!" },
+
+  "search_modal.title":               { "skip": "prose", "english": "Add function from Wikifunctions" },
+  "search_modal.hint":                 { "skip": "prose", "english": "Search the live catalog. Pin any function to the Pinned sidebar category." },
+  "search_modal.search_placeholder":   { "skip": "prose", "english": "Search by label, e.g. \"filter claims\" (optional with a type filter)" },
+  "search_modal.filter.returns":       { "skip": "lexeme-verb", "english": "returns" },
+  "search_modal.filter.takes":         { "skip": "lexeme-verb", "english": "takes" },
+  "search_modal.filter.placeholder_any": { "skip": "lexeme-adj", "english": "any" },
+  "search_modal.filter.placeholder_any_multi": { "skip": "prose", "english": "any (comma-separate for multiple)" },
+  "search_modal.status.searching":     { "skip": "lexeme-verb", "english": "searching…" },
+  "search_modal.status.fetching":      { "skip": "lexeme-verb", "english": "fetching…" },
+  "search_modal.status.count":         { "skip": "prose-template", "english": "{{PLURAL:$1|$1 result|$1 results}}" },
+  "search_modal.status.none":          { "skip": "lexeme-compound", "english": "no matches" },
+  "search_modal.status.zid_match":     { "skip": "lexeme-compound", "english": "direct ZID match" },
+  "search_modal.status.parent_available": { "skip": "prose", "english": "parent function available to pin" },
+  "search_modal.result.pin":           { "skip": "lexeme-verb", "english": "Pin" },
+  "search_modal.result.unpin":         { "skip": "lexeme-verb", "english": "Unpin" },
+  "search_modal.result.pin_busy":      { "skip": "lexeme-verb", "english": "Pinning…" },
+  "search_modal.result.unpin_busy":    { "skip": "lexeme-verb", "english": "Unpinning…" },
+  "search_modal.close":                { "skip": "lexeme-verb", "english": "Close" },
+  "search_modal.zid_is_impl":          { "skip": "prose-template", "english": "<strong>$1</strong> is an implementation (Z14) of function $2. Pin the parent function below, or use <b>Import</b>…" },
+  "search_modal.zid_is_other":         { "skip": "prose-template", "english": "<strong>$1</strong> is a <code>$2</code>, not a function. Only Z8 functions can be pinned." },
+
+  "fill_slots.title":                  { "skip": "prose-template", "english": "Fill slots from test — $1" },
+  "fill_slots.hint":                   { "skip": "prose-template", "english": "Tests attached to $1 carry known-good inputs…" },
+  "fill_slots.loading":                { "skip": "lexeme-verb", "english": "loading…" },
+  "fill_slots.none":                   { "skip": "prose", "english": "(no tests on this function)" },
+  "fill_slots.pick":                   { "skip": "prose", "english": "choose a test…" },
+  "fill_slots.cancel":                 { "skip": "lexeme-verb", "english": "Cancel" },
+  "fill_slots.apply":                  { "skip": "lexeme-verb", "english": "Apply" },
+  "fill_slots.fetch_failed":           { "skip": "prose-template", "english": "Couldn't load tests: $1" },
+  "fill_slots.fate.will":              { "skip": "prose", "english": "will set" },
+  "fill_slots.fate.skip_no_value":     { "skip": "prose", "english": "skip (no test value)" },
+  "fill_slots.fate.skip_has_real":     { "skip": "prose", "english": "keep current (non-shadow)" },
+  "fill_slots.partial_fail":           { "skip": "prose", "english": "Some slots couldn't be filled:" },
+
+  "slot_picker.title":                 { "skip": "prose-template", "english": "Fill \"$1\"" },
+  "slot_picker.hint":                  { "skip": "prose-template", "english": "Slot expects <code>$1</code>. Compatible blocks below…" },
+  "slot_picker.filter_placeholder":    { "skip": "prose", "english": "Filter by label or ZID…" },
+  "slot_picker.close":                 { "skip": "lexeme-verb", "english": "Close" },
+  "slot_picker.empty":                 { "skip": "prose", "english": "No compatible blocks." },
+  "slot_picker.empty_filtered":        { "skip": "prose", "english": "No compatible blocks match that query." },
+
+  "context_menu.fill_slot":            { "skip": "prose-template", "english": "Fill \"$1\"…" },
+  "context_menu.run_block":            { "skip": "lexeme-compound", "english": "Run this block" },
+  "context_menu.fill_slots_from_test": { "skip": "prose", "english": "Fill slots from test…" },
+
+  "error.unknown_title":               { "skip": "lexeme-compound", "english": "Unknown error" },
+  "error.no_errors_entry":             { "skip": "app", "english": "No Z22K2.errors entry in response." },
+  "error.timeout":                     { "skip": "prose-template", "english": "Timed out after $1s." },
+  "error.http":                        { "skip": "prose-template", "english": "HTTP $1 from Wikifunctions API" },
+  "error.no_data":                     { "skip": "prose", "english": "Unexpected API response (no data field)." },
+  "error.no_root_block":               { "skip": "prose", "english": "No value block at the top level — drag a function or literal block onto the workspace." },
+  "error.multiple_roots":              { "skip": "prose-template", "english": "$1 top-level blocks. Compositions must have exactly one root — delete or nest the extras." },
+  "error.shell_def_empty":             { "skip": "prose", "english": "Function-definition frame has no composition body — connect a block to the 'body' slot." },
+
+  "block.shell_def.def":               { "skip": "lexeme-programming", "reason": "'def' is programming jargon; no general-English lexeme", "english": "def" },
+  "block.shell_def.takes":             { "skip": "lexeme-verb", "english": "takes" },
+  "block.shell_def.returns":           { "skip": "lexeme-verb", "english": "returns" },
+  "block.shell_def.body":              { "skip": "lexeme-noun", "reason": "'body' in programming context; lexeme senses don't match", "english": "body" },
+  "block.shell_def.source":            { "skip": "lexeme-noun", "english": "source" },
+  "block.shell_def.tooltip":           { "skip": "prose", "english": "Function implementation boundary. The block in the body slot is the composition; everything else on this block is metadata and isn't emitted." },
+  "block.shell_def.unlabeled":         { "skip": "prose", "english": "(unlabeled function)" },
+  "block.shell_def.no_args":           { "skip": "prose", "english": "no arguments" },
+
+  "literal.string.tooltip":            { "skip": "prose", "english": "String literal (Z6)" },
+  "literal.integer.tooltip":           { "skip": "prose", "english": "Integer literal (Z16683) — sign + natural-number digits" },
+  "literal.natural.tooltip":           { "skip": "prose", "english": "Natural number literal (Z13518)" },
+  "literal.float.tooltip":             { "skip": "prose", "english": "Float64 literal (Z20838) — full IEEE-754 decomposition" },
+  "literal.boolean.tooltip":           { "skip": "prose", "english": "Boolean (Z40): Z41 = true, Z42 = false" },
+  "literal.item_ref.tooltip":          { "skip": "prose", "english": "Wikidata item reference (Z6091) — e.g. Q17087764" },
+  "literal.property_ref.tooltip":      { "skip": "prose", "english": "Wikidata property reference (Z6092) — e.g. P361" },
+  "literal.zid_ref.tooltip":           { "skip": "prose", "english": "Bare Z-reference (Z9) — emits the ZID as an untyped reference, same shape canonical Wikifunctions JSON uses." },
+
+  "literal.item_ref.prefix":           { "skip": "lexeme-noun", "reason": "'item' has Wikidata lexemes but senses don't cleanly match Wikidata-item in UI context", "english": "item" },
+  "literal.property_ref.prefix":       { "skip": "lexeme-noun", "reason": "'property' has Wikidata lexemes; sense matching TBD", "english": "property" }
+}

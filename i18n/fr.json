@@ -1,0 +1,12 @@
+{
+  "@metadata": {
+    "built": "2026-04-19T16:36:31.371Z",
+    "source": "Z33668 word-for-concept via Wikifunctions",
+    "lang": "fr",
+    "wfLang": "Z1004",
+    "coverage": "3 resolved / 8 attempted (103 skipped, 5 missing, 0 errored, 0 incomplete mapping)"
+  },
+  "header.buttons.import": "importation",
+  "import_modal.submit": "importation",
+  "shell_modal.args.legend": "argument"
+}

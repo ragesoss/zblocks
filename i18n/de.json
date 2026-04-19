@@ -1,0 +1,13 @@
+{
+  "@metadata": {
+    "built": "2026-04-19T16:36:30.054Z",
+    "source": "Z33668 word-for-concept via Wikifunctions",
+    "lang": "de",
+    "wfLang": "Z1430",
+    "coverage": "4 resolved / 8 attempted (103 skipped, 4 missing, 0 errored, 0 incomplete mapping)"
+  },
+  "result_modal.title_error": "Irrtum",
+  "fill_slots.test_label": "Test",
+  "run_modal.test_label": "Test",
+  "shell_modal.args.legend": "Argument"
+}
