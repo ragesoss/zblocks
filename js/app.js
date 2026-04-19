@@ -14,7 +14,7 @@ import {
 import { typeLabel } from "./type_labels.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
-  fetchFunctionTests, argValueToString, fetchErrorTypeInfo,
+  fetchFunctionTests, argValueToString, fetchErrorTypeInfo, normalizeZid,
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
 import { SHELL } from "./shell.js";
@@ -502,6 +502,12 @@ document.getElementById("import-submit").addEventListener("click", async () => {
     errEl.textContent = "Provide a ZID or paste composition JSON.";
     return;
   }
+  // Accept lowercase Z-IDs like "z32582" too.
+  const normalizedZid = normalizeZid(zidRaw);
+  if (zidRaw && !normalizedZid) {
+    errEl.textContent = `"${zidRaw}" doesn't look like a ZID (expected Z followed by digits).`;
+    return;
+  }
   const isDirty = workspace.getAllBlocks(false).length > 0;
   if (isDirty && !confirm("Import will replace the current workspace. Continue?")) return;
 
@@ -510,7 +516,7 @@ document.getElementById("import-submit").addEventListener("click", async () => {
   btn.disabled = true;
   btn.textContent = "Importing\u2026";
   try {
-    const { state } = zidRaw ? await importByZid(zidRaw) : await importFromJson(jsonRaw);
+    const { state } = normalizedZid ? await importByZid(normalizedZid) : await importFromJson(jsonRaw);
     workspace.clear();
     Blockly.serialization.workspaces.load(state, workspace);
     document.getElementById("import-modal").close();
@@ -638,9 +644,11 @@ async function performSearch({ query, outputType, inputTypes }) {
   const { signal } = searchAbort;
 
   // If the query is a bare ZID and there are no filters, short-circuit
-  // to a direct fetch — label search doesn't match ZIDs.
-  if (/^Z\d+$/.test(query) && !outputType && !inputTypes) {
-    return performZidLookup(query);
+  // to a direct fetch — label search doesn't match ZIDs. Case-
+  // insensitive so "z33605" works the same as "Z33605".
+  const zidQuery = normalizeZid(query);
+  if (zidQuery && !outputType && !inputTypes) {
+    return performZidLookup(zidQuery);
   }
 
   try {

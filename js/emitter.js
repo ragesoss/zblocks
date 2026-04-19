@@ -50,6 +50,7 @@ export function emitBlock(block, opts = {}) {
   if (t === "wf_boolean")       return emitBoolean(block);
   if (t === "wf_item_ref")      return emitItemRef(block);
   if (t === "wf_property_ref")  return emitPropertyRef(block);
+  if (t === "wf_zid_ref")       return emitZidRef(block);
   if (t.startsWith("wf_Z"))     return emitFunctionCall(block, opts);
 
   throw new EmitError(`Unknown block type: ${t}`);
@@ -108,6 +109,15 @@ function emitItemRef(block) {
     throw new EmitError(`Invalid Wikidata item reference: ${JSON.stringify(qid)}`);
   }
   return { Z1K1: "Z6091", Z6091K1: qid };
+}
+
+function emitZidRef(block) {
+  const raw = String(block.getFieldValue("VALUE") ?? "").trim();
+  if (!/^Z\d+$/i.test(raw)) {
+    throw new EmitError(`Invalid bare Z-reference: ${JSON.stringify(raw)} (expected Z followed by digits)`);
+  }
+  // Canonical form: Z9 references are bare strings.
+  return raw.replace(/^z/, "Z");
 }
 
 function emitPropertyRef(block) {

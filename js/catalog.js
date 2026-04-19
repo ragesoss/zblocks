@@ -17,6 +17,16 @@ const WF_API = "https://www.wikifunctions.org/w/api.php";
 
 export class CatalogError extends Error {}
 
+// Normalise any user-supplied ZID: "z33605", "  Z33605 ", "Z33605"
+// all return "Z33605". Returns null for anything that isn't a valid
+// ZID. Used at UI entry points (import, search) so users don't have
+// to worry about casing.
+export function normalizeZid(s) {
+  if (s == null) return null;
+  const m = String(s).trim().match(/^z(\d+)$/i);
+  return m ? `Z${m[1]}` : null;
+}
+
 import { decodeInteger, decodeFloat64 } from "./numeric.js";
 
 // ─── Search ─────────────────────────────────────────────────────────

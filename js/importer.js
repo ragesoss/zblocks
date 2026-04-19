@@ -190,11 +190,11 @@ function parseBareString(s) {
   if (s === "Z41") return { type: "wf_boolean", fields: { VALUE: "Z41" } };
   if (s === "Z42") return { type: "wf_boolean", fields: { VALUE: "Z42" } };
   if (/^Z\d+$/.test(s)) {
-    // Could be a function reference, a language code, etc. In the
-    // composition tree it only appears standalone when something
-    // expected a reference; we don't have a generic "ZID literal"
-    // block, so surface as an error with enough info to fix.
-    return `Bare ZID reference ${s} at a value position isn't supported yet — expected a wrapped object or a known literal.`;
+    // Canonical JSON stores bare Z-IDs in value positions as a
+    // compact form of Z9 reference (to a type, a function, an enum
+    // member, etc.). Route through the Z9-reference block so it
+    // round-trips back to the same bare string on emit.
+    return { type: "wf_zid_ref", fields: { VALUE: s } };
   }
   return { type: "wf_string", fields: { VALUE: s } };
 }

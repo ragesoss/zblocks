@@ -80,6 +80,15 @@ export const LITERAL_BLOCKS = [
     tooltip: "Wikidata property reference (Z6092) — e.g. P361",
     helpUrl: wfPage("Z6092"),
   },
+  {
+    type: "wf_zid_ref",
+    message0: "→ %1",
+    args0: [{ type: "field_input", name: "VALUE", text: "Z" }],
+    output: ["Z9", "Z1"],
+    colour: LITERAL_COLOUR,
+    tooltip: "Bare Z-reference (Z9) — emits the ZID as an untyped reference, same shape canonical Wikifunctions JSON uses for ZID values in value positions.",
+    helpUrl: wfPage("Z9"),
+  },
 ];
 
 export const LITERAL_TOOLBOX = {
