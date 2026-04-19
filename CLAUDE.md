@@ -292,9 +292,13 @@ Moving shell-def logic around is easy to get wrong. The key pieces:
   creates one manually (the import/example flows include it in
   their loaded state JSON)
 
-### wikilambda_fetch batch uses `|` not `,`
-Getting this wrong returns `Z549: Invalid reference`. Only
-`fetchFunctionTests` currently uses batch fetch; new callers beware.
+### wikilambda_fetch batch uses `|` not `,` and caps at 50 ZIDs
+Getting the separator wrong returns `Z549: Invalid reference`.
+Exceeding 50 ZIDs per request returns `toomanyvalues` with the cap
+explicitly in the error. All batch fetches in catalog.js route
+through `wikilambdaFetchChunked` which splits the request at the
+50-ZID boundary and merges responses. Don't hand-roll another
+batch fetch — use the helper.
 
 ### Blockly serialization nuances
 - Block state keys: `type`, `fields`, `inputs`, `deletable`, `x`, `y`
