@@ -17,6 +17,7 @@ import { FUNCTIONS, CATEGORIES } from "./functions.js";
 import { LITERAL_BLOCKS, LITERAL_TOOLBOX, SHADOW_FOR_TYPE } from "./literals.js";
 import { typeLabel } from "./type_labels.js";
 import { openSlotPicker } from "./slot_picker.js";
+import { openWikidataSearch } from "./wikidata_search.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
 
@@ -100,6 +101,10 @@ export function registerAllBlocks() {
 
   // Literals first (so shadow attachments can reference them by type).
   define(LITERAL_BLOCKS);
+  // Wikidata-ref literals get a "Search Wikidata…" context action so
+  // users can look up a Q/P number by label instead of typing it.
+  attachWikidataSearchMenu("wf_item_ref", "item");
+  attachWikidataSearchMenu("wf_property_ref", "property");
 
   // Function blocks, coloured by category.
   const defs = FUNCTIONS.map(fn => {
@@ -192,6 +197,31 @@ function attachSlotPickerMenu(blockType) {
         },
       });
     }
+  };
+}
+
+// Context-menu "Search Wikidata…" for the wf_item_ref / wf_property_ref
+// literal blocks. Seeds the search from the block's current field value
+// (unless it's the default "Q" / "P" placeholder); on pick, sets the
+// field to the chosen entity ID.
+function attachWikidataSearchMenu(blockType, entityType) {
+  const blockDef = Blockly.Blocks[blockType];
+  if (!blockDef) return;
+  blockDef.customContextMenu = function (options) {
+    const block = this;
+    options.push({
+      text: "Search Wikidata\u2026",
+      enabled: true,
+      callback: () => {
+        const current = block.getFieldValue("VALUE") || "";
+        const seed = (current === "Q" || current === "P") ? "" : current;
+        openWikidataSearch({
+          entityType,
+          initialQuery: seed,
+          onSelect: ({ id }) => block.setFieldValue(id, "VALUE"),
+        });
+      },
+    });
   };
 }
 

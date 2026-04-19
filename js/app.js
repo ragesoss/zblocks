@@ -20,6 +20,7 @@ import {
 import { SHELL } from "./shell.js";
 import { importByZid, importFromJson, ImportError, exprToBlockSpec } from "./importer.js";
 import { initSlotPicker } from "./slot_picker.js";
+import { initWikidataSearch } from "./wikidata_search.js";
 import {
   pinFunction, unpinFunction, isPinned,
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
@@ -51,6 +52,7 @@ const workspace = Blockly.inject("blocklyDiv", {
 
 initShell(workspace);
 initSlotPicker();
+initWikidataSearch();
 
 // ── Example loader ────────────────────────────────────────────────
 const exampleSelect = document.getElementById("load-example-select");

@@ -13,6 +13,44 @@ import { FUNCTIONS, CATEGORIES } from "./functions.js";
 import { LITERAL_BLOCKS } from "./literals.js";
 import { SHELL, ARG_REF_META } from "./shell.js";
 import { typeLabel } from "./type_labels.js";
+import { openWikidataSearch } from "./wikidata_search.js";
+
+// Slot types where a Wikidata search makes sense. Each entry maps the
+// picked {Q|P}-number to the block structure the slot should receive.
+// The Z6001 / Z6002 entries build the full fetch chain (Z6821/Z6822
+// wrapping a ref literal) so the slot gets a complete fetched entity.
+const WIKIDATA_SLOT_HANDLERS = {
+  Z6091: {
+    entityType: "item",
+    build: (id) => ({ type: "wf_item_ref", fields: { VALUE: id } }),
+  },
+  Z6001: {
+    entityType: "item",
+    build: (id) => ({
+      type: "wf_Z6821",
+      inputs: { Z6821K1: { block: { type: "wf_item_ref", fields: { VALUE: id } } } },
+    }),
+  },
+  Z6092: {
+    entityType: "property",
+    build: (id) => ({ type: "wf_property_ref", fields: { VALUE: id } }),
+  },
+  Z6002: {
+    entityType: "property",
+    build: (id) => ({
+      type: "wf_Z6822",
+      inputs: { Z6822K1: { block: { type: "wf_property_ref", fields: { VALUE: id } } } },
+    }),
+  },
+};
+
+function wikidataHandlerForSlot(slotCheck) {
+  if (!slotCheck) return null;
+  for (const t of slotCheck) {
+    if (WIKIDATA_SLOT_HANDLERS[t]) return { ...WIKIDATA_SLOT_HANDLERS[t], slotType: t };
+  }
+  return null;
+}
 
 // ─── Candidate enumeration ─────────────────────────────────────────
 // One entry per registered block type, with its output check so the
@@ -90,6 +128,24 @@ export function openSlotPicker({ connection, slotLabel, slotType }) {
   inputEl.focus();
 }
 
+// Build the "Search Wikidata…" row that appears at the top of the slot
+// picker when the slot accepts a Wikidata item/property type. Returns
+// HTML or "" when no handler applies.
+function wikidataSearchRowHtml(handler) {
+  if (!handler) return "";
+  const noun = handler.entityType === "property" ? "property" : "item";
+  return `
+    <div class="slot-picker-group slot-picker-wikidata">
+      <h3>Lookup</h3>
+      <button class="slot-picker-item slot-picker-wikidata-btn" data-wikidata="1"
+              title="Search wikidata.org for a ${noun} and fill this slot with the result">
+        <span class="slot-picker-item-label">\uD83D\uDD0D Search Wikidata \u2014 find a ${noun} by label\u2026</span>
+        <span class="slot-picker-item-meta">wikidata.org</span>
+      </button>
+    </div>
+  `;
+}
+
 export function closeSlotPicker() {
   document.getElementById("slot-picker-modal").close();
   modalState = null;
@@ -102,8 +158,17 @@ function renderCandidates(candidates, filterText = "") {
     ? candidates.filter(c => c.label.toLowerCase().includes(q) || (c.zid ?? "").toLowerCase().includes(q))
     : candidates;
 
+  // Wikidata search affordance appears whenever the slot type accepts
+  // a Q/P reference, even when the user is typing a filter — the
+  // filter only narrows block candidates, not this lookup action.
+  const wdHandler = modalState
+    ? wikidataHandlerForSlot(modalState.connection.getCheck())
+    : null;
+  const wikidataRow = wikidataSearchRowHtml(wdHandler);
+
   if (filtered.length === 0) {
-    resultsEl.innerHTML = `<div class="slot-picker-empty">No compatible blocks${filterText ? " match that query" : ""}.</div>`;
+    resultsEl.innerHTML = wikidataRow +
+      `<div class="slot-picker-empty">No compatible blocks${filterText ? " match that query" : ""}.</div>`;
     return;
   }
 
@@ -126,7 +191,7 @@ function renderCandidates(candidates, filterText = "") {
       `).join("");
       return `<div class="slot-picker-group"><h3>${escapeHtml(cat)}</h3>${items}</div>`;
     }).join("");
-  resultsEl.innerHTML = html;
+  resultsEl.innerHTML = wikidataRow + html;
 }
 
 // ─── Instantiation ─────────────────────────────────────────────────
@@ -150,6 +215,42 @@ function instantiateAndConnect(blockType) {
   closeSlotPicker();
 }
 
+// Instantiate a block spec in the given workspace and connect its
+// output to `connection`. Used by the Wikidata-search flow since the
+// slot picker modal is closed by the time the pick happens — we can't
+// rely on slot-picker module state.
+function instantiateIntoConnection(connection, spec) {
+  const workspace = connection.getSourceBlock().workspace;
+  try {
+    const newBlock = Blockly.serialization.blocks.append(spec, workspace);
+    if (!newBlock.outputConnection) {
+      throw new Error(`${spec.type} has no output connection.`);
+    }
+    connection.connect(newBlock.outputConnection);
+  } catch (e) {
+    alert(`Could not place ${spec.type}: ${e.message}`);
+  }
+}
+
+function startWikidataSearch() {
+  if (!modalState) return;
+  const handler = wikidataHandlerForSlot(modalState.connection.getCheck());
+  if (!handler) return;
+  // Capture the target connection in closure so the onSelect callback
+  // isn't coupled to slot-picker module state — the slot picker modal
+  // is closed below (browsers don't love two <dialog>s modal at once)
+  // and the user might even reopen the slot picker for a different
+  // slot before finishing the Wikidata search.
+  const targetConnection = modalState.connection;
+  closeSlotPicker();
+  openWikidataSearch({
+    entityType: handler.entityType,
+    onSelect: ({ id }) => {
+      instantiateIntoConnection(targetConnection, handler.build(id));
+    },
+  });
+}
+
 // ─── Wire the modal DOM once at startup ────────────────────────────
 export function initSlotPicker() {
   document.getElementById("slot-picker-close").addEventListener("click", closeSlotPicker);
@@ -162,6 +263,10 @@ export function initSlotPicker() {
   document.getElementById("slot-picker-results").addEventListener("click", (e) => {
     const btn = e.target.closest(".slot-picker-item");
     if (!btn) return;
+    if (btn.dataset.wikidata) {
+      startWikidataSearch();
+      return;
+    }
     instantiateAndConnect(btn.dataset.blockType);
   });
 }
