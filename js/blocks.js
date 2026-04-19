@@ -105,10 +105,7 @@ export function registerAllBlocks() {
   registerShellDefBlock();
 
   // Literals first (so shadow attachments can reference them by type).
-  // hydrateLiteralBlockDefs injects msg()-resolved tooltips and
-  // substitutes {{LABEL}} placeholders in message0 so no English
-  // literal leaks into runtime strings.
-  define(hydrateLiteralBlockDefs());
+  define(LITERAL_BLOCKS);
   // Wikidata-ref literals get a "Search Wikidata…" context action so
   // users can look up a Q/P number by label instead of typing it.
   attachWikidataSearchMenu("wf_item_ref", "item");
@@ -124,33 +121,6 @@ export function registerAllBlocks() {
   // Attach the slot-picker context menu after defs are registered so
   // Blockly.Blocks[type] exists for each.
   for (const def of defs) attachSlotPickerMenu(def.type);
-}
-
-// Produce the LITERAL_BLOCKS array with tooltips + message0 prefixes
-// resolved through msg(). Called at registration time (after initI18n)
-// so translated values are current. Zero English string literals end
-// up in the final block defs.
-const LITERAL_I18N = {
-  wf_string:       { tooltip: "literal.string.tooltip" },
-  wf_integer:      { tooltip: "literal.integer.tooltip" },
-  wf_natural:      { tooltip: "literal.natural.tooltip" },
-  wf_float:        { tooltip: "literal.float.tooltip" },
-  wf_boolean:      { tooltip: "literal.boolean.tooltip" },
-  wf_item_ref:     { tooltip: "literal.item_ref.tooltip",     labelKey: "literal.item_ref.prefix" },
-  wf_property_ref: { tooltip: "literal.property_ref.tooltip", labelKey: "literal.property_ref.prefix" },
-  wf_zid_ref:      { tooltip: "literal.zid_ref.tooltip" },
-};
-
-function hydrateLiteralBlockDefs() {
-  return LITERAL_BLOCKS.map(def => {
-    const info = LITERAL_I18N[def.type];
-    if (!info) return def;
-    const out = { ...def, tooltip: msg(info.tooltip) };
-    if (info.labelKey && typeof out.message0 === "string" && out.message0.includes("{{LABEL}}")) {
-      out.message0 = out.message0.replace("{{LABEL}}", msg(info.labelKey));
-    }
-    return out;
-  });
 }
 
 // Register a single function block at runtime. Used by the catalog

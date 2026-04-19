@@ -14,31 +14,26 @@
 
 import { SHELL } from "./shell.js";
 import { typeLabel } from "./type_labels.js";
-import { msg } from "./i18n.js";
 
-// Spec built at register time so msg() reads the current language's
-// catalog; register happens after initI18n in app.js.
-function buildShellDefSpec() {
-  return {
-    type: "wf_shell_def",
-    message0: `${msg("block.shell_def.def")} %1  ·  %2`,
-    args0: [
-      { type: "field_label", name: "LABEL", text: "" },
-      { type: "field_label", name: "ZID", text: "" },
-    ],
-    message1: `${msg("block.shell_def.takes")} %1`,
-    args1: [{ type: "field_label", name: "ARGS", text: "" }],
-    message2: `${msg("block.shell_def.returns")} %1`,
-    args2: [{ type: "field_label", name: "OUTPUT_TYPE", text: "" }],
-    message3: `${msg("block.shell_def.source")} %1`,
-    args3: [{ type: "field_label", name: "SOURCE", text: "" }],
-    message4: `${msg("block.shell_def.body")} %1`,
-    args4: [{ type: "input_value", name: "BODY", check: null, align: "RIGHT" }],
-    colour: 45,
-    tooltip: msg("block.shell_def.tooltip"),
-    extensions: ["wf_shell_def_sync"],
-  };
-}
+const SHELL_DEF_SPEC = {
+  type: "wf_shell_def",
+  message0: "def %1  ·  %2",
+  args0: [
+    { type: "field_label", name: "LABEL", text: "(unlabeled)" },
+    { type: "field_label", name: "ZID", text: "Z0" },
+  ],
+  message1: "takes %1",
+  args1: [{ type: "field_label", name: "ARGS", text: "no arguments" }],
+  message2: "returns %1",
+  args2: [{ type: "field_label", name: "OUTPUT_TYPE", text: "?" }],
+  message3: "source %1",
+  args3: [{ type: "field_label", name: "SOURCE", text: "" }],
+  message4: "body %1",
+  args4: [{ type: "input_value", name: "BODY", check: null, align: "RIGHT" }],
+  colour: 45,
+  tooltip: "Function implementation boundary. The block in the body slot is the composition; everything else on this block is metadata and isn't emitted.",
+  extensions: ["wf_shell_def_sync"],
+};
 
 const SOURCE_ROW_HIDDEN = "";
 
@@ -51,13 +46,13 @@ export function registerShellDefBlock() {
   }
   const define = (Blockly.common && Blockly.common.defineBlocksWithJsonArray)
     || Blockly.defineBlocksWithJsonArray;
-  define([buildShellDefSpec()]);
+  define([SHELL_DEF_SPEC]);
 }
 
 // Render SHELL into a block instance's fields + BODY check. Safe to
 // call multiple times; pulls live values from SHELL every time.
 export function syncShellDefFields(block) {
-  set(block, "LABEL", SHELL.label || msg("block.shell_def.unlabeled"));
+  set(block, "LABEL", SHELL.label || "(unlabeled function)");
   set(block, "ZID", SHELL.zid || "Z0");
   set(block, "ARGS", formatArgsLine(SHELL.args));
   set(block, "OUTPUT_TYPE", formatTypeLine(SHELL.outputType));
@@ -78,7 +73,7 @@ function set(block, name, value) {
 }
 
 function formatArgsLine(args) {
-  if (!args || args.length === 0) return msg("block.shell_def.no_args");
+  if (!args || args.length === 0) return "no arguments";
   return args.map(a => `${a.label}: ${typeLabel(a.type, { withZid: true })}`).join("   ");
 }
 
