@@ -29,35 +29,26 @@ const RTL_ISO = new Set([
 // Picked by Wikimedia editor community size, restricted to LTR.
 const PINNED_TOP = ["en", "de", "fr", "es", "it", "pt", "ru", "ja", "zh", "pl", "nl", "hi"];
 
-// Seed set — known-good ZIDs for the pinned top languages. The search
-// API with empty search ranks arbitrarily and may miss very common
-// languages; seeding guarantees they're present.
-const SEED_WF_ZIDS = [
-  "Z1002", // en
-  "Z1430", // de
-  "Z1004", // fr
-  "Z1003", // es
-  "Z1787", // it
-  "Z1037", // pt
-  "Z1005", // ru
-  "Z1830", // ja
-  "Z1006", // zh (Chinese)
-  "Z1025", // pl (verified against catalog)
-  "Z1157", // nl (verified against catalog)
-  "Z1820", // hi
-];
-
 async function main() {
-  console.log("Searching Wikifunctions for Z60 natural-language objects\u2026");
-  const searched = await listAllZ60Zids();
-  const zids = [...new Set([...SEED_WF_ZIDS, ...searched])];
-  console.log(`  ${searched.length} from search + ${SEED_WF_ZIDS.length} seeded = ${zids.length} unique`);
+  console.log("Fetching canonical language-code enum from wikilambdaload_zobjects\u2026");
+  const codes = await fetchCanonicalLanguageCodes();
+  console.log(`  ${codes.length} codes`);
+  console.log("Resolving each code \u2192 Z60 ZID via wikilambdaload_zlanguages\u2026");
+  const codeToZid = await resolveLanguageZids(codes);
+  // Multiple codes can resolve to the same Z60 (aliases). Build a
+  // reverse map so we can pick one canonical ISO per Z-ID.
+  const zidToCodes = {};
+  for (const [code, zid] of Object.entries(codeToZid)) {
+    (zidToCodes[zid] ||= []).push(code);
+  }
+  const zids = Object.keys(zidToCodes);
+  console.log(`  ${Object.keys(codeToZid).length} codes resolved \u2192 ${zids.length} unique Z60s`);
   console.log("Batch-fetching language objects\u2026");
   const langs = [];
   for (const batch of chunks(zids, 50)) {
     const page = await fetchBatch(batch);
     for (const z of batch) {
-      const entry = parseLanguageObject(z, page[z]?.wikilambda_fetch);
+      const entry = parseLanguageObject(z, page[z]?.wikilambda_fetch, zidToCodes[z]);
       if (entry) langs.push(entry);
     }
     process.stdout.write(`  ${langs.length}/${zids.length}\r`);
@@ -97,32 +88,51 @@ export const LANGUAGES = ${JSON.stringify(ordered, null, 2)};
   console.log(`Wrote ${OUT.pathname}`);
 }
 
-async function listAllZ60Zids() {
-  // wikilambdasearch_labels returns ranked label matches; we iterate
-  // with an empty search + paging to capture everything.
-  const zids = new Set();
-  let continueToken = null;
-  for (let i = 0; i < 30; i++) {
+// Read the list of valid language codes from the paraminfo of
+// wikilambdaload_zobjects. That parameter's enum is Wikifunctions'
+// canonical roster of recognised language codes, so it's a superset
+// of every Z60 that has an ISO attached. Using this instead of label
+// search avoids the silent gap where an empty-string label search
+// returns only ~520 entries and drops major languages (Swedish,
+// Norwegian, Danish, Finnish, Turkish, Korean, Vietnamese, etc).
+async function fetchCanonicalLanguageCodes() {
+  const params = new URLSearchParams({
+    action: "paraminfo",
+    modules: "query+wikilambdaload_zobjects",
+    format: "json",
+    origin: "*",
+  });
+  const resp = await fetch(`${WF_API}?${params.toString()}`);
+  const data = await resp.json();
+  const params_ = data?.paraminfo?.modules?.[0]?.parameters || [];
+  const langParam = params_.find(p => p.name === "language");
+  const codes = Array.isArray(langParam?.type) ? langParam.type : [];
+  if (!codes.length) throw new Error("Could not read language-code enum from paraminfo");
+  return codes;
+}
+
+// wikilambdaload_zlanguages takes a pipe-separated list of ISO codes
+// and returns their Z60 ZIDs. The per-request cap is 50 values;
+// exceeding it returns toomanyvalues with an empty result list (not
+// a partial one), so we must respect the limit strictly.
+async function resolveLanguageZids(codes) {
+  const out = {};
+  for (const batch of chunks(codes, 50)) {
     const params = new URLSearchParams({
       action: "query",
-      list: "wikilambdasearch_labels",
-      wikilambdasearch_search: "",
-      wikilambdasearch_type: "Z60",
-      wikilambdasearch_language: "en",
-      wikilambdasearch_limit: "100",
+      list: "wikilambdaload_zlanguages",
+      wikilambdaload_zlanguages_codes: batch.join("|"),
       format: "json",
       origin: "*",
     });
-    if (continueToken) params.set("wikilambdasearch_continue", continueToken);
     const resp = await fetch(`${WF_API}?${params.toString()}`);
     const data = await resp.json();
-    const results = data?.query?.wikilambdasearch_labels || [];
-    for (const r of results) zids.add(r.page_title);
-    const next = data?.continue?.wikilambdasearch_continue;
-    if (!next) break;
-    continueToken = next;
+    const entries = data?.query?.wikilambdaload_zlanguages || [];
+    for (const e of entries) {
+      if (e?.code && e?.zid) out[e.code] = e.zid;
+    }
   }
-  return [...zids];
+  return out;
 }
 
 async function fetchBatch(zids) {
@@ -138,14 +148,31 @@ async function fetchBatch(zids) {
   return data;
 }
 
-function parseLanguageObject(zid, rawStr) {
+function parseLanguageObject(zid, rawStr, requestedCodes) {
   if (!rawStr) return null;
   let z2;
   try { z2 = JSON.parse(rawStr); } catch { return null; }
   const body = z2?.Z2K2;
   if (body?.Z1K1 !== "Z60") return null;
-  const iso = typeof body.Z60K1 === "string" ? body.Z60K1 : null;
-  if (!iso) return null;
+  // Pick the canonical ISO for this Z60. Some Wikifunctions Z60s
+  // have a surprising Z60K1 (e.g. Z1664 is labelled "Romanian" but
+  // has Z60K1 "ro-cyrl-md" for Moldovan Cyrillic Romanian, while the
+  // wikilambdaload_zlanguages API canonically resolves "ro" to it).
+  // So prefer the simplest code among those that resolved to this
+  // ZID — no hyphen beats hyphenated, shorter beats longer — rather
+  // than blindly using Z60K1.
+  const z60k1 = typeof body.Z60K1 === "string" ? body.Z60K1 : null;
+  const codes = (requestedCodes && requestedCodes.length)
+    ? requestedCodes
+    : (z60k1 ? [z60k1] : []);
+  if (!codes.length) return null;
+  const iso = [...codes].sort((a, b) => {
+    const ha = a.includes("-") ? 1 : 0;
+    const hb = b.includes("-") ? 1 : 0;
+    if (ha !== hb) return ha - hb;
+    if (a.length !== b.length) return a.length - b.length;
+    return a.localeCompare(b);
+  })[0];
   // Native name: prefer a Z11 entry whose Z11K1 points to this very
   // language (the language labelling itself). Fall back to English.
   const entries = z2?.Z2K3?.Z12K1 || [];

@@ -2,8 +2,8 @@
 // Re-run that script to refresh. DO NOT edit by hand; your changes
 // will be overwritten.
 //
-// Source: Wikifunctions Z60 catalogue. Generated 2026-04-19T15:44:10.243Z.
-// Entries: 12 pinned (top of picker) + 507 alphabetical.
+// Source: Wikifunctions Z60 catalogue. Generated 2026-04-19T17:52:21.010Z.
+// Entries: 12 pinned (top of picker) + 947 alphabetical.
 // RTL languages filtered out until the CSS pass for bidirectional layout.
 
 export const LANGUAGES = [
@@ -86,6 +86,18 @@ export const LANGUAGES = [
     "wfZid": "Z1360"
   },
   {
+    "iso": "ase",
+    "native": "𝣷𝪜 𝤃𝪜 𝣜𝪜",
+    "english": "American Sign Language",
+    "wfZid": "Z1763"
+  },
+  {
+    "iso": "aig",
+    "native": "Aanteegan an' Baabyuudan",
+    "english": "Antiguan and Barbudan Creole",
+    "wfZid": "Z1975"
+  },
+  {
     "iso": "sma",
     "native": "åarjelsaemien",
     "english": "Southern Sami",
@@ -98,16 +110,64 @@ export const LANGUAGES = [
     "wfZid": "Z1196"
   },
   {
+    "iso": "abr",
+    "native": "Abron",
+    "english": "Abron",
+    "wfZid": "Z1929"
+  },
+  {
     "iso": "jac",
     "native": "Abꞌxubꞌal Poptiꞌ",
     "english": "Jakalteko",
     "wfZid": "Z1927"
   },
   {
+    "iso": "ace",
+    "native": "Acèh",
+    "english": "Acehnese",
+    "wfZid": "Z1562"
+  },
+  {
+    "iso": "ach",
+    "native": "Acoli",
+    "english": "Acoli",
+    "wfZid": "Z1054"
+  },
+  {
+    "iso": "ada",
+    "native": "Adangme",
+    "english": "Adangme",
+    "wfZid": "Z1317"
+  },
+  {
+    "iso": "ang",
+    "native": "Ænglisc",
+    "english": "Old English",
+    "wfZid": "Z1333"
+  },
+  {
+    "iso": "afh",
+    "native": "Afrihili",
+    "english": "Afrihili",
+    "wfZid": "Z1529"
+  },
+  {
+    "iso": "af",
+    "native": "Afrikaans",
+    "english": "Afrikaans",
+    "wfZid": "Z1532"
+  },
+  {
     "iso": "agq",
     "native": "Aghem",
     "english": "Aghem",
     "wfZid": "Z1081"
+  },
+  {
+    "iso": "ak",
+    "native": "Akan",
+    "english": "Akan",
+    "wfZid": "Z1246"
   },
   {
     "iso": "akk",
@@ -134,16 +194,52 @@ export const LANGUAGES = [
     "wfZid": "Z1235"
   },
   {
+    "iso": "als",
+    "native": "Alemannisch",
+    "english": "Alemannic German",
+    "wfZid": "Z1508"
+  },
+  {
+    "iso": "ale",
+    "native": "Aleut",
+    "english": "Aleut",
+    "wfZid": "Z1453"
+  },
+  {
+    "iso": "en-us",
+    "native": "American English",
+    "english": "American English",
+    "wfZid": "Z1689"
+  },
+  {
     "iso": "smn",
     "native": "anarâškielâ",
     "english": "Inari Sami",
     "wfZid": "Z1352"
   },
   {
+    "iso": "egy",
+    "native": "Ancient Egyptian",
+    "english": "Ancient Egyptian",
+    "wfZid": "Z1049"
+  },
+  {
+    "iso": "cko",
+    "native": "Anufɔ",
+    "english": "Anufo",
+    "wfZid": "Z1950"
+  },
+  {
     "iso": "njo",
     "native": "Ao Naga",
     "english": "Ao Naga",
     "wfZid": "Z1594"
+  },
+  {
+    "iso": "an",
+    "native": "aragonés",
+    "english": "Aragonese",
+    "wfZid": "Z1269"
   },
   {
     "iso": "aro",
@@ -164,16 +260,52 @@ export const LANGUAGES = [
     "wfZid": "Z1313"
   },
   {
+    "iso": "aae",
+    "native": "Arbëreshë",
+    "english": "Arbëresh",
+    "wfZid": "Z1879"
+  },
+  {
     "iso": "rup",
     "native": "armãneashti",
     "english": "Aromanian",
     "wfZid": "Z1097"
   },
   {
+    "iso": "frp",
+    "native": "arpetan",
+    "english": "Arpitan",
+    "wfZid": "Z1378"
+  },
+  {
+    "iso": "ast",
+    "native": "asturianu",
+    "english": "Asturian",
+    "wfZid": "Z1732"
+  },
+  {
     "iso": "asa",
     "native": "Asu",
     "english": "Asu",
     "wfZid": "Z1743"
+  },
+  {
+    "iso": "atj",
+    "native": "Atikamekw",
+    "english": "Atikamekw",
+    "wfZid": "Z1383"
+  },
+  {
+    "iso": "cch",
+    "native": "Atsam",
+    "english": "Atsam",
+    "wfZid": "Z1212"
+  },
+  {
+    "iso": "en-au",
+    "native": "Australian English",
+    "english": "Australian English",
+    "wfZid": "Z1113"
   },
   {
     "iso": "gn",
@@ -188,6 +320,30 @@ export const LANGUAGES = [
     "wfZid": "Z1300"
   },
   {
+    "iso": "agr",
+    "native": "Awajún",
+    "english": "Aguaruna",
+    "wfZid": "Z1974"
+  },
+  {
+    "iso": "ay",
+    "native": "Aymar aru",
+    "english": "Aymara",
+    "wfZid": "Z1865"
+  },
+  {
+    "iso": "az",
+    "native": "azərbaycanca",
+    "english": "Azerbaijani",
+    "wfZid": "Z1597"
+  },
+  {
+    "iso": "bfq",
+    "native": "Badaga",
+    "english": "Badaga",
+    "wfZid": "Z1773"
+  },
+  {
     "iso": "ksf",
     "native": "Bafia",
     "english": "Bafia",
@@ -200,10 +356,64 @@ export const LANGUAGES = [
     "wfZid": "Z1595"
   },
   {
+    "iso": "abs",
+    "native": "bahasa ambon",
+    "english": "Ambonese Malay",
+    "wfZid": "Z1349"
+  },
+  {
+    "iso": "gor",
+    "native": "Bahasa Hulontalo",
+    "english": "Gorontalo",
+    "wfZid": "Z1805"
+  },
+  {
+    "iso": "id",
+    "native": "Bahasa Indonesia",
+    "english": "Indonesian",
+    "wfZid": "Z1078"
+  },
+  {
+    "iso": "ms",
+    "native": "Bahasa Melayu",
+    "english": "Malay",
+    "wfZid": "Z1531"
+  },
+  {
+    "iso": "msi",
+    "native": "Bahasa Sabah",
+    "english": "Sabah Malay",
+    "wfZid": "Z1936"
+  },
+  {
     "iso": "bkc",
     "native": "Baka",
     "english": "Baka",
     "wfZid": "Z1801"
+  },
+  {
+    "iso": "bkh",
+    "native": "Bakoko",
+    "english": "Bakoko",
+    "wfZid": "Z1145"
+  },
+  {
+    "iso": "rmn",
+    "native": "Balkan Romani",
+    "english": "Balkan Romani",
+    "wfZid": "Z1570"
+  },
+  {
+    "iso": "rml",
+    "native": "Baltic Romani",
+    "english": "Baltic Romani",
+    "wfZid": "Z1331"
+  },
+  {
+    "iso": "bm",
+    "native": "bamanankan",
+    "english": "Bambara",
+    "wfZid": "Z1607"
   },
   {
     "iso": "bax",
@@ -218,16 +428,46 @@ export const LANGUAGES = [
     "wfZid": "Z1893"
   },
   {
+    "iso": "nan-latn-pehoeji",
+    "native": "Bân-lâm-gú (Pe̍h-ōe-jī)",
+    "english": "Minnan (Pe̍h-ōe-jī)",
+    "wfZid": "Z1501"
+  },
+  {
     "iso": "nan-latn-tailo",
     "native": "Bân-lâm-gú (Tâi-lô)",
     "english": "Minnan (Tâi-lô)",
     "wfZid": "Z1922"
   },
   {
+    "iso": "bjn",
+    "native": "Banjar",
+    "english": "Banjar",
+    "wfZid": "Z1079"
+  },
+  {
     "iso": "bci",
     "native": "Baoulé",
     "english": "Baoulé",
     "wfZid": "Z1016"
+  },
+  {
+    "iso": "ban",
+    "native": "Basa Bali",
+    "english": "Balinese",
+    "wfZid": "Z1289"
+  },
+  {
+    "iso": "map-bms",
+    "native": "Basa Banyumasan",
+    "english": "Banyumasan",
+    "wfZid": "Z1826"
+  },
+  {
+    "iso": "kge",
+    "native": "Basa Kumoring",
+    "english": "Komering",
+    "wfZid": "Z1816"
   },
   {
     "iso": "bug-latn",
@@ -242,10 +482,82 @@ export const LANGUAGES = [
     "wfZid": "Z1485"
   },
   {
+    "iso": "btz",
+    "native": "Batak Alas-Kluet",
+    "english": "Batak Alas-Kluet",
+    "wfZid": "Z1946"
+  },
+  {
+    "iso": "akb",
+    "native": "Batak Angkola",
+    "english": "Batak Angkola",
+    "wfZid": "Z1942"
+  },
+  {
+    "iso": "btd",
+    "native": "Batak Dairi",
+    "english": "Batak Dairi",
+    "wfZid": "Z1943"
+  },
+  {
+    "iso": "btm",
+    "native": "Batak Mandailing",
+    "english": "Batak Mandailing",
+    "wfZid": "Z1767"
+  },
+  {
+    "iso": "bbc",
+    "native": "Batak Toba",
+    "english": "Batak Toba",
+    "wfZid": "Z1817"
+  },
+  {
     "iso": "bbc-latn",
     "native": "Batak Toba",
     "english": "Batak Toba (Latin script)",
     "wfZid": "Z1676"
+  },
+  {
+    "iso": "bej",
+    "native": "Beja",
+    "english": "Beja",
+    "wfZid": "Z1808"
+  },
+  {
+    "iso": "nl-be",
+    "native": "Belgian Dutch",
+    "english": "Belgian Dutch",
+    "wfZid": "Z1517"
+  },
+  {
+    "iso": "bem",
+    "native": "Bemba",
+    "english": "Bemba",
+    "wfZid": "Z1464"
+  },
+  {
+    "iso": "bez",
+    "native": "Bena",
+    "english": "Bena",
+    "wfZid": "Z1614"
+  },
+  {
+    "iso": "bom",
+    "native": "bèrom",
+    "english": "Berom",
+    "wfZid": "Z1017"
+  },
+  {
+    "iso": "bew",
+    "native": "Betawi",
+    "english": "Betawi",
+    "wfZid": "Z1630"
+  },
+  {
+    "iso": "hbo",
+    "native": "Biblical Hebrew",
+    "english": "Biblical Hebrew",
+    "wfZid": "Z1667"
   },
   {
     "iso": "tji",
@@ -258,6 +570,18 @@ export const LANGUAGES = [
     "native": "Bikol",
     "english": "Bikol",
     "wfZid": "Z1382"
+  },
+  {
+    "iso": "bcl",
+    "native": "Bikol Central",
+    "english": "Central Bikol",
+    "wfZid": "Z1481"
+  },
+  {
+    "iso": "bin",
+    "native": "Bini",
+    "english": "Bini",
+    "wfZid": "Z1662"
   },
   {
     "iso": "bi",
@@ -278,16 +602,82 @@ export const LANGUAGES = [
     "wfZid": "Z1588"
   },
   {
+    "iso": "bar",
+    "native": "Boarisch",
+    "english": "Bavarian",
+    "wfZid": "Z1730"
+  },
+  {
+    "iso": "brx",
+    "native": "Bodo",
+    "english": "Bodo",
+    "wfZid": "Z1413"
+  },
+  {
+    "iso": "bol",
+    "native": "bòo pìkkà",
+    "english": "Bole",
+    "wfZid": "Z1911"
+  },
+  {
+    "iso": "bs",
+    "native": "bosanski",
+    "english": "Bosnian",
+    "wfZid": "Z1473"
+  },
+  {
+    "iso": "bra",
+    "native": "Braj",
+    "english": "Braj",
+    "wfZid": "Z1366"
+  },
+  {
     "iso": "bzs",
     "native": "Brazilian Sign Language",
     "english": "Brazilian Sign Language",
     "wfZid": "Z1907"
   },
   {
+    "iso": "br",
+    "native": "brezhoneg",
+    "english": "Breton",
+    "wfZid": "Z1282"
+  },
+  {
+    "iso": "en-gb",
+    "native": "British English",
+    "english": "British English",
+    "wfZid": "Z1199"
+  },
+  {
+    "iso": "bum",
+    "native": "Bulu",
+    "english": "Bulu",
+    "wfZid": "Z1325"
+  },
+  {
     "iso": "bnn",
     "native": "Bunun",
     "english": "Bunun",
     "wfZid": "Z1606"
+  },
+  {
+    "iso": "bua",
+    "native": "Buryat",
+    "english": "Buryat",
+    "wfZid": "Z1164"
+  },
+  {
+    "iso": "cad",
+    "native": "Caddo",
+    "english": "Caddo",
+    "wfZid": "Z1461"
+  },
+  {
+    "iso": "btx",
+    "native": "cakap Karo",
+    "english": "cakap Karo",
+    "wfZid": "Z1945"
   },
   {
     "iso": "wes",
@@ -308,10 +698,34 @@ export const LANGUAGES = [
     "wfZid": "Z1640"
   },
   {
+    "iso": "cps",
+    "native": "Capiceño",
+    "english": "Capiznon",
+    "wfZid": "Z1857"
+  },
+  {
+    "iso": "car",
+    "native": "Carib",
+    "english": "Carib",
+    "wfZid": "Z1328"
+  },
+  {
+    "iso": "cal",
+    "native": "Carolinian",
+    "english": "Carolinian",
+    "wfZid": "Z1621"
+  },
+  {
     "iso": "rmc",
     "native": "Carpathian Romani",
     "english": "Carpathian Romani",
     "wfZid": "Z1215"
+  },
+  {
+    "iso": "ca",
+    "native": "català",
+    "english": "Catalan",
+    "wfZid": "Z1789"
   },
   {
     "iso": "cay",
@@ -326,6 +740,18 @@ export const LANGUAGES = [
     "wfZid": "Z1486"
   },
   {
+    "iso": "esu",
+    "native": "Central Yupik",
+    "english": "Central Yupik",
+    "wfZid": "Z1071"
+  },
+  {
+    "iso": "cs",
+    "native": "čeština",
+    "english": "Czech",
+    "wfZid": "Z1062"
+  },
+  {
     "iso": "shu",
     "native": "Chadian Arabic",
     "english": "Chadian Arabic",
@@ -336,6 +762,30 @@ export const LANGUAGES = [
     "native": "Chagatai",
     "english": "Chagatai",
     "wfZid": "Z1496"
+  },
+  {
+    "iso": "cho",
+    "native": "Chahta anumpa",
+    "english": "Choctaw",
+    "wfZid": "Z1593"
+  },
+  {
+    "iso": "ch",
+    "native": "Chamoru",
+    "english": "Chamorro",
+    "wfZid": "Z1217"
+  },
+  {
+    "iso": "cbk-zam",
+    "native": "Chavacano de Zamboanga",
+    "english": "Chavacano",
+    "wfZid": "Z1782"
+  },
+  {
+    "iso": "ny",
+    "native": "Chi-Chewa",
+    "english": "Nyanja",
+    "wfZid": "Z1074"
   },
   {
     "iso": "chb",
@@ -350,6 +800,12 @@ export const LANGUAGES = [
     "wfZid": "Z1156"
   },
   {
+    "iso": "cgg",
+    "native": "Chiga",
+    "english": "Chiga",
+    "wfZid": "Z1791"
+  },
+  {
     "iso": "clc",
     "native": "Chilcotin",
     "english": "Chilcotin",
@@ -362,6 +818,30 @@ export const LANGUAGES = [
     "wfZid": "Z1926"
   },
   {
+    "iso": "chn",
+    "native": "Chinook Jargon",
+    "english": "Chinook Jargon",
+    "wfZid": "Z1031"
+  },
+  {
+    "iso": "chp",
+    "native": "Chipewyan",
+    "english": "Chipewyan",
+    "wfZid": "Z1238"
+  },
+  {
+    "iso": "sn",
+    "native": "chiShona",
+    "english": "Shona",
+    "wfZid": "Z1350"
+  },
+  {
+    "iso": "toi",
+    "native": "chitonga",
+    "english": "Chitonga",
+    "wfZid": "Z1925"
+  },
+  {
     "iso": "tum",
     "native": "chiTumbuka",
     "english": "Tumbuka",
@@ -372,6 +852,12 @@ export const LANGUAGES = [
     "native": "Chuukese",
     "english": "Chuukese",
     "wfZid": "Z1364"
+  },
+  {
+    "iso": "tao",
+    "native": "ciriciring no Tao",
+    "english": "Yami",
+    "wfZid": "Z1985"
   },
   {
     "iso": "nwc",
@@ -404,10 +890,40 @@ export const LANGUAGES = [
     "wfZid": "Z1263"
   },
   {
+    "iso": "co",
+    "native": "corsu",
+    "english": "Corsican",
+    "wfZid": "Z1329"
+  },
+  {
+    "iso": "tsu",
+    "native": "Cou",
+    "english": "Tsou",
+    "wfZid": "Z1981"
+  },
+  {
+    "iso": "cy",
+    "native": "Cymraeg",
+    "english": "Welsh",
+    "wfZid": "Z1024"
+  },
+  {
     "iso": "el-cy",
     "native": "Cypriot Greek",
     "english": "Cypriot Greek",
     "wfZid": "Z1208"
+  },
+  {
+    "iso": "dga",
+    "native": "Dagaare",
+    "english": "Southern Dagaare",
+    "wfZid": "Z1885"
+  },
+  {
+    "iso": "dag",
+    "native": "dagbanli",
+    "english": "Dagbani",
+    "wfZid": "Z1015"
   },
   {
     "iso": "dak",
@@ -420,6 +936,24 @@ export const LANGUAGES = [
     "native": "Dalecarlian",
     "english": "Dalecarlian",
     "wfZid": "Z1292"
+  },
+  {
+    "iso": "da",
+    "native": "dansk",
+    "english": "Danish",
+    "wfZid": "Z1061"
+  },
+  {
+    "iso": "dar",
+    "native": "Dargwa",
+    "english": "Dargwa",
+    "wfZid": "Z1599"
+  },
+  {
+    "iso": "prs",
+    "native": "Dari",
+    "english": "Dari",
+    "wfZid": "Z1265"
   },
   {
     "iso": "se",
@@ -452,6 +986,12 @@ export const LANGUAGES = [
     "wfZid": "Z1674"
   },
   {
+    "iso": "pdc",
+    "native": "Deitsch",
+    "english": "Pennsylvania German",
+    "wfZid": "Z1859"
+  },
+  {
     "iso": "del",
     "native": "Delaware",
     "english": "Delaware",
@@ -464,10 +1004,16 @@ export const LANGUAGES = [
     "wfZid": "Z1890"
   },
   {
-    "iso": "de-x-formal",
+    "iso": "de-formal",
     "native": "Deutsch (Sie-Form)‎",
     "english": "German (formal address)",
     "wfZid": "Z1231"
+  },
+  {
+    "iso": "nv",
+    "native": "Diné bizaad",
+    "english": "Navajo",
+    "wfZid": "Z1306"
   },
   {
     "iso": "doi",
@@ -482,6 +1028,18 @@ export const LANGUAGES = [
     "wfZid": "Z1128"
   },
   {
+    "iso": "dsb",
+    "native": "dolnoserbski",
+    "english": "Lower Sorbian",
+    "wfZid": "Z1165"
+  },
+  {
+    "iso": "na",
+    "native": "Dorerin Naoero",
+    "english": "Nauru",
+    "wfZid": "Z1523"
+  },
+  {
     "iso": "dua",
     "native": "Duálá",
     "english": "Duala",
@@ -492,6 +1050,12 @@ export const LANGUAGES = [
     "native": "Dusun Bundu-liwan",
     "english": "Central Dusun",
     "wfZid": "Z1088"
+  },
+  {
+    "iso": "dyu",
+    "native": "Dyula",
+    "english": "Dyula",
+    "wfZid": "Z1579"
   },
   {
     "iso": "crl",
@@ -530,6 +1094,12 @@ export const LANGUAGES = [
     "wfZid": "Z1705"
   },
   {
+    "iso": "frs",
+    "native": "Eastern Frisian",
+    "english": "Eastern Frisian",
+    "wfZid": "Z1194"
+  },
+  {
     "iso": "ydd",
     "native": "Eastern Yiddish",
     "english": "Eastern Yiddish",
@@ -548,6 +1118,18 @@ export const LANGUAGES = [
     "wfZid": "Z1703"
   },
   {
+    "iso": "et",
+    "native": "eesti",
+    "english": "Estonian",
+    "wfZid": "Z1110"
+  },
+  {
+    "iso": "efi",
+    "native": "Efik",
+    "english": "Efik",
+    "wfZid": "Z1119"
+  },
+  {
     "iso": "etu",
     "native": "Ejagham",
     "english": "Ejagham",
@@ -558,6 +1140,12 @@ export const LANGUAGES = [
     "native": "Ekajuk",
     "english": "Ekajuk",
     "wfZid": "Z1284"
+  },
+  {
+    "iso": "ekp",
+    "native": "ẹkpeye",
+    "english": "Ekpeye",
+    "wfZid": "Z1923"
   },
   {
     "iso": "elx",
@@ -578,6 +1166,12 @@ export const LANGUAGES = [
     "wfZid": "Z1089"
   },
   {
+    "iso": "egl",
+    "native": "Emiliàn",
+    "english": "Emilian",
+    "wfZid": "Z1726"
+  },
+  {
     "iso": "es-formal",
     "native": "español (formal)‎",
     "english": "Spanish (formal)‎",
@@ -590,10 +1184,28 @@ export const LANGUAGES = [
     "wfZid": "Z1547"
   },
   {
+    "iso": "eo",
+    "native": "Esperanto",
+    "english": "Esperanto",
+    "wfZid": "Z1576"
+  },
+  {
+    "iso": "ext",
+    "native": "estremeñu",
+    "english": "Extremaduran",
+    "wfZid": "Z1841"
+  },
+  {
     "iso": "eto",
     "native": "Eton",
     "english": "Eton",
     "wfZid": "Z1725"
+  },
+  {
+    "iso": "ett",
+    "native": "Etruscian",
+    "english": "Etruscian",
+    "wfZid": "Z1368"
   },
   {
     "iso": "pt-pt",
@@ -602,10 +1214,22 @@ export const LANGUAGES = [
     "wfZid": "Z1294"
   },
   {
+    "iso": "es-es",
+    "native": "European Spanish",
+    "english": "European Spanish",
+    "wfZid": "Z1127"
+  },
+  {
     "iso": "eu",
     "native": "euskara",
     "english": "Basque",
     "wfZid": "Z1314"
+  },
+  {
+    "iso": "ee",
+    "native": "eʋegbe",
+    "english": "Ewe",
+    "wfZid": "Z1509"
   },
   {
     "iso": "ewo",
@@ -614,22 +1238,40 @@ export const LANGUAGES = [
     "wfZid": "Z1590"
   },
   {
+    "iso": "eya",
+    "native": "Eyak",
+    "english": "Eyak",
+    "wfZid": "Z1310"
+  },
+  {
+    "iso": "fan",
+    "native": "Fang",
+    "english": "Fang",
+    "wfZid": "Z1831"
+  },
+  {
+    "iso": "fat",
+    "native": "Fanti",
+    "english": "Fanti",
+    "wfZid": "Z1336"
+  },
+  {
     "iso": "fmp",
     "native": "Fe'Fe'",
     "english": "Fe'Fe'",
     "wfZid": "Z1847"
   },
   {
-    "iso": "hif-latn",
-    "native": "Fiji Hindi",
-    "english": "Fiji Hindi (Latin script)",
-    "wfZid": "Z1578"
-  },
-  {
     "iso": "hif",
     "native": "Fiji Hindi",
     "english": "Fiji Hindi",
     "wfZid": "Z1118"
+  },
+  {
+    "iso": "hif-latn",
+    "native": "Fiji Hindi",
+    "english": "Fiji Hindi (Latin script)",
+    "wfZid": "Z1578"
   },
   {
     "iso": "fil",
@@ -642,6 +1284,12 @@ export const LANGUAGES = [
     "native": "Finnish Kalo",
     "english": "Finnish Kalo",
     "wfZid": "Z1707"
+  },
+  {
+    "iso": "fon",
+    "native": "Fon",
+    "english": "Fon",
+    "wfZid": "Z1130"
   },
   {
     "iso": "fo",
@@ -668,6 +1316,36 @@ export const LANGUAGES = [
     "wfZid": "Z1245"
   },
   {
+    "iso": "fy",
+    "native": "Frysk",
+    "english": "Western Frisian",
+    "wfZid": "Z1216"
+  },
+  {
+    "iso": "ff",
+    "native": "Fulfulde",
+    "english": "Fula",
+    "wfZid": "Z1251"
+  },
+  {
+    "iso": "fur",
+    "native": "furlan",
+    "english": "Friulian",
+    "wfZid": "Z1159"
+  },
+  {
+    "iso": "gaa",
+    "native": "Ga",
+    "english": "Ga",
+    "wfZid": "Z1466"
+  },
+  {
+    "iso": "ga",
+    "native": "Gaeilge",
+    "english": "Irish",
+    "wfZid": "Z1866"
+  },
+  {
     "iso": "gv",
     "native": "Gaelg",
     "english": "Manx",
@@ -678,6 +1356,12 @@ export const LANGUAGES = [
     "native": "Gagana Samoa",
     "english": "Samoan",
     "wfZid": "Z1144"
+  },
+  {
+    "iso": "gag",
+    "native": "Gagauz",
+    "english": "Gagauz",
+    "wfZid": "Z1150"
   },
   {
     "iso": "gd",
@@ -704,6 +1388,24 @@ export const LANGUAGES = [
     "wfZid": "Z1266"
   },
   {
+    "iso": "gay",
+    "native": "Gayo",
+    "english": "Gayo",
+    "wfZid": "Z1063"
+  },
+  {
+    "iso": "gba",
+    "native": "Gbaya",
+    "english": "Gbaya",
+    "wfZid": "Z1193"
+  },
+  {
+    "iso": "gez",
+    "native": "Geez",
+    "english": "Geez",
+    "wfZid": "Z1036"
+  },
+  {
     "iso": "aln",
     "native": "Gegë",
     "english": "Gheg Albanian",
@@ -720,6 +1422,12 @@ export const LANGUAGES = [
     "native": "Ghomala",
     "english": "Ghomala",
     "wfZid": "Z1283"
+  },
+  {
+    "iso": "ki",
+    "native": "Gĩkũyũ",
+    "english": "Kikuyu",
+    "wfZid": "Z1693"
   },
   {
     "iso": "gil",
@@ -764,6 +1472,18 @@ export const LANGUAGES = [
     "wfZid": "Z1410"
   },
   {
+    "iso": "gwi",
+    "native": "Gwichʼin",
+    "english": "Gwichʼin",
+    "wfZid": "Z1700"
+  },
+  {
+    "iso": "hai",
+    "native": "Haida",
+    "english": "Haida",
+    "wfZid": "Z1651"
+  },
+  {
     "iso": "hak-latn",
     "native": "Hak-kâ-ngî (Pha̍k-fa-sṳ)",
     "english": "Hakka (Latin script)",
@@ -774,6 +1494,18 @@ export const LANGUAGES = [
     "native": "Hakha-Chin",
     "english": "Hakha-Chin",
     "wfZid": "Z1080"
+  },
+  {
+    "iso": "ha",
+    "native": "Hausa",
+    "english": "Hausa",
+    "wfZid": "Z1013"
+  },
+  {
+    "iso": "haw",
+    "native": "Hawaiʻi",
+    "english": "Hawaiian",
+    "wfZid": "Z1445"
   },
   {
     "iso": "haz",
@@ -794,6 +1526,12 @@ export const LANGUAGES = [
     "wfZid": "Z1487"
   },
   {
+    "iso": "sxr",
+    "native": "Hla'alua",
+    "english": "Saaroa",
+    "wfZid": "Z1982"
+  },
+  {
     "iso": "hmn",
     "native": "Hmong",
     "english": "Hmong",
@@ -812,16 +1550,70 @@ export const LANGUAGES = [
     "wfZid": "Z1706"
   },
   {
+    "iso": "hsb",
+    "native": "hornjoserbsce",
+    "english": "Upper Sorbian",
+    "wfZid": "Z1642"
+  },
+  {
+    "iso": "hr",
+    "native": "hrvatski",
+    "english": "Croatian",
+    "wfZid": "Z1272"
+  },
+  {
+    "iso": "hrx",
+    "native": "Hunsrik",
+    "english": "Hunsrik",
+    "wfZid": "Z1692"
+  },
+  {
+    "iso": "hup",
+    "native": "Hupa",
+    "english": "Hupa",
+    "wfZid": "Z1379"
+  },
+  {
+    "iso": "jab",
+    "native": "Hyam",
+    "english": "Hyam",
+    "wfZid": "Z1980"
+  },
+  {
+    "iso": "ibb",
+    "native": "Ibibio",
+    "english": "Ibibio",
+    "wfZid": "Z1462"
+  },
+  {
+    "iso": "io",
+    "native": "Ido",
+    "english": "Ido",
+    "wfZid": "Z1162"
+  },
+  {
     "iso": "igl",
     "native": "Igala",
     "english": "Igala",
     "wfZid": "Z1852"
   },
   {
+    "iso": "ig",
+    "native": "Igbo",
+    "english": "Igbo",
+    "wfZid": "Z1014"
+  },
+  {
     "iso": "en-x-piglatin",
     "native": "Igpay Atinlay",
     "english": "Pig Latin",
     "wfZid": "Z1881"
+  },
+  {
+    "iso": "ilo",
+    "native": "Ilokano",
+    "english": "Iloko",
+    "wfZid": "Z1173"
   },
   {
     "iso": "hil",
@@ -836,13 +1628,31 @@ export const LANGUAGES = [
     "wfZid": "Z1966"
   },
   {
+    "iso": "izh",
+    "native": "Ingrian",
+    "english": "Ingrian",
+    "wfZid": "Z1518"
+  },
+  {
     "iso": "moe",
     "native": "Innu",
     "english": "Innu",
     "wfZid": "Z1520"
   },
   {
-    "iso": "isv-latn",
+    "iso": "ia",
+    "native": "interlingua",
+    "english": "Interlingua",
+    "wfZid": "Z1060"
+  },
+  {
+    "iso": "ie",
+    "native": "Interlingue",
+    "english": "Interlingue",
+    "wfZid": "Z1185"
+  },
+  {
+    "iso": "isv",
     "native": "Interslavic (Latin script)",
     "english": "Interslavic (Latin script)",
     "wfZid": "Z1750"
@@ -866,10 +1676,28 @@ export const LANGUAGES = [
     "wfZid": "Z1125"
   },
   {
+    "iso": "xh",
+    "native": "isiXhosa",
+    "english": "Xhosa",
+    "wfZid": "Z1723"
+  },
+  {
     "iso": "zu",
     "native": "isiZulu",
     "english": "Zulu",
     "wfZid": "Z1330"
+  },
+  {
+    "iso": "crb",
+    "native": "Island Carib",
+    "english": "Island Carib",
+    "wfZid": "Z1075"
+  },
+  {
+    "iso": "is",
+    "native": "íslenska",
+    "english": "Icelandic",
+    "wfZid": "Z1106"
   },
   {
     "iso": "isu",
@@ -884,10 +1712,40 @@ export const LANGUAGES = [
     "wfZid": "Z1449"
   },
   {
+    "iso": "jax",
+    "native": "Jambi",
+    "english": "Jambi Malay",
+    "wfZid": "Z1987"
+  },
+  {
     "iso": "ja-hrkt",
     "native": "Japanese (Kana script)",
     "english": "Japanese (Kana script)",
     "wfZid": "Z1444"
+  },
+  {
+    "iso": "jv",
+    "native": "Jawa",
+    "english": "Javanese",
+    "wfZid": "Z1362"
+  },
+  {
+    "iso": "nrf-je",
+    "native": "jèrriais",
+    "english": "Jèrriais",
+    "wfZid": "Z1337"
+  },
+  {
+    "iso": "cjy",
+    "native": "Jin",
+    "english": "Jin",
+    "wfZid": "Z1809"
+  },
+  {
+    "iso": "kaj",
+    "native": "Jju",
+    "english": "Jju",
+    "wfZid": "Z1573"
   },
   {
     "iso": "dyo",
@@ -914,10 +1772,34 @@ export const LANGUAGES = [
     "wfZid": "Z1384"
   },
   {
+    "iso": "kea",
+    "native": "Kabuverdianu",
+    "english": "Kabuverdianu",
+    "wfZid": "Z1806"
+  },
+  {
+    "iso": "kac",
+    "native": "Kachin",
+    "english": "Kachin",
+    "wfZid": "Z1219"
+  },
+  {
+    "iso": "kgp",
+    "native": "Kaingang",
+    "english": "Kaingang",
+    "wfZid": "Z1224"
+  },
+  {
     "iso": "kkj",
     "native": "Kako",
     "english": "Kako",
     "wfZid": "Z1833"
+  },
+  {
+    "iso": "kl",
+    "native": "kalaallisut",
+    "english": "Kalaallisut",
+    "wfZid": "Z1813"
   },
   {
     "iso": "kln",
@@ -932,10 +1814,22 @@ export const LANGUAGES = [
     "wfZid": "Z1603"
   },
   {
+    "iso": "xnb",
+    "native": "Kanakanavu",
+    "english": "Kanakanavu",
+    "wfZid": "Z1988"
+  },
+  {
     "iso": "kbl",
     "native": "Kanembu",
     "english": "Kanembu",
     "wfZid": "Z1557"
+  },
+  {
+    "iso": "kr",
+    "native": "Kanuri",
+    "english": "Kanuri",
+    "wfZid": "Z1131"
   },
   {
     "iso": "pam",
@@ -968,10 +1862,28 @@ export const LANGUAGES = [
     "wfZid": "Z1665"
   },
   {
+    "iso": "alc",
+    "native": "Kawésqar",
+    "english": "Kawésqar",
+    "wfZid": "Z1117"
+  },
+  {
+    "iso": "kaw",
+    "native": "Kawi",
+    "english": "Kawi",
+    "wfZid": "Z1684"
+  },
+  {
     "iso": "ckv",
     "native": "Kebalan",
     "english": "Kavalan",
     "wfZid": "Z1977"
+  },
+  {
+    "iso": "mfa",
+    "native": "Kelantan-Pattani Malay",
+    "english": "Kelantan-Pattani Malay",
+    "wfZid": "Z1550"
   },
   {
     "iso": "sjk",
@@ -990,6 +1902,18 @@ export const LANGUAGES = [
     "native": "Kera",
     "english": "Kera",
     "wfZid": "Z1142"
+  },
+  {
+    "iso": "kw",
+    "native": "kernowek",
+    "english": "Cornish",
+    "wfZid": "Z1470"
+  },
+  {
+    "iso": "kjh",
+    "native": "Khakas",
+    "english": "Khakas",
+    "wfZid": "Z1303"
   },
   {
     "iso": "kha",
@@ -1022,10 +1946,64 @@ export const LANGUAGES = [
     "wfZid": "Z1042"
   },
   {
+    "iso": "kmb",
+    "native": "Kimbundu",
+    "english": "Kimbundu",
+    "wfZid": "Z1544"
+  },
+  {
+    "iso": "krj",
+    "native": "Kinaray-a",
+    "english": "Kinaray-a",
+    "wfZid": "Z1222"
+  },
+  {
+    "iso": "rw",
+    "native": "Kinyarwanda",
+    "english": "Kinyarwanda",
+    "wfZid": "Z1123"
+  },
+  {
+    "iso": "rn",
+    "native": "Kirundi",
+    "english": "Rundi",
+    "wfZid": "Z1397"
+  },
+  {
+    "iso": "sw",
+    "native": "Kiswahili",
+    "english": "Swahili",
+    "wfZid": "Z1039"
+  },
+  {
+    "iso": "kiu",
+    "native": "Kırmancki",
+    "english": "Kirmanjki",
+    "wfZid": "Z1066"
+  },
+  {
+    "iso": "ksh",
+    "native": "Kölsch ",
+    "english": "Colognian",
+    "wfZid": "Z1182"
+  },
+  {
     "iso": "bkm",
     "native": "Kom",
     "english": "Kom",
     "wfZid": "Z1795"
+  },
+  {
+    "iso": "kg",
+    "native": "Kongo",
+    "english": "Kongo",
+    "wfZid": "Z1311"
+  },
+  {
+    "iso": "kok",
+    "native": "Konkani",
+    "english": "Konkani",
+    "wfZid": "Z1177"
   },
   {
     "iso": "kfo",
@@ -1046,6 +2024,18 @@ export const LANGUAGES = [
     "wfZid": "Z1695"
   },
   {
+    "iso": "khq",
+    "native": "Koyra Chiini",
+    "english": "Koyra Chiini",
+    "wfZid": "Z1800"
+  },
+  {
+    "iso": "ses",
+    "native": "Koyraboro Senni",
+    "english": "Koyraboro Senni",
+    "wfZid": "Z1613"
+  },
+  {
     "iso": "koy",
     "native": "Koyukon",
     "english": "Koyukon",
@@ -1056,6 +2046,24 @@ export const LANGUAGES = [
     "native": "Kpelle",
     "english": "Kpelle",
     "wfZid": "Z1432"
+  },
+  {
+    "iso": "mfe",
+    "native": "kreol morisien",
+    "english": "Mauritian Creole",
+    "wfZid": "Z1318"
+  },
+  {
+    "iso": "ht",
+    "native": "Kreyòl ayisyen",
+    "english": "Haitian Creole",
+    "wfZid": "Z1095"
+  },
+  {
+    "iso": "gcf",
+    "native": "kréyòl Gwadloup",
+    "english": "Guadeloupean French Creole",
+    "wfZid": "Z1898"
   },
   {
     "iso": "kri",
@@ -1070,16 +2078,40 @@ export const LANGUAGES = [
     "wfZid": "Z1101"
   },
   {
+    "iso": "ku",
+    "native": "kurdî",
+    "english": "Kurmanji Kurdish",
+    "wfZid": "Z1556"
+  },
+  {
     "iso": "ku-latn",
     "native": "kurdî (latînî)‎",
     "english": "Kurdish (Latin script)",
     "wfZid": "Z1786"
   },
   {
+    "iso": "kru",
+    "native": "Kurukh",
+    "english": "Kurukh",
+    "wfZid": "Z1581"
+  },
+  {
     "iso": "kus",
     "native": "Kusaal",
     "english": "Kusaal",
     "wfZid": "Z1883"
+  },
+  {
+    "iso": "kut",
+    "native": "Kutenai",
+    "english": "Kutenai",
+    "wfZid": "Z1305"
+  },
+  {
+    "iso": "fkv",
+    "native": "Kvensk",
+    "english": "Kvensk",
+    "wfZid": "Z1149"
   },
   {
     "iso": "kj",
@@ -1112,10 +2144,40 @@ export const LANGUAGES = [
     "wfZid": "Z1250"
   },
   {
+    "iso": "ldn",
+    "native": "Láadan",
+    "english": "Láadan",
+    "wfZid": "Z1882"
+  },
+  {
+    "iso": "lld",
+    "native": "Ladin",
+    "english": "Ladin",
+    "wfZid": "Z1690"
+  },
+  {
+    "iso": "lad",
+    "native": "Ladino",
+    "english": "Ladino",
+    "wfZid": "Z1483"
+  },
+  {
     "iso": "lah",
     "native": "Lahnda",
     "english": "Lahnda",
     "wfZid": "Z1307"
+  },
+  {
+    "iso": "lkt",
+    "native": "Lakȟótiyapi",
+    "english": "Lakota",
+    "wfZid": "Z1271"
+  },
+  {
+    "iso": "lam",
+    "native": "Lamba",
+    "english": "Lamba",
+    "wfZid": "Z1369"
   },
   {
     "iso": "lns",
@@ -1124,16 +2186,40 @@ export const LANGUAGES = [
     "wfZid": "Z1779"
   },
   {
+    "iso": "ljp",
+    "native": "Lampung Api",
+    "english": "Lampung Api",
+    "wfZid": "Z1963"
+  },
+  {
     "iso": "lag",
     "native": "Langi",
     "english": "Langi",
     "wfZid": "Z1828"
   },
   {
+    "iso": "ltg",
+    "native": "latgaļu",
+    "english": "Latgalian",
+    "wfZid": "Z1388"
+  },
+  {
+    "iso": "la",
+    "native": "Latina",
+    "english": "Latin",
+    "wfZid": "Z1403"
+  },
+  {
     "iso": "lv",
     "native": "latviešu",
     "english": "Latvian",
     "wfZid": "Z1709"
+  },
+  {
+    "iso": "lzz",
+    "native": "Lazuri",
+    "english": "Laz",
+    "wfZid": "Z1715"
   },
   {
     "iso": "to",
@@ -1148,10 +2234,58 @@ export const LANGUAGES = [
     "wfZid": "Z1940"
   },
   {
+    "iso": "lb",
+    "native": "Lëtzebuergesch",
+    "english": "Luxembourgish",
+    "wfZid": "Z1099"
+  },
+  {
+    "iso": "nia",
+    "native": "Li Niha",
+    "english": "Nias",
+    "wfZid": "Z1602"
+  },
+  {
     "iso": "lt",
     "native": "lietuvių",
     "english": "Lithuanian",
     "wfZid": "Z1447"
+  },
+  {
+    "iso": "lij",
+    "native": "Ligure",
+    "english": "Ligurian",
+    "wfZid": "Z1175"
+  },
+  {
+    "iso": "xon",
+    "native": "likpakpaanl",
+    "english": "Likpakpaanl",
+    "wfZid": "Z1953"
+  },
+  {
+    "iso": "li",
+    "native": "Limburgs",
+    "english": "Limburgish",
+    "wfZid": "Z1230"
+  },
+  {
+    "iso": "ln",
+    "native": "lingála",
+    "english": "Lingala",
+    "wfZid": "Z1448"
+  },
+  {
+    "iso": "lfn",
+    "native": "Lingua Franca Nova",
+    "english": "Lingua Franca Nova",
+    "wfZid": "Z1355"
+  },
+  {
+    "iso": "liv",
+    "native": "līvõ kēļ",
+    "english": "Livonian",
+    "wfZid": "Z1228"
   },
   {
     "iso": "olo",
@@ -1170,6 +2304,18 @@ export const LANGUAGES = [
     "native": "Luba-Katanga",
     "english": "Luba-Katanga",
     "wfZid": "Z1535"
+  },
+  {
+    "iso": "lua",
+    "native": "Luba-Lulua",
+    "english": "Luba-Lulua",
+    "wfZid": "Z1385"
+  },
+  {
+    "iso": "lg",
+    "native": "Luganda",
+    "english": "Ganda",
+    "wfZid": "Z1803"
   },
   {
     "iso": "lui",
@@ -1196,6 +2342,12 @@ export const LANGUAGES = [
     "wfZid": "Z1516"
   },
   {
+    "iso": "luo",
+    "native": "Luo",
+    "english": "Luo",
+    "wfZid": "Z1223"
+  },
+  {
     "iso": "luy",
     "native": "Luyia",
     "english": "Luyia",
@@ -1220,10 +2372,34 @@ export const LANGUAGES = [
     "wfZid": "Z1629"
   },
   {
+    "iso": "mad",
+    "native": "Madhurâ",
+    "english": "Madurese",
+    "wfZid": "Z1436"
+  },
+  {
     "iso": "maf",
     "native": "Mafa",
     "english": "Mafa",
     "wfZid": "Z1468"
+  },
+  {
+    "iso": "mag",
+    "native": "Magahi",
+    "english": "Magahi",
+    "wfZid": "Z1639"
+  },
+  {
+    "iso": "mdh",
+    "native": "Magindanawn",
+    "english": "Magindanawn",
+    "wfZid": "Z1947"
+  },
+  {
+    "iso": "hu",
+    "native": "magyar",
+    "english": "Hungarian",
+    "wfZid": "Z1513"
   },
   {
     "iso": "hu-formal",
@@ -1244,10 +2420,22 @@ export const LANGUAGES = [
     "wfZid": "Z1258"
   },
   {
+    "iso": "vmf",
+    "native": "Mainfränkisch",
+    "english": "Main-Franconian",
+    "wfZid": "Z1514"
+  },
+  {
     "iso": "mcp",
     "native": "Makaa",
     "english": "Makaa",
     "wfZid": "Z1203"
+  },
+  {
+    "iso": "mak",
+    "native": "Makasar",
+    "english": "Makasar",
+    "wfZid": "Z1023"
   },
   {
     "iso": "mgh",
@@ -1262,6 +2450,12 @@ export const LANGUAGES = [
     "wfZid": "Z1770"
   },
   {
+    "iso": "mg",
+    "native": "Malagasy",
+    "english": "Malagasy",
+    "wfZid": "Z1625"
+  },
+  {
     "iso": "tog",
     "native": "Malawian Tonga",
     "english": "Malawian Tonga",
@@ -1274,10 +2468,28 @@ export const LANGUAGES = [
     "wfZid": "Z1434"
   },
   {
+    "iso": "mt",
+    "native": "Malti",
+    "english": "Maltese",
+    "wfZid": "Z1316"
+  },
+  {
+    "iso": "xmm",
+    "native": "Manado",
+    "english": "Manado",
+    "wfZid": "Z1742"
+  },
+  {
     "iso": "mid",
     "native": "Mandaic",
     "english": "Mandaic",
     "wfZid": "Z1526"
+  },
+  {
+    "iso": "mdr",
+    "native": "Mandar",
+    "english": "Mandar",
+    "wfZid": "Z1047"
   },
   {
     "iso": "man",
@@ -1290,6 +2502,18 @@ export const LANGUAGES = [
     "native": "manju gisun",
     "english": "Manchu (Latin script)",
     "wfZid": "Z1914"
+  },
+  {
+    "iso": "mi",
+    "native": "Māori",
+    "english": "Maori",
+    "wfZid": "Z1312"
+  },
+  {
+    "iso": "arn",
+    "native": "mapudungun",
+    "english": "Mapuche",
+    "wfZid": "Z1213"
   },
   {
     "iso": "mrh",
@@ -1310,10 +2534,28 @@ export const LANGUAGES = [
     "wfZid": "Z1493"
   },
   {
+    "iso": "mwr",
+    "native": "Marwari",
+    "english": "Marwari",
+    "wfZid": "Z1029"
+  },
+  {
     "iso": "rwr",
     "native": "Marwari (India)",
     "english": "Marwari (India)",
     "wfZid": "Z1644"
+  },
+  {
+    "iso": "mas",
+    "native": "Masai",
+    "english": "Masai",
+    "wfZid": "Z1814"
+  },
+  {
+    "iso": "mcn",
+    "native": "Massa",
+    "english": "Massa",
+    "wfZid": "Z1253"
   },
   {
     "iso": "fit",
@@ -1340,6 +2582,12 @@ export const LANGUAGES = [
     "wfZid": "Z1568"
   },
   {
+    "iso": "mwv",
+    "native": "Mentawai",
+    "english": "Mentawai",
+    "wfZid": "Z1319"
+  },
+  {
     "iso": "mer",
     "native": "Meru",
     "english": "Meru",
@@ -1358,10 +2606,28 @@ export const LANGUAGES = [
     "wfZid": "Z1133"
   },
   {
+    "iso": "mic",
+    "native": "Mi'kmaq",
+    "english": "Mi'kmaq",
+    "wfZid": "Z1205"
+  },
+  {
     "iso": "crg",
     "native": "Michif",
     "english": "Michif",
     "wfZid": "Z1971"
+  },
+  {
+    "iso": "dum",
+    "native": "Middle Dutch",
+    "english": "Middle Dutch",
+    "wfZid": "Z1093"
+  },
+  {
+    "iso": "enm",
+    "native": "Middle English",
+    "english": "Middle English",
+    "wfZid": "Z1111"
   },
   {
     "iso": "gmh",
@@ -1370,16 +2636,46 @@ export const LANGUAGES = [
     "wfZid": "Z1794"
   },
   {
+    "iso": "gml",
+    "native": "Middle Low German",
+    "english": "Middle Low German",
+    "wfZid": "Z1233"
+  },
+  {
+    "iso": "min",
+    "native": "Minangkabau",
+    "english": "Minangkabau",
+    "wfZid": "Z1860"
+  },
+  {
+    "iso": "cdo-latn",
+    "native": "Mìng-dĕ̤ng-ngṳ̄ (Bàng-uâ-cê)",
+    "english": "Mindong (Latin script)",
+    "wfZid": "Z1955"
+  },
+  {
     "iso": "mwl",
     "native": "Mirandés",
     "english": "Mirandese",
     "wfZid": "Z1465"
   },
   {
+    "iso": "lus",
+    "native": "Mizo ţawng",
+    "english": "Mizo",
+    "wfZid": "Z1094"
+  },
+  {
     "iso": "bqz",
     "native": "Mka'a",
     "english": "Mka'a",
     "wfZid": "Z1112"
+  },
+  {
+    "iso": "ar-001",
+    "native": "Modern Standard Arabic",
+    "english": "Modern Standard Arabic",
+    "wfZid": "Z1624"
   },
   {
     "iso": "moh",
@@ -1400,16 +2696,46 @@ export const LANGUAGES = [
     "wfZid": "Z1654"
   },
   {
+    "iso": "cnr",
+    "native": "Montenegrin",
+    "english": "Montenegrin",
+    "wfZid": "Z1498"
+  },
+  {
+    "iso": "mos",
+    "native": "Mossi",
+    "english": "Mossi",
+    "wfZid": "Z1751"
+  },
+  {
     "iso": "mua",
     "native": "Mundang",
     "english": "Mundang",
     "wfZid": "Z1765"
   },
   {
+    "iso": "lij-mc",
+    "native": "munegascu",
+    "english": "Monégasque",
+    "wfZid": "Z1153"
+  },
+  {
     "iso": "umu",
     "native": "Munsee",
     "english": "Munsee",
     "wfZid": "Z1459"
+  },
+  {
+    "iso": "mui",
+    "native": "Musi",
+    "english": "Musi",
+    "wfZid": "Z1846"
+  },
+  {
+    "iso": "ttt",
+    "native": "Muslim Tat",
+    "english": "Muslim Tat",
+    "wfZid": "Z1188"
   },
   {
     "iso": "mus",
@@ -1430,10 +2756,40 @@ export const LANGUAGES = [
     "wfZid": "Z1454"
   },
   {
+    "iso": "fj",
+    "native": "Na Vosa Vakaviti",
+    "english": "Fijian",
+    "wfZid": "Z1530"
+  },
+  {
+    "iso": "nah",
+    "native": "Nāhuatl",
+    "english": "Nāhuatl",
+    "wfZid": "Z1834"
+  },
+  {
+    "iso": "naq",
+    "native": "Nama",
+    "english": "Nama",
+    "wfZid": "Z1718"
+  },
+  {
+    "iso": "nap",
+    "native": "Napulitano",
+    "english": "Neapolitan",
+    "wfZid": "Z1491"
+  },
+  {
     "iso": "nsk",
     "native": "Naskapi",
     "english": "Naskapi",
     "wfZid": "Z1546"
+  },
+  {
+    "iso": "ppl",
+    "native": "Nawat",
+    "english": "Nawat",
+    "wfZid": "Z1986"
   },
   {
     "iso": "nmz",
@@ -1448,10 +2804,34 @@ export const LANGUAGES = [
     "wfZid": "Z1248"
   },
   {
+    "iso": "nl-informal",
+    "native": "Nederlands (informeel)‎",
+    "english": "Dutch (informal address)‎",
+    "wfZid": "Z1774"
+  },
+  {
+    "iso": "nds-nl",
+    "native": "Nedersaksies",
+    "english": "Dutch Low Saxon",
+    "wfZid": "Z1482"
+  },
+  {
     "iso": "cr",
     "native": "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ",
     "english": "Cree",
     "wfZid": "Z1115"
+  },
+  {
+    "iso": "juk",
+    "native": "Nene Wapan",
+    "english": "Wapan",
+    "wfZid": "Z1992"
+  },
+  {
+    "iso": "sba",
+    "native": "Ngambay",
+    "english": "Ngambay",
+    "wfZid": "Z1785"
   },
   {
     "iso": "nge",
@@ -1478,6 +2858,12 @@ export const LANGUAGES = [
     "wfZid": "Z1704"
   },
   {
+    "iso": "yrl",
+    "native": "Nheengatu",
+    "english": "Nheengatu",
+    "wfZid": "Z1685"
+  },
+  {
     "iso": "pcm",
     "native": "Nigerian Pidgin",
     "english": "Nigerian Pidgin",
@@ -1488,6 +2874,12 @@ export const LANGUAGES = [
     "native": "Nismilan",
     "english": "Negeri Sembilan Malay",
     "wfZid": "Z1939"
+  },
+  {
+    "iso": "niu",
+    "native": "Niuē",
+    "english": "Niuean",
+    "wfZid": "Z1661"
   },
   {
     "iso": "nog",
@@ -1508,16 +2900,52 @@ export const LANGUAGES = [
     "wfZid": "Z1650"
   },
   {
+    "iso": "pih",
+    "native": "Norfuk / Pitkern",
+    "english": "Norfuk / Pitkern",
+    "wfZid": "Z1274"
+  },
+  {
+    "iso": "no",
+    "native": "norsk",
+    "english": "Norwegian",
+    "wfZid": "Z1021"
+  },
+  {
+    "iso": "nb",
+    "native": "norsk bokmål",
+    "english": "Norwegian Bokmål",
+    "wfZid": "Z1227"
+  },
+  {
     "iso": "nn",
     "native": "norsk nynorsk",
     "english": "Norwegian Nynorsk",
     "wfZid": "Z1276"
   },
   {
+    "iso": "nd",
+    "native": "North Ndebele",
+    "english": "North Ndebele",
+    "wfZid": "Z1835"
+  },
+  {
     "iso": "nod",
     "native": "Northern Thai",
     "english": "Northern Thai",
     "wfZid": "Z1291"
+  },
+  {
+    "iso": "nrm",
+    "native": "Nouormand",
+    "english": "Norman",
+    "wfZid": "Z1849"
+  },
+  {
+    "iso": "nov",
+    "native": "Novial",
+    "english": "Novial",
+    "wfZid": "Z1586"
   },
   {
     "iso": "nus",
@@ -1532,16 +2960,52 @@ export const LANGUAGES = [
     "wfZid": "Z1236"
   },
   {
+    "iso": "nxm",
+    "native": "Numidian",
+    "english": "Numidian",
+    "wfZid": "Z1086"
+  },
+  {
     "iso": "nup",
     "native": "Nupe",
     "english": "Nupe",
     "wfZid": "Z1919"
   },
   {
+    "iso": "nym",
+    "native": "Nyamwezi",
+    "english": "Nyamwezi",
+    "wfZid": "Z1796"
+  },
+  {
+    "iso": "nyn",
+    "native": "Nyankole",
+    "english": "Nyankole",
+    "wfZid": "Z1838"
+  },
+  {
+    "iso": "nyo",
+    "native": "Nyoro",
+    "english": "Nyoro",
+    "wfZid": "Z1701"
+  },
+  {
     "iso": "nys",
     "native": "Nyunga",
     "english": "Nyungar",
     "wfZid": "Z1864"
+  },
+  {
+    "iso": "nzi",
+    "native": "Nzima",
+    "english": "Nzima",
+    "wfZid": "Z1778"
+  },
+  {
+    "iso": "maw",
+    "native": "Ŋmampulli",
+    "english": "Mampruli",
+    "wfZid": "Z1948"
   },
   {
     "iso": "ood",
@@ -1622,10 +3086,22 @@ export const LANGUAGES = [
     "wfZid": "Z1601"
   },
   {
+    "iso": "non",
+    "native": "Old Norse",
+    "english": "Old Norse",
+    "wfZid": "Z1560"
+  },
+  {
     "iso": "non-runr",
     "native": "Old Norse (Runic script)",
     "english": "Old Norse (Runic script)",
     "wfZid": "Z1261"
+  },
+  {
+    "iso": "peo",
+    "native": "Old Persian",
+    "english": "Old Persian",
+    "wfZid": "Z1521"
   },
   {
     "iso": "pro",
@@ -1640,10 +3116,34 @@ export const LANGUAGES = [
     "wfZid": "Z1769"
   },
   {
+    "iso": "om",
+    "native": "Oromoo",
+    "english": "Oromo",
+    "wfZid": "Z1087"
+  },
+  {
+    "iso": "ttj",
+    "native": "Orutooro",
+    "english": "Tooro",
+    "wfZid": "Z1917"
+  },
+  {
     "iso": "osa",
     "native": "Osage",
     "english": "Osage",
     "wfZid": "Z1727"
+  },
+  {
+    "iso": "ng",
+    "native": "Oshiwambo",
+    "english": "Ndonga",
+    "wfZid": "Z1032"
+  },
+  {
+    "iso": "de-at",
+    "native": "Österreichisches Deutsch",
+    "english": "Austrian German",
+    "wfZid": "Z1843"
   },
   {
     "iso": "hz",
@@ -1676,10 +3176,22 @@ export const LANGUAGES = [
     "wfZid": "Z1760"
   },
   {
+    "iso": "pfl",
+    "native": "Pälzisch",
+    "english": "Palatine German",
+    "wfZid": "Z1463"
+  },
+  {
     "iso": "pag",
     "native": "Pangasinan",
     "english": "Pangasinan",
     "wfZid": "Z1502"
+  },
+  {
+    "iso": "ami",
+    "native": "Pangcah",
+    "english": "Amis",
+    "wfZid": "Z1398"
   },
   {
     "iso": "pap-aw",
@@ -1700,10 +3212,22 @@ export const LANGUAGES = [
     "wfZid": "Z1490"
   },
   {
+    "iso": "jam",
+    "native": "Patois",
+    "english": "Jamaican Patois",
+    "wfZid": "Z1299"
+  },
+  {
     "iso": "uun",
     "native": "Pazeh",
     "english": "Pazeh",
     "wfZid": "Z1788"
+  },
+  {
+    "iso": "pey",
+    "native": "Peco'",
+    "english": "Petjo",
+    "wfZid": "Z1921"
   },
   {
     "iso": "phn",
@@ -1730,10 +3254,40 @@ export const LANGUAGES = [
     "wfZid": "Z1829"
   },
   {
+    "iso": "pms",
+    "native": "Piemontèis",
+    "english": "Piedmontese",
+    "wfZid": "Z1697"
+  },
+  {
     "iso": "piu",
     "native": "Pintupi-Luritja",
     "english": "Pintupi-Luritja",
     "wfZid": "Z1910"
+  },
+  {
+    "iso": "sje",
+    "native": "Pite Sami",
+    "english": "Pite Sami",
+    "wfZid": "Z1278"
+  },
+  {
+    "iso": "pjt",
+    "native": "Pitjantjatjara",
+    "english": "Pitjantjatjara",
+    "wfZid": "Z1431"
+  },
+  {
+    "iso": "nds",
+    "native": "Plattdüütsch",
+    "english": "Low German",
+    "wfZid": "Z1146"
+  },
+  {
+    "iso": "pdt",
+    "native": "Plautdietsch",
+    "english": "Plautdietsch",
+    "wfZid": "Z1057"
   },
   {
     "iso": "cpx-latn",
@@ -1754,6 +3308,18 @@ export const LANGUAGES = [
     "wfZid": "Z1956"
   },
   {
+    "iso": "pt-br",
+    "native": "português do Brasil",
+    "english": "Brazilian Portuguese",
+    "wfZid": "Z1381"
+  },
+  {
+    "iso": "prg",
+    "native": "Prūsiskan",
+    "english": "Prussian",
+    "wfZid": "Z1741"
+  },
+  {
     "iso": "fuf",
     "native": "Pular",
     "english": "Pular",
@@ -1766,6 +3332,12 @@ export const LANGUAGES = [
     "wfZid": "Z1744"
   },
   {
+    "iso": "qxp",
+    "native": "Punu qhichwa",
+    "english": "Puno Quechua",
+    "wfZid": "Z1970"
+  },
+  {
     "iso": "rm-puter",
     "native": "Putèr",
     "english": "Putèr",
@@ -1776,6 +3348,18 @@ export const LANGUAGES = [
     "native": "Puyuma",
     "english": "Puyuma",
     "wfZid": "Z1781"
+  },
+  {
+    "iso": "aa",
+    "native": "Qafár af",
+    "english": "Afar",
+    "wfZid": "Z1822"
+  },
+  {
+    "iso": "kaa",
+    "native": "Qaraqalpaqsha",
+    "english": "Karakalpak",
+    "wfZid": "Z1574"
   },
   {
     "iso": "kk-latn",
@@ -1802,10 +3386,22 @@ export const LANGUAGES = [
     "wfZid": "Z1126"
   },
   {
+    "iso": "qya",
+    "native": "Quenya",
+    "english": "Quenya",
+    "wfZid": "Z1322"
+  },
+  {
     "iso": "rah",
     "native": "Rabha",
     "english": "Rabha",
     "wfZid": "Z1324"
+  },
+  {
+    "iso": "raj",
+    "native": "Rajasthani",
+    "english": "Rajasthani",
+    "wfZid": "Z1558"
   },
   {
     "iso": "rap",
@@ -1814,10 +3410,34 @@ export const LANGUAGES = [
     "wfZid": "Z1090"
   },
   {
+    "iso": "rar",
+    "native": "Rarotongan",
+    "english": "Rarotongan",
+    "wfZid": "Z1367"
+  },
+  {
     "iso": "ty",
     "native": "reo tahiti",
     "english": "Tahitian",
     "wfZid": "Z1856"
+  },
+  {
+    "iso": "ro",
+    "native": "română",
+    "english": "Romanian",
+    "wfZid": "Z1664"
+  },
+  {
+    "iso": "rom",
+    "native": "Romani",
+    "english": "Romani",
+    "wfZid": "Z1361"
+  },
+  {
+    "iso": "rmy",
+    "native": "romani čhib",
+    "english": "Vlax Romani",
+    "wfZid": "Z1092"
   },
   {
     "iso": "rof",
@@ -1838,10 +3458,52 @@ export const LANGUAGES = [
     "wfZid": "Z1416"
   },
   {
+    "iso": "dru",
+    "native": "Rukai",
+    "english": "Rukai",
+    "wfZid": "Z1710"
+  },
+  {
+    "iso": "rgn",
+    "native": "Rumagnôl",
+    "english": "Romagnol",
+    "wfZid": "Z1356"
+  },
+  {
+    "iso": "rm",
+    "native": "rumantsch",
+    "english": "Romansh",
+    "wfZid": "Z1476"
+  },
+  {
     "iso": "rm-rumgr",
     "native": "Rumantsch Grischun",
     "english": "Rumantsch Grischun",
     "wfZid": "Z1768"
+  },
+  {
+    "iso": "qug",
+    "native": "Runa shimi",
+    "english": "Chimborazo Highland Quichua",
+    "wfZid": "Z1109"
+  },
+  {
+    "iso": "qu",
+    "native": "Runa Simi",
+    "english": "Quechua",
+    "wfZid": "Z1678"
+  },
+  {
+    "iso": "rwk",
+    "native": "Rwa",
+    "english": "Rwa",
+    "wfZid": "Z1371"
+  },
+  {
+    "iso": "bts",
+    "native": "Sahap Simalungun",
+    "english": "Sahap Simalungun",
+    "wfZid": "Z1944"
   },
   {
     "iso": "ssy",
@@ -1860,6 +3522,12 @@ export const LANGUAGES = [
     "native": "Sakizaya",
     "english": "Sakizaya",
     "wfZid": "Z1247"
+  },
+  {
+    "iso": "sam",
+    "native": "Samaritan Aramaic",
+    "english": "Samaritan Aramaic",
+    "wfZid": "Z1154"
   },
   {
     "iso": "saq",
@@ -1892,6 +3560,30 @@ export const LANGUAGES = [
     "wfZid": "Z1479"
   },
   {
+    "iso": "sc",
+    "native": "sardu",
+    "english": "Sardinian",
+    "wfZid": "Z1342"
+  },
+  {
+    "iso": "sro",
+    "native": "sardu campidanesu",
+    "english": "Campidanese Sardinian",
+    "wfZid": "Z1876"
+  },
+  {
+    "iso": "sas",
+    "native": "Sasak",
+    "english": "Sasak",
+    "wfZid": "Z1345"
+  },
+  {
+    "iso": "sdc",
+    "native": "Sassaresu",
+    "english": "Sassarese Sardinian",
+    "wfZid": "Z1082"
+  },
+  {
     "iso": "saz",
     "native": "Saurashtra",
     "english": "Saurashtra",
@@ -1902,6 +3594,12 @@ export const LANGUAGES = [
     "native": "Schläsch",
     "english": "Lower Silesian",
     "wfZid": "Z1309"
+  },
+  {
+    "iso": "de-ch",
+    "native": "Schweizer Hochdeutsch",
+    "english": "Swiss High German",
+    "wfZid": "Z1515"
   },
   {
     "iso": "sco",
@@ -1922,16 +3620,64 @@ export const LANGUAGES = [
     "wfZid": "Z1598"
   },
   {
+    "iso": "sly",
+    "native": "Selayar",
+    "english": "Selayar",
+    "wfZid": "Z1688"
+  },
+  {
+    "iso": "sel",
+    "native": "Selkup",
+    "english": "Selkup",
+    "wfZid": "Z1435"
+  },
+  {
+    "iso": "seh",
+    "native": "Sena",
+    "english": "Sena",
+    "wfZid": "Z1698"
+  },
+  {
     "iso": "see",
     "native": "Seneca",
     "english": "Seneca",
     "wfZid": "Z1840"
   },
   {
+    "iso": "srr",
+    "native": "Serer",
+    "english": "Serer",
+    "wfZid": "Z1722"
+  },
+  {
+    "iso": "crs",
+    "native": "Seselwa",
+    "english": "Seselwa Creole French",
+    "wfZid": "Z1425"
+  },
+  {
+    "iso": "st",
+    "native": "Sesotho",
+    "english": "Southern Sotho",
+    "wfZid": "Z1450"
+  },
+  {
     "iso": "nso",
     "native": "Sesotho sa Leboa",
     "english": "Northern Sotho",
     "wfZid": "Z1456"
+  },
+  {
+    "iso": "tn",
+    "native": "Setswana",
+    "english": "Tswana",
+    "wfZid": "Z1085"
+  },
+  {
+    "iso": "ksb",
+    "native": "Shambala",
+    "english": "Shambala",
+    "wfZid": "Z1648"
   },
   {
     "iso": "shy-arab",
@@ -1946,16 +3692,58 @@ export const LANGUAGES = [
     "wfZid": "Z1056"
   },
   {
+    "iso": "sq",
+    "native": "shqip",
+    "english": "Albanian",
+    "wfZid": "Z1608"
+  },
+  {
+    "iso": "scn",
+    "native": "sicilianu",
+    "english": "Sicilian",
+    "wfZid": "Z1298"
+  },
+  {
     "iso": "sid",
     "native": "Sidamo",
     "english": "Sidamo",
     "wfZid": "Z1683"
   },
   {
-    "iso": "en-simple",
+    "iso": "bla",
+    "native": "Siksika",
+    "english": "Siksika",
+    "wfZid": "Z1777"
+  },
+  {
+    "iso": "loz",
+    "native": "Silozi",
+    "english": "Lozi",
+    "wfZid": "Z1564"
+  },
+  {
+    "iso": "simple",
     "native": "Simple English",
     "english": "Simple English",
     "wfZid": "Z1124"
+  },
+  {
+    "iso": "sjn",
+    "native": "Sindarin",
+    "english": "Sindarin",
+    "wfZid": "Z1295"
+  },
+  {
+    "iso": "rmo",
+    "native": "Sinte Romani",
+    "english": "Sinte Romani",
+    "wfZid": "Z1210"
+  },
+  {
+    "iso": "tsg",
+    "native": "Sinūg",
+    "english": "Tausug",
+    "wfZid": "Z1887"
   },
   {
     "iso": "fos",
@@ -1970,10 +3758,22 @@ export const LANGUAGES = [
     "wfZid": "Z1611"
   },
   {
+    "iso": "ss",
+    "native": "SiSwati",
+    "english": "Swati",
+    "wfZid": "Z1389"
+  },
+  {
     "iso": "sms",
     "native": "Skolt Sami",
     "english": "Skolt Sami",
     "wfZid": "Z1646"
+  },
+  {
+    "iso": "den",
+    "native": "Slave",
+    "english": "Slave",
+    "wfZid": "Z1663"
   },
   {
     "iso": "sk",
@@ -1988,10 +3788,40 @@ export const LANGUAGES = [
     "wfZid": "Z1616"
   },
   {
+    "iso": "szl",
+    "native": "ślůnski",
+    "english": "Silesian",
+    "wfZid": "Z1304"
+  },
+  {
     "iso": "xog",
     "native": "Soga",
     "english": "Soga",
     "wfZid": "Z1729"
+  },
+  {
+    "iso": "sog",
+    "native": "Sogdian",
+    "english": "Sogdian",
+    "wfZid": "Z1343"
+  },
+  {
+    "iso": "snk",
+    "native": "Soninke",
+    "english": "Soninke",
+    "wfZid": "Z1028"
+  },
+  {
+    "iso": "so",
+    "native": "Soomaaliga",
+    "english": "Somali",
+    "wfZid": "Z1587"
+  },
+  {
+    "iso": "nr",
+    "native": "South Ndebele",
+    "english": "South Ndebele",
+    "wfZid": "Z1845"
   },
   {
     "iso": "srn",
@@ -2000,16 +3830,46 @@ export const LANGUAGES = [
     "wfZid": "Z1583"
   },
   {
-    "iso": "sr-latn",
+    "iso": "sr-el",
     "native": "srpski (latinica)",
     "english": "Serbian (Latin script)",
     "wfZid": "Z1394"
+  },
+  {
+    "iso": "sh",
+    "native": "srpskohrvatski",
+    "english": "Serbo-Croatian",
+    "wfZid": "Z1412"
   },
   {
     "iso": "sh-latn",
     "native": "srpskohrvatski (latinica)",
     "english": "Serbo-Croatian (Latin)",
     "wfZid": "Z1669"
+  },
+  {
+    "iso": "suk",
+    "native": "Sukuma",
+    "english": "Sukuma",
+    "wfZid": "Z1139"
+  },
+  {
+    "iso": "sux",
+    "native": "Sumerian",
+    "english": "Sumerian",
+    "wfZid": "Z1552"
+  },
+  {
+    "iso": "su",
+    "native": "Sunda",
+    "english": "Sundanese",
+    "wfZid": "Z1471"
+  },
+  {
+    "iso": "fi",
+    "native": "suomi",
+    "english": "Finnish",
+    "wfZid": "Z1051"
   },
   {
     "iso": "rm-surmiran",
@@ -2036,16 +3896,16 @@ export const LANGUAGES = [
     "wfZid": "Z1824"
   },
   {
+    "iso": "sv",
+    "native": "svenska",
+    "english": "Swedish",
+    "wfZid": "Z1592"
+  },
+  {
     "iso": "fr-ch",
     "native": "Swiss French",
     "english": "Swiss French",
     "wfZid": "Z1757"
-  },
-  {
-    "iso": "shy-latn",
-    "native": "tacawit",
-    "english": "Shawiya (Latin script)",
-    "wfZid": "Z1691"
   },
   {
     "iso": "shy",
@@ -2054,16 +3914,34 @@ export const LANGUAGES = [
     "wfZid": "Z1026"
   },
   {
-    "iso": "shi-latn",
-    "native": "Taclḥit",
-    "english": "Tachelhit (Latin script)",
-    "wfZid": "Z1404"
+    "iso": "shy-latn",
+    "native": "tacawit",
+    "english": "Shawiya (Latin script)",
+    "wfZid": "Z1691"
   },
   {
     "iso": "shi",
     "native": "Taclḥit",
     "english": "Tachelhit",
     "wfZid": "Z1540"
+  },
+  {
+    "iso": "shi-latn",
+    "native": "Taclḥit",
+    "english": "Tachelhit (Latin script)",
+    "wfZid": "Z1404"
+  },
+  {
+    "iso": "tl",
+    "native": "Tagalog",
+    "english": "Tagalog",
+    "wfZid": "Z1844"
+  },
+  {
+    "iso": "tnq",
+    "native": "Taíno",
+    "english": "Taíno",
+    "wfZid": "Z1166"
   },
   {
     "iso": "dav",
@@ -2090,6 +3968,18 @@ export const LANGUAGES = [
     "wfZid": "Z1687"
   },
   {
+    "iso": "roa-tara",
+    "native": "tarandíne",
+    "english": "Tarantino",
+    "wfZid": "Z1679"
+  },
+  {
+    "iso": "rif",
+    "native": "Tarifit",
+    "english": "Riffian",
+    "wfZid": "Z1617"
+  },
+  {
     "iso": "twq",
     "native": "Tasawaq",
     "english": "Tasawaq",
@@ -2114,10 +4004,22 @@ export const LANGUAGES = [
     "wfZid": "Z1748"
   },
   {
+    "iso": "ter",
+    "native": "Terena",
+    "english": "Terena",
+    "wfZid": "Z1409"
+  },
+  {
     "iso": "teo",
     "native": "Teso",
     "english": "Teso",
     "wfZid": "Z1176"
+  },
+  {
+    "iso": "tet",
+    "native": "tetun",
+    "english": "Tetum",
+    "wfZid": "Z1612"
   },
   {
     "iso": "taq-latn",
@@ -2132,6 +4034,12 @@ export const LANGUAGES = [
     "wfZid": "Z1596"
   },
   {
+    "iso": "dik",
+    "native": "Thuɔŋjäŋ",
+    "english": "Dinka",
+    "wfZid": "Z1745"
+  },
+  {
     "iso": "vi",
     "native": "Tiếng Việt",
     "english": "Vietnamese",
@@ -2144,10 +4052,28 @@ export const LANGUAGES = [
     "wfZid": "Z1545"
   },
   {
+    "iso": "tiv",
+    "native": "Tiv",
+    "english": "Tiv",
+    "wfZid": "Z1626"
+  },
+  {
     "iso": "tlh",
     "native": "tlhIngan Hol",
     "english": "Klingon",
     "wfZid": "Z1534"
+  },
+  {
+    "iso": "tlh-latn",
+    "native": "tlhIngan Hol",
+    "english": "Klingon (Latin script)",
+    "wfZid": "Z1990"
+  },
+  {
+    "iso": "tli",
+    "native": "Tlingit",
+    "english": "Tlingit",
+    "wfZid": "Z1682"
   },
   {
     "iso": "tlb",
@@ -2162,10 +4088,52 @@ export const LANGUAGES = [
     "wfZid": "Z1761"
   },
   {
+    "iso": "tpi",
+    "native": "Tok Pisin",
+    "english": "Tok Pisin",
+    "wfZid": "Z1067"
+  },
+  {
+    "iso": "tkl",
+    "native": "Tokelau",
+    "english": "Tokelau",
+    "wfZid": "Z1138"
+  },
+  {
+    "iso": "tok",
+    "native": "toki pona",
+    "english": "Toki Pona",
+    "wfZid": "Z1762"
+  },
+  {
+    "iso": "tly",
+    "native": "tolışi",
+    "english": "Talysh",
+    "wfZid": "Z1340"
+  },
+  {
     "iso": "rmg",
     "native": "Traveller Norwegian",
     "english": "Traveller Norwegian",
     "wfZid": "Z1161"
+  },
+  {
+    "iso": "tkr",
+    "native": "Tsakhur",
+    "english": "Tsakhur",
+    "wfZid": "Z1040"
+  },
+  {
+    "iso": "tsd",
+    "native": "Tsakonian",
+    "english": "Tsakonian",
+    "wfZid": "Z1254"
+  },
+  {
+    "iso": "chy",
+    "native": "Tsėhesenėstsestotse",
+    "english": "Cheyenne",
+    "wfZid": "Z1348"
   },
   {
     "iso": "ve",
@@ -2204,10 +4172,22 @@ export const LANGUAGES = [
     "wfZid": "Z1708"
   },
   {
+    "iso": "tr",
+    "native": "Türkçe",
+    "english": "Turkish",
+    "wfZid": "Z1237"
+  },
+  {
     "iso": "tk",
     "native": "Türkmençe",
     "english": "Turkmen",
     "wfZid": "Z1797"
+  },
+  {
+    "iso": "tru",
+    "native": "Ṫuroyo",
+    "english": "Turoyo",
+    "wfZid": "Z1168"
   },
   {
     "iso": "tvl",
@@ -2222,16 +4202,40 @@ export const LANGUAGES = [
     "wfZid": "Z1344"
   },
   {
+    "iso": "kcg",
+    "native": "Tyap",
+    "english": "Tyap",
+    "wfZid": "Z1179"
+  },
+  {
+    "iso": "uga",
+    "native": "Ugaritic",
+    "english": "Ugaritic",
+    "wfZid": "Z1234"
+  },
+  {
     "iso": "umb",
     "native": "Umbundu",
     "english": "Umbundu",
     "wfZid": "Z1308"
   },
   {
+    "iso": "sju",
+    "native": "Ume Sami",
+    "english": "Ume Sami",
+    "wfZid": "Z1104"
+  },
+  {
     "iso": "ug-latn",
     "native": "Uyghurche",
     "english": "Uyghur (Latin script)",
     "wfZid": "Z1414"
+  },
+  {
+    "iso": "vot",
+    "native": "Vaďďa",
+    "english": "Votic",
+    "wfZid": "Z1257"
   },
   {
     "iso": "za",
@@ -2252,6 +4256,18 @@ export const LANGUAGES = [
     "wfZid": "Z1655"
   },
   {
+    "iso": "vec",
+    "native": "vèneto",
+    "english": "Venetian",
+    "wfZid": "Z1363"
+  },
+  {
+    "iso": "vep",
+    "native": "vepsän kel’",
+    "english": "Veps",
+    "wfZid": "Z1867"
+  },
+  {
     "iso": "ruq",
     "native": "vlăheşte",
     "english": "Megleno-Romanian",
@@ -2270,6 +4286,12 @@ export const LANGUAGES = [
     "wfZid": "Z1370"
   },
   {
+    "iso": "vro",
+    "native": "võro",
+    "english": "Võro",
+    "wfZid": "Z1346"
+  },
+  {
     "iso": "vun",
     "native": "Vunjo",
     "english": "Vunjo",
@@ -2280,6 +4302,18 @@ export const LANGUAGES = [
     "native": "Vute",
     "english": "Vute",
     "wfZid": "Z1819"
+  },
+  {
+    "iso": "wlx",
+    "native": "Waali",
+    "english": "Waali",
+    "wfZid": "Z1405"
+  },
+  {
+    "iso": "wls",
+    "native": "Wallisian",
+    "english": "Wallisian",
+    "wfZid": "Z1605"
   },
   {
     "iso": "wa",
@@ -2300,6 +4334,12 @@ export const LANGUAGES = [
     "wfZid": "Z1393"
   },
   {
+    "iso": "was",
+    "native": "Washo",
+    "english": "Washo",
+    "wfZid": "Z1714"
+  },
+  {
     "iso": "guc",
     "native": "wayuunaiki",
     "english": "Wayuu",
@@ -2310,6 +4350,24 @@ export const LANGUAGES = [
     "native": "Welsh-Romani",
     "english": "Welsh-Romani",
     "wfZid": "Z1256"
+  },
+  {
+    "iso": "bdr",
+    "native": "West Coast Bajau",
+    "english": "West Coast Bajau",
+    "wfZid": "Z1854"
+  },
+  {
+    "iso": "vls",
+    "native": "West-Vlams",
+    "english": "West Flemish",
+    "wfZid": "Z1555"
+  },
+  {
+    "iso": "abe",
+    "native": "Western Abenaki",
+    "english": "Western Abenaki",
+    "wfZid": "Z1832"
   },
   {
     "iso": "cja",
@@ -2336,6 +4394,18 @@ export const LANGUAGES = [
     "wfZid": "Z1548"
   },
   {
+    "iso": "war",
+    "native": "Winaray",
+    "english": "Waray",
+    "wfZid": "Z1155"
+  },
+  {
+    "iso": "wal",
+    "native": "Wolaytta",
+    "english": "Wolaytta",
+    "wfZid": "Z1563"
+  },
+  {
     "iso": "wo",
     "native": "Wolof",
     "english": "Wolof",
@@ -2352,6 +4422,18 @@ export const LANGUAGES = [
     "native": "Xitsonga",
     "english": "Tsonga",
     "wfZid": "Z1636"
+  },
+  {
+    "iso": "sgh",
+    "native": "Xuɣ̌nůni",
+    "english": "Shughni",
+    "wfZid": "Z1983"
+  },
+  {
+    "iso": "yat",
+    "native": "Yambeta",
+    "english": "Yambeta",
+    "wfZid": "Z1280"
   },
   {
     "iso": "yav",
@@ -2384,10 +4466,40 @@ export const LANGUAGES = [
     "wfZid": "Z1949"
   },
   {
+    "iso": "yo",
+    "native": "Yorùbá",
+    "english": "Yoruba",
+    "wfZid": "Z1818"
+  },
+  {
     "iso": "zap",
     "native": "Zapotec",
     "english": "Zapotec",
     "wfZid": "Z1575"
+  },
+  {
+    "iso": "dje",
+    "native": "Zarma",
+    "english": "Zarma",
+    "wfZid": "Z1287"
+  },
+  {
+    "iso": "zza",
+    "native": "Zaza",
+    "english": "Zaza",
+    "wfZid": "Z1187"
+  },
+  {
+    "iso": "diq",
+    "native": "Zazaki",
+    "english": "Zazaki",
+    "wfZid": "Z1407"
+  },
+  {
+    "iso": "zea",
+    "native": "Zeêuws",
+    "english": "Zeelandic",
+    "wfZid": "Z1338"
   },
   {
     "iso": "sgs",
@@ -2396,10 +4508,28 @@ export const LANGUAGES = [
     "wfZid": "Z1755"
   },
   {
+    "iso": "zen",
+    "native": "Zenaga",
+    "english": "Zenaga",
+    "wfZid": "Z1096"
+  },
+  {
     "iso": "gbz",
     "native": "Zoroastrian Dari",
     "english": "Zoroastrian Dari",
     "wfZid": "Z1135"
+  },
+  {
+    "iso": "zun",
+    "native": "Zuni",
+    "english": "Zuni",
+    "wfZid": "Z1758"
+  },
+  {
+    "iso": "grc",
+    "native": "Ἀρχαία ἑλληνικὴ",
+    "english": "Ancient Greek",
+    "wfZid": "Z1052"
   },
   {
     "iso": "el",
@@ -2414,16 +4544,28 @@ export const LANGUAGES = [
     "wfZid": "Z1652"
   },
   {
-    "iso": "ady-cyrl",
-    "native": "адыгабзэ",
-    "english": "Adyghe (Cyrillic script)",
-    "wfZid": "Z1475"
+    "iso": "av",
+    "native": "авар",
+    "english": "Avaric",
+    "wfZid": "Z1440"
   },
   {
     "iso": "ady",
     "native": "адыгабзэ",
     "english": "Adyghe",
     "wfZid": "Z1195"
+  },
+  {
+    "iso": "ady-cyrl",
+    "native": "адыгабзэ",
+    "english": "Adyghe (Cyrillic script)",
+    "wfZid": "Z1475"
+  },
+  {
+    "iso": "kbd",
+    "native": "Адыгэбзэ",
+    "english": "Kabardian",
+    "wfZid": "Z1467"
   },
   {
     "iso": "kbd-cyrl",
@@ -2438,10 +4580,28 @@ export const LANGUAGES = [
     "wfZid": "Z1746"
   },
   {
+    "iso": "ab",
+    "native": "Аҧсшәа",
+    "english": "Abkhazian",
+    "wfZid": "Z1421"
+  },
+  {
     "iso": "ba",
     "native": "башҡортса",
     "english": "Bashkir",
     "wfZid": "Z1211"
+  },
+  {
+    "iso": "be",
+    "native": "беларуская",
+    "english": "Belarusian",
+    "wfZid": "Z1622"
+  },
+  {
+    "iso": "be-latn",
+    "native": "беларуская (тарашкевіца)‎",
+    "english": "Belarusian (Taraškievica orthography)",
+    "wfZid": "Z1132"
   },
   {
     "iso": "bxr",
@@ -2462,10 +4622,40 @@ export const LANGUAGES = [
     "wfZid": "Z1584"
   },
   {
+    "iso": "inh",
+    "native": "ГӀалгӀай",
+    "english": "Ingush",
+    "wfZid": "Z1122"
+  },
+  {
     "iso": "dlg",
     "native": "долган тыла",
     "english": "Dolgan",
     "wfZid": "Z1973"
+  },
+  {
+    "iso": "os",
+    "native": "Ирон",
+    "english": "Ossetic",
+    "wfZid": "Z1798"
+  },
+  {
+    "iso": "kv",
+    "native": "коми",
+    "english": "Komi",
+    "wfZid": "Z1420"
+  },
+  {
+    "iso": "krc",
+    "native": "къарачай-малкъар",
+    "english": "Karachay-Balkar",
+    "wfZid": "Z1387"
+  },
+  {
+    "iso": "kum",
+    "native": "къумукъ",
+    "english": "Kumyk",
+    "wfZid": "Z1241"
   },
   {
     "iso": "crh-ro",
@@ -2480,10 +4670,22 @@ export const LANGUAGES = [
     "wfZid": "Z1775"
   },
   {
+    "iso": "ky",
+    "native": "Кыргызча",
+    "english": "Kyrgyz",
+    "wfZid": "Z1455"
+  },
+  {
     "iso": "mrj",
     "native": "кырык мары",
     "english": "Western Mari",
     "wfZid": "Z1183"
+  },
+  {
+    "iso": "kk",
+    "native": "қазақша",
+    "english": "Kazakh",
+    "wfZid": "Z1441"
   },
   {
     "iso": "kk-cyrl",
@@ -2498,16 +4700,46 @@ export const LANGUAGES = [
     "wfZid": "Z1536"
   },
   {
+    "iso": "lbe",
+    "native": "лакку",
+    "english": "Lak",
+    "wfZid": "Z1267"
+  },
+  {
+    "iso": "lez",
+    "native": "лезги",
+    "english": "Lezghian",
+    "wfZid": "Z1735"
+  },
+  {
+    "iso": "ckt",
+    "native": "ԓыгъоравэтԓьэн",
+    "english": "Chukchi",
+    "wfZid": "Z1489"
+  },
+  {
     "iso": "mk",
     "native": "македонски",
     "english": "Macedonian",
     "wfZid": "Z1402"
   },
   {
+    "iso": "mns",
+    "native": "ма̄ньси",
+    "english": "Mansi",
+    "wfZid": "Z1941"
+  },
+  {
     "iso": "isv-cyrl",
     "native": "меджусловјанскы",
     "english": "Interslavic (Cyrillic script)",
     "wfZid": "Z1924"
+  },
+  {
+    "iso": "mdf",
+    "native": "мокшень",
+    "english": "Moksha",
+    "wfZid": "Z1766"
   },
   {
     "iso": "mo",
@@ -2528,6 +4760,12 @@ export const LANGUAGES = [
     "wfZid": "Z1915"
   },
   {
+    "iso": "gld",
+    "native": "на̄ни",
+    "english": "Nanai",
+    "wfZid": "Z1868"
+  },
+  {
     "iso": "ce",
     "native": "нохчийн",
     "english": "Chechen",
@@ -2540,10 +4778,34 @@ export const LANGUAGES = [
     "wfZid": "Z1160"
   },
   {
+    "iso": "koi",
+    "native": "перем коми",
+    "english": "Komi-Permyak",
+    "wfZid": "Z1512"
+  },
+  {
+    "iso": "rue",
+    "native": "русиньскый",
+    "english": "Rusyn",
+    "wfZid": "Z1815"
+  },
+  {
     "iso": "rsk",
     "native": "руски",
     "english": "Pannonian Rusyn",
     "wfZid": "Z1874"
+  },
+  {
+    "iso": "sah",
+    "native": "саха тыла",
+    "english": "Sakha",
+    "wfZid": "Z1533"
+  },
+  {
+    "iso": "sty",
+    "native": "себертатар",
+    "english": "Siberian Tatar",
+    "wfZid": "Z1286"
   },
   {
     "iso": "cu",
@@ -2552,7 +4814,7 @@ export const LANGUAGES = [
     "wfZid": "Z1105"
   },
   {
-    "iso": "sr-cyrl",
+    "iso": "sr-ec",
     "native": "српски (ћирилица)",
     "english": "Serbian (Cyrillic script)",
     "wfZid": "Z1181"
@@ -2576,10 +4838,22 @@ export const LANGUAGES = [
     "wfZid": "Z1724"
   },
   {
+    "iso": "tt",
+    "native": "татарча/tatarça",
+    "english": "Tatar",
+    "wfZid": "Z1401"
+  },
+  {
     "iso": "tly-cyrl",
     "native": "толыши",
     "english": "Talysh (Cyrillic script)",
     "wfZid": "Z1580"
+  },
+  {
+    "iso": "tg",
+    "native": "тоҷикӣ",
+    "english": "Tajik",
+    "wfZid": "Z1207"
   },
   {
     "iso": "tg-cyrl",
@@ -2588,16 +4862,70 @@ export const LANGUAGES = [
     "wfZid": "Z1737"
   },
   {
+    "iso": "tyv",
+    "native": "тыва дыл",
+    "english": "Tuvinian",
+    "wfZid": "Z1780"
+  },
+  {
+    "iso": "udm",
+    "native": "удмурт",
+    "english": "Udmurt",
+    "wfZid": "Z1451"
+  },
+  {
     "iso": "uz-cyrl",
     "native": "ўзбекча",
     "english": "Uzbek (Cyrillic script)",
     "wfZid": "Z1474"
   },
   {
+    "iso": "uk",
+    "native": "українська",
+    "english": "Ukrainian",
+    "wfZid": "Z1332"
+  },
+  {
     "iso": "xal",
     "native": "хальмг",
     "english": "Kalmyk",
     "wfZid": "Z1100"
+  },
+  {
+    "iso": "cv",
+    "native": "Чӑвашла",
+    "english": "Chuvash",
+    "wfZid": "Z1510"
+  },
+  {
+    "iso": "myv",
+    "native": "эрзянь",
+    "english": "Erzya",
+    "wfZid": "Z1716"
+  },
+  {
+    "iso": "xmf",
+    "native": "მარგალური",
+    "english": "Mingrelian",
+    "wfZid": "Z1321"
+  },
+  {
+    "iso": "ka",
+    "native": "ქართული",
+    "english": "Georgian",
+    "wfZid": "Z1756"
+  },
+  {
+    "iso": "hyw",
+    "native": "Արեւմտահայերէն",
+    "english": "Western Armenian",
+    "wfZid": "Z1495"
+  },
+  {
+    "iso": "hy",
+    "native": "հայերեն",
+    "english": "Armenian",
+    "wfZid": "Z1541"
   },
   {
     "iso": "ug-arab",
@@ -2610,6 +4938,18 @@ export const LANGUAGES = [
     "native": "الحضرمية",
     "english": "Hadhrami Arabic",
     "wfZid": "Z1976"
+  },
+  {
+    "iso": "brh",
+    "native": "براہوئی",
+    "english": "Brahui",
+    "wfZid": "Z1293"
+  },
+  {
+    "iso": "bal",
+    "native": "بلوچی",
+    "english": "Baluchi",
+    "wfZid": "Z1747"
   },
   {
     "iso": "acq",
@@ -2630,6 +4970,12 @@ export const LANGUAGES = [
     "wfZid": "Z1633"
   },
   {
+    "iso": "aeb",
+    "native": "تونسي/Tûnsî",
+    "english": "Tunisian Arabic",
+    "wfZid": "Z1582"
+  },
+  {
     "iso": "bcc",
     "native": "جهلسری بلوچی",
     "english": "Southern Balochi",
@@ -2646,6 +4992,12 @@ export const LANGUAGES = [
     "native": "روچ کپتین بلوچی",
     "english": "Western Balochi",
     "wfZid": "Z1505"
+  },
+  {
+    "iso": "ajp",
+    "native": "شامي",
+    "english": "Levantine Arabic",
+    "wfZid": "Z1884"
   },
   {
     "iso": "ota",
@@ -2696,6 +5048,12 @@ export const LANGUAGES = [
     "wfZid": "Z1424"
   },
   {
+    "iso": "ars",
+    "native": "نجدي",
+    "english": "Najdi Arabic",
+    "wfZid": "Z1853"
+  },
+  {
     "iso": "bgc-arab",
     "native": "ہریانوی",
     "english": "Haryanvi (Arabic script)",
@@ -2720,6 +5078,24 @@ export const LANGUAGES = [
     "wfZid": "Z1438"
   },
   {
+    "iso": "taq",
+    "native": "ⵜⴰⵎⴰⵌⴰⵆ",
+    "english": "Tamasheq (Tifinagh script)",
+    "wfZid": "Z1896"
+  },
+  {
+    "iso": "tmh",
+    "native": "ⵜⴰⵎⴰⵌⴰⵆ",
+    "english": "Tamasheq",
+    "wfZid": "Z1351"
+  },
+  {
+    "iso": "tzm",
+    "native": "ⵜⴰⵎⴰⵣⵉⵖⵜ",
+    "english": "Central Atlas Tamazight",
+    "wfZid": "Z1395"
+  },
+  {
     "iso": "zgh",
     "native": "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵡⴰⵢⵜ",
     "english": "Standard Moroccan Tamazight",
@@ -2732,10 +5108,40 @@ export const LANGUAGES = [
     "wfZid": "Z1458"
   },
   {
+    "iso": "tig",
+    "native": "ትግራይት",
+    "english": "Tigre",
+    "wfZid": "Z1628"
+  },
+  {
+    "iso": "ti",
+    "native": "ትግርኛ",
+    "english": "Tigrinya",
+    "wfZid": "Z1108"
+  },
+  {
+    "iso": "am",
+    "native": "አማርኛ",
+    "english": "Amharic",
+    "wfZid": "Z1184"
+  },
+  {
     "iso": "anp",
     "native": "अङ्गिका",
     "english": "Angika",
     "wfZid": "Z1297"
+  },
+  {
+    "iso": "awa",
+    "native": "अवधी",
+    "english": "Awadhi",
+    "wfZid": "Z1422"
+  },
+  {
+    "iso": "thq",
+    "native": "काेचिला थारु",
+    "english": "Kochila Tharu",
+    "wfZid": "Z1965"
   },
   {
     "iso": "ks-deva",
@@ -2748,6 +5154,12 @@ export const LANGUAGES = [
     "native": "गुज्जरी",
     "english": "Gojri (Devanagari script)",
     "wfZid": "Z1960"
+  },
+  {
+    "iso": "kgg",
+    "native": "गेम्येहाक़ गिपन",
+    "english": "Kusunda",
+    "wfZid": "Z1962"
   },
   {
     "iso": "gom-deva",
@@ -2780,6 +5192,24 @@ export const LANGUAGES = [
     "wfZid": "Z1675"
   },
   {
+    "iso": "pi",
+    "native": "पालि",
+    "english": "Pali",
+    "wfZid": "Z1618"
+  },
+  {
+    "iso": "bh",
+    "native": "भोजपुरी",
+    "english": "Bhojpuri",
+    "wfZid": "Z1503"
+  },
+  {
+    "iso": "mr",
+    "native": "मराठी",
+    "english": "Marathi",
+    "wfZid": "Z1206"
+  },
+  {
     "iso": "mai",
     "native": "मैथिली",
     "english": "Maithili",
@@ -2798,6 +5228,36 @@ export const LANGUAGES = [
     "wfZid": "Z1951"
   },
   {
+    "iso": "sa",
+    "native": "संस्कृतम्",
+    "english": "Sanskrit",
+    "wfZid": "Z1749"
+  },
+  {
+    "iso": "bgc",
+    "native": "हरियाणवी",
+    "english": "Haryanvi",
+    "wfZid": "Z1886"
+  },
+  {
+    "iso": "as",
+    "native": "অসমীয়া",
+    "english": "Assamese",
+    "wfZid": "Z1197"
+  },
+  {
+    "iso": "bn",
+    "native": "বাংলা",
+    "english": "Bangla",
+    "wfZid": "Z1011"
+  },
+  {
+    "iso": "bpy",
+    "native": "বিষ্ণুপ্রিয়া মণিপুরী",
+    "english": "Bishnupriya",
+    "wfZid": "Z1148"
+  },
+  {
     "iso": "pa",
     "native": "ਪੰਜਾਬੀ (ਗੁਰਮੁਖੀ)",
     "english": "Punjabi (Gurmukhi)",
@@ -2808,6 +5268,12 @@ export const LANGUAGES = [
     "native": "ગુજરાતી",
     "english": "Gujarati",
     "wfZid": "Z1696"
+  },
+  {
+    "iso": "or",
+    "native": "ଓଡ଼ିଆ",
+    "english": "Odia",
+    "wfZid": "Z1419"
   },
   {
     "iso": "dso",
@@ -2822,10 +5288,28 @@ export const LANGUAGES = [
     "wfZid": "Z1958"
   },
   {
+    "iso": "ta",
+    "native": "தமிழ்",
+    "english": "Tamil",
+    "wfZid": "Z1694"
+  },
+  {
+    "iso": "nit",
+    "native": "కొలామి",
+    "english": "Southeastern Kolami",
+    "wfZid": "Z1916"
+  },
+  {
     "iso": "wsg",
     "native": "గోండి",
     "english": "Adilabad Gondi",
     "wfZid": "Z1918"
+  },
+  {
+    "iso": "te",
+    "native": "తెలుగు",
+    "english": "Telugu",
+    "wfZid": "Z1429"
   },
   {
     "iso": "kn",
@@ -2852,6 +5336,30 @@ export const LANGUAGES = [
     "wfZid": "Z1053"
   },
   {
+    "iso": "mni",
+    "native": "ꯃꯤꯇꯩ ꯂꯣꯟ",
+    "english": "Meeteilon",
+    "wfZid": "Z1151"
+  },
+  {
+    "iso": "syl",
+    "native": "ꠍꠤꠟꠐꠤ ꠝꠣꠔ",
+    "english": "Sylheti",
+    "wfZid": "Z1878"
+  },
+  {
+    "iso": "th",
+    "native": "ไทย",
+    "english": "Thai",
+    "wfZid": "Z1851"
+  },
+  {
+    "iso": "lo",
+    "native": "ລາວ",
+    "english": "Lao",
+    "wfZid": "Z1497"
+  },
+  {
     "iso": "dz",
     "native": "ཇོང་ཁ",
     "english": "Dzongkha",
@@ -2862,6 +5370,12 @@ export const LANGUAGES = [
     "native": "བོད་ཡིག",
     "english": "Tibetan",
     "wfZid": "Z1527"
+  },
+  {
+    "iso": "bug",
+    "native": "ᨅᨔ ᨕᨘᨁᨗ",
+    "english": "Buginese",
+    "wfZid": "Z1623"
   },
   {
     "iso": "bug-bugi",
@@ -2882,6 +5396,12 @@ export const LANGUAGES = [
     "wfZid": "Z1018"
   },
   {
+    "iso": "pwo",
+    "native": "ဖျိၩ့ၡိ",
+    "english": "Western Pwo",
+    "wfZid": "Z1991"
+  },
+  {
     "iso": "kjp",
     "native": "ဖၠုံလိက်",
     "english": "Eastern Pwo",
@@ -2898,6 +5418,12 @@ export const LANGUAGES = [
     "native": "ဘာသာ မန်",
     "english": "Mon",
     "wfZid": "Z1620"
+  },
+  {
+    "iso": "my",
+    "native": "မြန်မာဘာသာ",
+    "english": "Burmese",
+    "wfZid": "Z1055"
   },
   {
     "iso": "rki",
@@ -2918,6 +5444,12 @@ export const LANGUAGES = [
     "wfZid": "Z1374"
   },
   {
+    "iso": "km",
+    "native": "ភាសាខ្មែរ",
+    "english": "Khmer",
+    "wfZid": "Z1220"
+  },
+  {
     "iso": "tdd",
     "native": "ᥖᥭᥰᥖᥬᥳᥑᥨᥒᥰ",
     "english": "Tai Nuea",
@@ -2928,6 +5460,18 @@ export const LANGUAGES = [
     "native": "ᬩᬲᬩᬮᬶ",
     "english": "Balinese (Balinese script)",
     "wfZid": "Z1821"
+  },
+  {
+    "iso": "jv-java",
+    "native": "ꦗꦮ",
+    "english": "Javanese (Javanese script)",
+    "wfZid": "Z1984"
+  },
+  {
+    "iso": "mnc",
+    "native": "ᠮᠠᠨᠵᡠ ᡤᡳᠰᡠᠨ",
+    "english": "Manchu",
+    "wfZid": "Z1585"
   },
   {
     "iso": "mnc-mong",
@@ -2954,10 +5498,34 @@ export const LANGUAGES = [
     "wfZid": "Z1702"
   },
   {
+    "iso": "iu",
+    "native": "ᐃᓄᒃᑎᑐᑦ/inuktitut",
+    "english": "Inuktitut",
+    "wfZid": "Z1559"
+  },
+  {
     "iso": "bax-bamu",
     "native": "ꚶꛉ꛰꛲ꚫꛦꚳ",
     "english": "Bamun (Bamu script)",
     "wfZid": "Z1952"
+  },
+  {
+    "iso": "ko-kp",
+    "native": "조선말",
+    "english": "Korean (North Korea)",
+    "wfZid": "Z1506"
+  },
+  {
+    "iso": "ko",
+    "native": "한국어",
+    "english": "Korean",
+    "wfZid": "Z1643"
+  },
+  {
+    "iso": "ain",
+    "native": "アイヌイタㇰ",
+    "english": "Ainu",
+    "wfZid": "Z1734"
   },
   {
     "iso": "ja-kana",
@@ -2970,6 +5538,18 @@ export const LANGUAGES = [
     "native": "にほんご（ひらがな）",
     "english": "Japanese (Hiragana script)",
     "wfZid": "Z1171"
+  },
+  {
+    "iso": "ii",
+    "native": "ꆇꉙ",
+    "english": "Sichuan Yi",
+    "wfZid": "Z1480"
+  },
+  {
+    "iso": "hoc",
+    "native": "𑢹𑣉𑣉 𑣎𑣋𑣜",
+    "english": "Ho",
+    "wfZid": "Z1961"
   },
   {
     "iso": "got",
@@ -3002,6 +5582,12 @@ export const LANGUAGES = [
     "wfZid": "Z1107"
   },
   {
+    "iso": "zh-hk",
+    "native": "中文（香港）‎",
+    "english": "Chinese (Hong Kong)",
+    "wfZid": "Z1589"
+  },
+  {
     "iso": "zh-my",
     "native": "中文（马来西亚）‎",
     "english": "Chinese (Malaysia)",
@@ -3012,6 +5598,12 @@ export const LANGUAGES = [
     "native": "吳語（正體）",
     "english": "Wu (Traditional Han script)",
     "wfZid": "Z1900"
+  },
+  {
+    "iso": "wuu",
+    "native": "吴语",
+    "english": "Wu",
+    "wfZid": "Z1837"
   },
   {
     "iso": "wuu-hans",
@@ -3038,6 +5630,12 @@ export const LANGUAGES = [
     "wfZid": "Z1932"
   },
   {
+    "iso": "lzh",
+    "native": "文言",
+    "english": "Literary Chinese",
+    "wfZid": "Z1152"
+  },
+  {
     "iso": "ja-hani",
     "native": "日本語（漢字）",
     "english": "Japanese (Kanji script)",
@@ -3054,6 +5652,18 @@ export const LANGUAGES = [
     "native": "晋语（简化字）",
     "english": "Jin (Simplified Han script)",
     "wfZid": "Z1637"
+  },
+  {
+    "iso": "ryu",
+    "native": "沖縄口",
+    "english": "Okinawan",
+    "wfZid": "Z1858"
+  },
+  {
+    "iso": "zh-hans",
+    "native": "简体中文",
+    "english": "Chinese (Simplified Han script)",
+    "wfZid": "Z1645"
   },
   {
     "iso": "yue",
@@ -3074,16 +5684,34 @@ export const LANGUAGES = [
     "wfZid": "Z1901"
   },
   {
+    "iso": "zh-hant",
+    "native": "繁體中文",
+    "english": "Chinese (Traditional Han script)",
+    "wfZid": "Z1672"
+  },
+  {
     "iso": "cpx-hant",
     "native": "莆仙語（繁體）",
     "english": "Puxian (Traditional Han script)",
     "wfZid": "Z1904"
   },
   {
+    "iso": "cpx",
+    "native": "莆仙语",
+    "english": "Puxian",
+    "wfZid": "Z1903"
+  },
+  {
     "iso": "cpx-hans",
     "native": "莆仙语（简体）",
     "english": "Puxian (Simplified Han script)",
     "wfZid": "Z1905"
+  },
+  {
+    "iso": "gan",
+    "native": "贛語",
+    "english": "Gan",
+    "wfZid": "Z1804"
   },
   {
     "iso": "gan-hant",
@@ -3096,6 +5724,12 @@ export const LANGUAGES = [
     "native": "赣语（简体）‎",
     "english": "Gan (Simplified Han script)",
     "wfZid": "Z1375"
+  },
+  {
+    "iso": "nan",
+    "native": "閩南語 / Bân-lâm-gú",
+    "english": "Minnan",
+    "wfZid": "Z1221"
   },
   {
     "iso": "nan-hant",
@@ -3120,5 +5754,11 @@ export const LANGUAGES = [
     "native": "閩東語（傳統漢字）",
     "english": "Mindong (Traditional Han script)",
     "wfZid": "Z1954"
+  },
+  {
+    "iso": "tlh-piqd",
+    "native": " ",
+    "english": "Klingon (Klingon script)",
+    "wfZid": "Z1989"
   }
 ];
