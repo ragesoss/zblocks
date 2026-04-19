@@ -14,6 +14,8 @@
 import { buildToolbox } from "./blocks.js";
 import { FUNCTIONS } from "./functions.js";
 import { loadPinnedZids } from "./storage.js";
+import { refreshAllShellDefBlocks, ensureShellDefBlock } from "./shell_def.js";
+import { typeLabel } from "./type_labels.js";
 
 export const SHELL = {
   zid: "",           // empty until declared
@@ -21,6 +23,7 @@ export const SHELL = {
   args: [],          // [{ label, type }]
   label: null,       // human-readable function label, when known
   sourceZid: null,   // imported Z14 source ZID, when loaded via Import
+  sourceLabel: null, // Z14 label (e.g. "compose via 12-TET"), when known
 };
 
 // Map block type → { key, label, type }. Emitter reads this.
@@ -93,6 +96,9 @@ function saveShell() {
   }
 
   setShell({ zid, outputType, args });
+  // Manual shell declaration → materialise the wf_shell_def frame
+  // in the workspace so the user sees the definition they just set up.
+  ensureShellDefBlock(workspace);
   closeModal();
 }
 
@@ -105,17 +111,22 @@ function saveShell() {
 //   sourceZid: the Z14 the composition was loaded from, displayed in
 //              the status so the user knows which implementation
 //              their export should paste back into.
-export function setShell({ zid, outputType, args, label = null, sourceZid = null }) {
+export function setShell({
+  zid, outputType, args,
+  label = null, sourceZid = null, sourceLabel = null,
+}) {
   SHELL.zid = zid;
   SHELL.outputType = outputType;
   SHELL.args = args;
   SHELL.label = label;
   SHELL.sourceZid = sourceZid;
+  SHELL.sourceLabel = sourceLabel;
 
   unregisterArgRefBlocks();
   registerArgRefBlocks();
   rebuildToolbox();
   updateShellStatus();
+  refreshAllShellDefBlocks(workspace);
 }
 
 function unregisterArgRefBlocks() {
@@ -187,13 +198,15 @@ function updateShellStatus() {
   }
   const signature = SHELL.args.length === 0
     ? "no arguments declared"
-    : SHELL.args.map(a => `${a.label}: ${a.type}`).join(", ");
+    : SHELL.args.map(a => `${a.label}: ${escapeHtml(typeLabel(a.type, { withZid: true }))}`).join(", ");
   const labelPart = SHELL.label
     ? `<b>${escapeHtml(SHELL.label)}</b> \u00B7 `
     : "";
-  const sigPart = `${escapeHtml(SHELL.zid)}(${escapeHtml(signature)}) \u2192 ${escapeHtml(SHELL.outputType)}`;
+  const sigPart = `${escapeHtml(SHELL.zid)}(${signature}) \u2192 ${escapeHtml(typeLabel(SHELL.outputType, { withZid: true }))}`;
   const sourcePart = SHELL.sourceZid
-    ? ` \u2014 editing impl <b>${escapeHtml(SHELL.sourceZid)}</b>`
+    ? (SHELL.sourceLabel
+        ? ` \u2014 editing impl <b>${escapeHtml(SHELL.sourceLabel)}</b> (${escapeHtml(SHELL.sourceZid)})`
+        : ` \u2014 editing impl <b>${escapeHtml(SHELL.sourceZid)}</b>`)
     : "";
   el.innerHTML = labelPart + sigPart + sourcePart;
 }

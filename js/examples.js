@@ -30,46 +30,52 @@ export const EXAMPLES = [
       setShell({
         zid: "Z33682",
         outputType: "Z20838",
+        label: "frequency of MIDI note number",
         args: [
           { label: "midi note number", type: "Z16683" },
           { label: "pitch standard",   type: "Z6001"  },
         ],
       });
+      // Composition body, wrapped inside a wf_shell_def frame so the
+      // workspace visibly shows what Z8 this composition implements.
+      const composition = {
+        type: "wf_Z21032",
+        inputs: {
+          // multiplier: reference frequency of pitch standard
+          Z21032K1: { block: {
+            type: "wf_Z33603",
+            inputs: {
+              Z33603K1: { block: { type: "wf_arg_1" } },  // pitch standard
+            },
+          }},
+          // multiplicand: frequency ratio of semitone distance
+          Z21032K2: { block: {
+            type: "wf_Z25232",
+            inputs: {
+              Z25232K1: { block: {
+                type: "wf_Z17111",  // subtract (integer)
+                inputs: {
+                  Z17111K1: { block: { type: "wf_arg_0" } },  // midi note number
+                  Z17111K2: { block: {
+                    type: "wf_Z33606",
+                    inputs: {
+                      Z33606K1: { block: { type: "wf_arg_1" } },  // pitch standard
+                    },
+                  }},
+                },
+              }},
+            },
+          }},
+        },
+      };
       const state = {
         blocks: {
-          blocks: [
-            {
-              type: "wf_Z21032",
-              x: 40, y: 40,
-              inputs: {
-                // multiplier: reference frequency of pitch standard
-                Z21032K1: { block: {
-                  type: "wf_Z33603",
-                  inputs: {
-                    Z33603K1: { block: { type: "wf_arg_1" } },  // pitch standard
-                  },
-                }},
-                // multiplicand: frequency ratio of semitone distance
-                Z21032K2: { block: {
-                  type: "wf_Z25232",
-                  inputs: {
-                    Z25232K1: { block: {
-                      type: "wf_Z17111",  // subtract (integer)
-                      inputs: {
-                        Z17111K1: { block: { type: "wf_arg_0" } },  // midi note number
-                        Z17111K2: { block: {
-                          type: "wf_Z33606",
-                          inputs: {
-                            Z33606K1: { block: { type: "wf_arg_1" } },  // pitch standard
-                          },
-                        }},
-                      },
-                    }},
-                  },
-                }},
-              },
-            },
-          ],
+          blocks: [{
+            type: "wf_shell_def",
+            x: 20, y: 20,
+            deletable: false,
+            inputs: { BODY: { block: composition } },
+          }],
         },
       };
       Blockly.serialization.workspaces.load(state, workspace);

@@ -17,6 +17,7 @@ import { FUNCTIONS, CATEGORIES } from "./functions.js";
 import { LITERAL_BLOCKS, LITERAL_TOOLBOX, SHADOW_FOR_TYPE } from "./literals.js";
 import { typeLabel } from "./type_labels.js";
 import { openSlotPicker } from "./slot_picker.js";
+import { registerShellDefBlock } from "./shell_def.js";
 import { openWikidataSearch } from "./wikidata_search.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
@@ -98,6 +99,9 @@ export function registerAllBlocks() {
   // Shadow extension must be registered before any block that uses it
   // is defined.
   registerShadowExtension();
+
+  // Shell-def frame block: top-level implementation boundary.
+  registerShellDefBlock();
 
   // Literals first (so shadow attachments can reference them by type).
   define(LITERAL_BLOCKS);

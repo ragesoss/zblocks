@@ -58,7 +58,10 @@ async function interpretTopLevel(obj, { sourceZid = null, rootZ2 = null } = {}) 
     if (!composition) throw new ImportError("Z14 has no Z14K2 composition to import.");
     const targetZid = typeof obj.Z14K1 === "string" ? obj.Z14K1 : obj.Z14K1?.Z6K1;
     const shell = targetZid ? await fetchShellFromZ8(targetZid) : null;
-    if (shell) shell.sourceZid = sourceZid;
+    if (shell) {
+      shell.sourceZid = sourceZid;
+      shell.sourceLabel = rootZ2 ? (extractEnLabel(rootZ2.Z2K3) || null) : null;
+    }
     const state = await compositionToState(composition, shell);
     return { shell, state };
   }
@@ -150,7 +153,20 @@ async function compositionToState(composition, shell) {
 
   const rootSpec = exprToBlockSpec(composition);
   if (typeof rootSpec === "string") throw new ImportError(rootSpec);
-  // Place the root at a visible spot.
+
+  // With a declared shell, wrap the composition in a wf_shell_def
+  // frame so the workspace visually shows what's being implemented.
+  // Without one, the composition sits as a bare top-level block.
+  if (shell) {
+    return {
+      blocks: { blocks: [{
+        type: "wf_shell_def",
+        x: 20, y: 20,
+        deletable: false,
+        inputs: { BODY: { block: rootSpec } },
+      }] },
+    };
+  }
   rootSpec.x = 40;
   rootSpec.y = 40;
   return { blocks: { blocks: [rootSpec] } };

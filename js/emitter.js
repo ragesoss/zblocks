@@ -21,7 +21,18 @@ import { encodeInteger, encodeNatural, encodeFloat64 } from "./numeric.js";
 export class EmitError extends Error {}
 
 export function emitWorkspace(workspace, opts = {}) {
-  const roots = workspace.getTopBlocks(false).filter(b => b.outputConnection);
+  const allRoots = workspace.getTopBlocks(false);
+  // Prefer the shell-def frame if present — its BODY is the true
+  // composition root; the frame itself is UI metadata.
+  const shellDef = allRoots.find(b => b.type === "wf_shell_def");
+  if (shellDef) {
+    const body = shellDef.getInputTargetBlock("BODY");
+    if (!body) {
+      throw new EmitError("Function-definition frame has no composition body — connect a block to the 'body' slot.");
+    }
+    return emitBlock(body, opts);
+  }
+  const roots = allRoots.filter(b => b.outputConnection);
   if (roots.length === 0) {
     throw new EmitError("No value block at the top level — drag a function or literal block onto the workspace.");
   }
