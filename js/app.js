@@ -14,7 +14,7 @@ import {
 import { typeLabel } from "./type_labels.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
-  fetchFunctionTests, argValueToString,
+  fetchFunctionTests, argValueToString, fetchErrorTypeInfo,
   signatureText, signatureTooltip, CatalogError,
 } from "./catalog.js";
 import { SHELL } from "./shell.js";
@@ -206,9 +206,51 @@ function showResult(result) {
     heading.textContent = "Error";
     heading.className = "error";
     val.innerHTML = renderError(result) + renderMetadata(result.metadata);
+    // Fire-and-forget fetch for the error-type's Z50 definition.
+    // When it arrives, replace the raw ZID with its friendly label
+    // and rewrite any <zid>K<n> keys in the payload with the Z50's
+    // per-key names (e.g. "item: Q42, property: P2144").
+    enrichErrorFromWiki(result).catch(() => { /* silent */ });
   }
   raw.textContent = JSON.stringify(result.raw, null, 2);
   document.getElementById("result-modal").showModal();
+}
+
+async function enrichErrorFromWiki(result) {
+  if (!/^Z\d+$/.test(result.errorType || "")) return;
+  const info = await fetchErrorTypeInfo(result.errorType);
+  if (!info) return;
+  // Bail if a different error has since replaced this one.
+  const errBox = document.querySelector(".result-error");
+  if (!errBox || errBox.dataset.errorZid !== result.errorType) return;
+  if (info.label && !result.errorTitle) {
+    const titleEl = errBox.querySelector(".error-title");
+    if (titleEl) titleEl.innerHTML =
+      `${escapeHtml(info.label)} <span class="error-zid">${zidLink(result.errorType)}</span>`;
+  }
+  if (info.description && !result.errorHint) {
+    let hintEl = errBox.querySelector(".error-hint");
+    if (!hintEl) {
+      hintEl = document.createElement("div");
+      hintEl.className = "error-hint";
+      errBox.appendChild(hintEl);
+    }
+    hintEl.textContent = info.description;
+  }
+  const keyLabels = info.keyLabels;
+  if (keyLabels && Object.keys(keyLabels).length > 0) {
+    const msgEl = errBox.querySelector(".error-message");
+    if (msgEl) {
+      let text = msgEl.textContent;
+      for (const [keyId, keyLabel] of Object.entries(keyLabels)) {
+        // Replace "Z28158K1:" → "Wikidata item QID:" — bounded so
+        // substring matches don't hit Z28158K10 etc.
+        const re = new RegExp(`\\b${keyId}:`, "g");
+        text = text.replace(re, `${keyLabel}:`);
+      }
+      msgEl.textContent = text;
+    }
+  }
 }
 
 function zidLink(zid) {
@@ -222,7 +264,7 @@ function renderError(r) {
   const hintPart  = r.errorHint  ? `<div class="error-hint">${escapeHtml(r.errorHint)}</div>` : "";
   const msgPart   = r.errorMessage ? `<div class="error-message">${escapeHtml(r.errorMessage)}</div>` : "";
   return `
-    <div class="result-error">
+    <div class="result-error" data-error-zid="${escapeHtml(r.errorType || "")}">
       <div class="error-title">${titlePart}<span class="error-zid">${zidLink(r.errorType)}</span></div>
       ${msgPart}
       ${hintPart}

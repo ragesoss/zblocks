@@ -158,6 +158,48 @@ export function argValueToString(zobj) {
   try { return JSON.stringify(zobj); } catch { return ""; }
 }
 
+// Fetch an error-type ZID and extract its label, description, and
+// per-key labels from its Z50 definition. Used by the result modal
+// to resolve any error ZID we haven't hardcoded, and to rename the
+// generic "<zid>K<n>" payload keys into human names.
+// Returns { label, description, keyLabels } or null on failure.
+const ERROR_INFO_CACHE = new Map();
+
+export async function fetchErrorTypeInfo(zid) {
+  if (!/^Z\d+$/.test(zid)) return null;
+  if (ERROR_INFO_CACHE.has(zid)) return ERROR_INFO_CACHE.get(zid);
+  try {
+    const params = new URLSearchParams({
+      action: "wikilambda_fetch", zids: zid, format: "json", origin: "*",
+    });
+    const resp = await fetch(`${WF_API}?${params.toString()}`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const rawStr = data?.[zid]?.wikilambda_fetch;
+    if (!rawStr) return null;
+    const z2 = JSON.parse(rawStr);
+    const label = extractEnLabel(z2?.Z2K3) || null;
+    const description = extractEnLabel(z2?.Z2K5) || null;
+    const keyLabels = {};
+    const z2k2 = z2?.Z2K2;
+    // Error types are Z50s whose Z50K1 is a typed list of Z3 key
+    // definitions: each Z3 has Z3K2 = key ZID, Z3K3 = label.
+    if (z2k2?.Z1K1 === "Z50" && Array.isArray(z2k2.Z50K1)) {
+      for (const k of z2k2.Z50K1.slice(1)) {
+        if (k?.Z3K2 && k?.Z3K3) {
+          const kLabel = extractEnLabel(k.Z3K3);
+          if (kLabel) keyLabels[k.Z3K2] = kLabel;
+        }
+      }
+    }
+    const info = { label, description, keyLabels };
+    ERROR_INFO_CACHE.set(zid, info);
+    return info;
+  } catch {
+    return null;
+  }
+}
+
 export async function lookupByZid(zid) {
   if (!/^Z\d+$/.test(zid)) throw new CatalogError(`Invalid ZID: ${zid}`);
   const params = new URLSearchParams({
