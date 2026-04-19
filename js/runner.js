@@ -26,30 +26,34 @@ export const RUN_TIMEOUT_MS = 120_000;
 // notes and observed responses. Unknown types fall through to the
 // "<zid>:" generic format with a link to the Wikifunctions page.
 const ERROR_TYPE_INFO = {
-  Z500: {
-    title: "Generic error",
-    hint: "The function returned an untyped error. Inspect the raw ZObject for specifics.",
-  },
-  Z503: {
-    title: "No connected implementation",
-    hint: "On the function page, connect an implementation via the Implementations table before running.",
-  },
-  Z507: {
-    title: "Runtime evaluation failed",
-    hint: "The code implementation threw. Check the impl's expected input format (case, range, null-handling).",
-  },
-  Z511: {
-    title: "Key not found",
-    hint: "Expected ZObject key is missing — often a signature mismatch between the function and a caller.",
-  },
-  Z516: {
-    title: "Argument value error",
-    hint: "An argument had the right type but an invalid value (out of range, unknown enum, etc.).",
-  },
-  Z557: {
-    title: "Permission denied",
-    hint: "wikilambda_edit needs a logged-in session; bot passwords / OAuth aren't in $wgGrantPermissions.",
-  },
+  Z500: { title: "Generic error",
+    hint: "The function returned an untyped error. Inspect the raw ZObject for specifics." },
+  Z502: { title: "Not wellformed",
+    hint: "The ZObject structure is syntactically invalid for its declared type." },
+  Z503: { title: "No connected implementation",
+    hint: "On the function page, connect an implementation via the Implementations table before running." },
+  Z504: { title: "ZID not found",
+    hint: "A referenced Z-object doesn't exist (deleted, typo, or not yet saved)." },
+  Z507: { title: "Runtime evaluation failed",
+    hint: "The code implementation threw. Check the impl's expected input format (case, range, null-handling)." },
+  Z510: { title: "Not a function",
+    hint: "The ZID referenced by Z7K1 isn't a Z8 function." },
+  Z511: { title: "Key not found",
+    hint: "Expected ZObject key is missing — often a signature mismatch between the function and a caller." },
+  Z512: { title: "Type mismatch",
+    hint: "An argument was the wrong type for the function's declared signature." },
+  Z516: { title: "Argument value error",
+    hint: "An argument had the right type but an invalid value (out of range, unknown enum, etc.)." },
+  Z518: { title: "Result validation failed",
+    hint: "The function returned a value that didn't validate against its declared output type." },
+  Z526: { title: "Function call error",
+    hint: "A nested function call failed. The inner error below usually explains why." },
+  Z548: { title: "Invalid JSON",
+    hint: "The submitted ZObject isn't valid JSON or has a malformed shape." },
+  Z549: { title: "Invalid reference",
+    hint: "A ZID in the composition couldn't be resolved (typo, deleted, or not yet saved)." },
+  Z557: { title: "Permission denied",
+    hint: "wikilambda_edit needs a logged-in session; bot passwords / OAuth aren't in $wgGrantPermissions." },
 };
 
 // Z14K* key → implementation kind name.
@@ -351,30 +355,86 @@ function extractError(z22) {
 }
 
 // Pull the best human-readable message out of a Z5K2 payload. Z5K2
-// has Z1K1 = Z885<errorType>, then an errorType-keyed payload (e.g.
-// Z507K1, Z516K1, Z511K1). Z39K1 extracts a key reference if the
-// payload is one.
+// has Z1K1 = Z885<errorType>, then an errorType-keyed payload
+// (e.g. Z507K1, Z516K1). We unwrap common Z-object shapes into bare
+// values and walk nested Z5 errors inline, so the message says
+// something like
+//   Z526 — Function call error: Z511 on key P361
+// rather than a blob of raw JSON.
 function extractErrorMessage(errorType, z5k2) {
   if (z5k2 === undefined || z5k2 === null) return "";
-  // Argument-key-style errors: Z511K1 / Z516K1 is a Z39 "key reference".
-  if (errorType === "Z511" || errorType === "Z516") {
-    const k = z5k2?.[`${errorType}K1`];
-    const keyName = (k && typeof k === "object" && k.Z39K1) ? k.Z39K1
-                  : (typeof k === "string" ? k : null);
+  const payload = z5k2?.[`${errorType}K1`];
+
+  // Special-case key-reference payloads so the message reads
+  // "on key P361" rather than just "P361" in isolation.
+  if ((errorType === "Z511" || errorType === "Z516") && payload) {
+    const keyName = (typeof payload === "object" && payload.Z39K1) ? payload.Z39K1
+                  : (typeof payload === "string" ? payload : null);
     if (keyName) return `on key ${keyName}`;
   }
-  // Generic: <errorType>K1 as string.
-  const payload = z5k2?.[`${errorType}K1`];
-  if (typeof payload === "string") return payload;
-  if (payload !== undefined) return truncateJson(payload);
-  return truncateJson(z5k2);
+
+  // If Z5K2 has multiple <errorType>K<n> fields, render the whole
+  // thing so nothing's dropped. Otherwise unwrap the single payload.
+  const nonTypeKeys = Object.keys(z5k2).filter(k => k !== "Z1K1");
+  if (nonTypeKeys.length > 1) return formatErrorPayload(z5k2);
+  if (payload !== undefined) return formatErrorPayload(payload);
+  return formatErrorPayload(z5k2);
 }
 
-function truncateJson(v, limit = 300) {
-  try {
-    const s = JSON.stringify(v);
-    return s.length > limit ? s.slice(0, limit) + "\u2026" : s;
-  } catch (_e) {
-    return String(v);
+// Recursive pretty-printer for Z5K2 payloads and their nested values.
+// - Wrappers (Z6, Z9, Z39, Z6091, Z6092, Z13518, Z16683, Z40)
+//   collapse to their bare value.
+// - Nested Z5 errors render as "<innerZid>: <inner payload>".
+// - Single-field generic objects unwrap transparently.
+// - Multi-field objects render one K<n> per line so the shape is
+//   obvious without resorting to raw JSON.
+function formatErrorPayload(val, depth = 0) {
+  if (val == null) return "";
+  if (typeof val === "string") return val;
+  if (typeof val !== "object") return String(val);
+  if (Array.isArray(val)) {
+    // Typed-list head-marker: ["Z6", "foo", "bar"] → [foo, bar]
+    const tail = val.slice(1).map(e => formatErrorPayload(e, depth + 1));
+    return `[${tail.join(", ")}]`;
   }
+
+  const t = typeof val.Z1K1 === "string" ? val.Z1K1 : val.Z1K1?.Z7K1;
+
+  if (t === "Z6")    return JSON.stringify(val.Z6K1 ?? "");
+  if (t === "Z9")    return val.Z9K1 ?? "?";
+  if (t === "Z39")   return val.Z39K1 ?? "?";
+  if (t === "Z6091") return val.Z6091K1 ?? "?";
+  if (t === "Z6092") return val.Z6092K1 ?? "?";
+  if (t === "Z13518") return String(val.Z13518K1 ?? "");
+  if (t === "Z40") {
+    const v = typeof val.Z40K1 === "string" ? val.Z40K1 : val.Z40K1?.Z9K1;
+    return v === "Z41" ? "true" : v === "Z42" ? "false" : "?";
+  }
+  if (t === "Z16683") {
+    const sign = typeof val.Z16683K1?.Z16659K1 === "string"
+      ? val.Z16683K1.Z16659K1 : val.Z16683K1?.Z16659K1?.Z9K1;
+    const digits = typeof val.Z16683K2?.Z13518K1 === "string"
+      ? val.Z16683K2.Z13518K1 : val.Z16683K2?.Z13518K1?.Z6K1;
+    return (sign === "Z16662" ? "-" : "") + (digits ?? "?");
+  }
+  if (t === "Z5") {
+    const inner = val.Z5K1 ?? "?";
+    const innerPayload = val.Z5K2?.[`${inner}K1`];
+    const inferred = innerPayload !== undefined
+      ? extractErrorMessage(inner, val.Z5K2)
+      : formatErrorPayload(val.Z5K2, depth + 1);
+    return inferred ? `${inner} \u2014 ${inferred}` : inner;
+  }
+
+  // Generic object: iterate non-type fields.
+  const entries = Object.entries(val).filter(([k]) => k !== "Z1K1");
+  if (entries.length === 0) return "";
+  if (entries.length === 1) return formatErrorPayload(entries[0][1], depth);
+
+  const indent = "  ".repeat(depth);
+  return entries.map(([k, v]) => {
+    const fv = formatErrorPayload(v, depth + 1);
+    const indented = fv.includes("\n") ? fv.replace(/\n/g, "\n" + indent + "  ") : fv;
+    return `${indent}${k}: ${indented}`;
+  }).join("\n");
 }
