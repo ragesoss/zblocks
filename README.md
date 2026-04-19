@@ -1,5 +1,9 @@
 # zblocks
 
+[![Open zblocks](https://img.shields.io/badge/Open-zblocks-2a4365?style=for-the-badge&logo=github)](https://ragesoss.github.io/zblocks/)
+
+**Live:** <https://ragesoss.github.io/zblocks/>
+
 A Scratch-style block editor for Wikifunctions compositions.
 Outputs canonical ZObject JSON for copy-paste into the
 [`wikilambda-edit-source.js`](https://github.com/ragesoss/wikifunctioneering/blob/main/userscripts/wikilambda-edit-source.js)

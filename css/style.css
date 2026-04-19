@@ -138,6 +138,21 @@ main {
   inset: 0;
 }
 
+/* ── footer ────────────────────────────────────────────────────── */
+footer {
+  background: #2a4365;
+  color: #cbd5e0;
+  padding: 0.35rem 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+footer a {
+  color: #bee3f8;
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
 /* ── dialogs ───────────────────────────────────────────────────── */
 dialog {
   border: 1px solid #cbd5e0;

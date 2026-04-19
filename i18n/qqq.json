@@ -45,5 +45,7 @@
 
   "error.no_root_block":               "Emission error: workspace is empty or has nothing that outputs a value.",
   "error.multiple_roots":              "Emission error: user has multiple unattached value blocks. $1 = the count.",
-  "error.shell_def_empty":             "Emission error: shell-def frame has no composition plugged into its body slot."
+  "error.shell_def_empty":             "Emission error: shell-def frame has no composition plugged into its body slot.",
+
+  "footer.source":                     "Page footer. Contains an HTML anchor linking to the zblocks GitHub repository. Translators: keep the <a>…</a> tag intact; translate only the surrounding text (the URL itself should not be translated)."
 }
