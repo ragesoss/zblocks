@@ -235,6 +235,67 @@ export async function lookupByZid(zid) {
   return result;
 }
 
+// Batch version of fetchFunctionSignature. Uses wikilambda_fetch's
+// pipe-separated zids parameter to pull many Z8s in one HTTP round
+// trip. Cheaper than Promise.all(fetchFunctionSignature × N) when
+// translating the entire built-in registry at page load.
+export async function fetchFunctionSignatures(zids) {
+  if (zids.length === 0) return {};
+  const params = new URLSearchParams({
+    action: "wikilambda_fetch",
+    zids: zids.join("|"),
+    format: "json",
+    origin: "*",
+  });
+  const resp = await fetch(`${WF_API}?${params.toString()}`);
+  if (!resp.ok) throw new CatalogError(`Batch fetch failed: HTTP ${resp.status}`);
+  const data = await resp.json();
+  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+  const out = {};
+  for (const zid of zids) {
+    const raw = data?.[zid]?.wikilambda_fetch;
+    if (!raw) continue;
+    try {
+      const z2 = JSON.parse(raw);
+      const sig = parseZ8ToSignature(z2);
+      SIGNATURE_CACHE.set(zid, sig);
+      out[zid] = sig;
+    } catch (e) {
+      // Skip entries that don't parse as a Z8 (deleted, typed changes).
+      // The caller falls back to hardcoded data for unmatched ZIDs.
+    }
+  }
+  return out;
+}
+
+// Batch-fetch just labels (not full signatures) from Z2K3 in the
+// current language, with English fallback. Used by type_labels.js to
+// translate the type-name map without the overhead of Z8-parsing.
+export async function fetchLabels(zids) {
+  if (zids.length === 0) return {};
+  const params = new URLSearchParams({
+    action: "wikilambda_fetch",
+    zids: zids.join("|"),
+    format: "json",
+    origin: "*",
+  });
+  const resp = await fetch(`${WF_API}?${params.toString()}`);
+  if (!resp.ok) throw new CatalogError(`Label batch failed: HTTP ${resp.status}`);
+  const data = await resp.json();
+  if (data.error) throw new CatalogError(`${data.error.code}: ${data.error.info}`);
+  const out = {};
+  for (const zid of zids) {
+    const raw = data?.[zid]?.wikilambda_fetch;
+    if (!raw) continue;
+    try {
+      const z2 = JSON.parse(raw);
+      const label = extractLabel(z2?.Z2K3);
+      if (label) out[zid] = label;
+    } catch { /* skip */ }
+  }
+  return out;
+}
+
 export async function fetchFunctionSignature(zid, { signal } = {}) {
   if (!/^Z\d+$/.test(zid)) throw new CatalogError(`Invalid ZID: ${zid}`);
   const params = new URLSearchParams({

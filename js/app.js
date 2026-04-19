@@ -27,7 +27,9 @@ import { initWikidataSearch } from "./wikidata_search.js";
 import {
   pinFunction, unpinFunction, isPinned,
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
+  rehydrateBuiltinLabels,
 } from "./pins.js";
+import { loadTypeLabels } from "./type_labels.js";
 
 // Detect + apply the user's language before anything renders.
 // Detection chain: ?lang=xx → localStorage → navigator.language → "en".
@@ -39,6 +41,13 @@ const langInfo = languageInfo(language);
 document.documentElement.lang = language;
 document.documentElement.dir = langInfo.rtl ? "rtl" : "ltr";
 await initI18n(language);
+
+// When the user isn't in English, translate our built-in function
+// registry + type-name map in parallel before registering blocks, so
+// every block definition's message0 / tooltip / signature row shows
+// the right language at first render. Each is one batch HTTP call;
+// no-op in English. One-time cost on page load / language switch.
+await Promise.all([rehydrateBuiltinLabels(), loadTypeLabels()]);
 
 registerAllBlocks();
 

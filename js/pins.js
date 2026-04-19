@@ -4,7 +4,8 @@
 // Each pinned ZID is re-fetched and re-registered on startup so the
 // blocks exist in Blockly before any workspace state tries to use them.
 
-import { fetchSignatureCached, CatalogError } from "./catalog.js";
+import { fetchSignatureCached, fetchFunctionSignatures, CatalogError } from "./catalog.js";
+import { currentLanguage } from "./i18n.js";
 import { registerFunctionBlock } from "./blocks.js";
 import { rebuildToolbox } from "./shell.js";
 import { FUNCTIONS } from "./functions.js";
@@ -35,6 +36,39 @@ const STARTER_KIT = [
   "Z25073",  // integer to string
   "Z20915",  // string to float64
 ];
+
+// Translate the hardcoded FUNCTIONS registry labels + arg names +
+// output types from their English originals into the user's current
+// language, by batch-fetching every built-in ZID's Z2K3 once at page
+// load. No-op when the user language is English — the hardcoded
+// entries are already English.
+//
+// Called before registerAllBlocks() in app.js so block definitions
+// pick up translated labels at registration time.
+export async function rehydrateBuiltinLabels() {
+  if (currentLanguage() === "en") return { updated: 0, failed: 0 };
+  const zids = FUNCTIONS.map(f => f.zid);
+  let sigs;
+  try { sigs = await fetchFunctionSignatures(zids); }
+  catch (e) {
+    console.warn("Couldn't fetch built-in function signatures:", e);
+    return { updated: 0, failed: zids.length };
+  }
+  let updated = 0, failed = 0;
+  for (const zid of zids) {
+    const fetched = sigs[zid];
+    const entry = FUNCTIONS.find(f => f.zid === zid);
+    if (!entry) { failed++; continue; }
+    if (!fetched) { failed++; continue; }
+    // Keep the hand-curated category assignment; replace everything
+    // the user sees rendered.
+    entry.label = fetched.label || entry.label;
+    if (Array.isArray(fetched.args) && fetched.args.length) entry.args = fetched.args;
+    entry.output = fetched.output || entry.output;
+    updated++;
+  }
+  return { updated, failed };
+}
 
 // Seed the pin list on first-ever load (null localStorage entry).
 // If the user has intentionally cleared it (empty array), we respect

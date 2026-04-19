@@ -1,15 +1,16 @@
-// Human-readable labels for common Wikifunctions type ZIDs.
-// Used in block tooltips, search-result signatures, run-modal input
-// hints, and the shell declaration form.
+import { currentLanguage } from "./i18n.js";
+import { fetchLabels } from "./catalog.js";
+
+// Human-readable labels for common Wikifunctions type ZIDs. Mutable:
+// seeded with the English defaults below, overwritten in place by
+// loadTypeLabels() at init when the user language isn't English.
 //
 // Curated from YoshiRulz's prepopulated_label_cache.json in
 // WikiLambdaBlockly (Apache-2.0). Shortened where his prefix
 // conventions ("/Type", "-- enum member") don't match ours.
 //
 // Missing ZIDs fall through to the raw ZID — safe default and a
-// visible signal that we don't know what it is. A lazy-fetch pass
-// (right-click a ZID, pull its label from wikilambda_fetch) is
-// planned but not in this cut.
+// visible signal that we don't know what it is.
 
 export const TYPE_LABELS = {
   // Core primitives
@@ -76,6 +77,26 @@ export const TYPE_LABELS = {
   Z511: "Key-not-found error",
   Z516: "Argument-value error",
 };
+
+// Fetch translated labels for every key in TYPE_LABELS and overwrite
+// the map in place. Skips if the user language is English. Call once
+// at init, before registerAllBlocks, so block-definition message0s
+// pick up translated type names at registration time.
+export async function loadTypeLabels() {
+  if (currentLanguage() === "en") return { updated: 0 };
+  const zids = Object.keys(TYPE_LABELS);
+  try {
+    const fetched = await fetchLabels(zids);
+    let updated = 0;
+    for (const [zid, label] of Object.entries(fetched)) {
+      if (label) { TYPE_LABELS[zid] = label; updated++; }
+    }
+    return { updated };
+  } catch (e) {
+    console.warn("Couldn't fetch type labels:", e);
+    return { updated: 0 };
+  }
+}
 
 // Return a display label for a ZID: "Float64" for Z20838,
 // "Float64 (Z20838)" if `withZid` is true, raw ZID if unknown.
