@@ -24,23 +24,23 @@ export class ImportError extends Error {}
 
 // ─── Top-level entry points ─────────────────────────────────────────
 export async function importByZid(zid) {
-  const obj = await fetchUnwrapped(zid);
-  return interpretTopLevel(obj);
+  const { z2, obj } = await fetchFullZ2(zid);
+  return interpretTopLevel(obj, { sourceZid: zid, rootZ2: z2 });
 }
 
 export async function importFromJson(jsonStr) {
   let obj;
   try { obj = JSON.parse(jsonStr); }
   catch (e) { throw new ImportError(`Invalid JSON: ${e.message}`); }
-  // Unwrap Z2 if present.
-  if (obj?.Z1K1 === "Z2" && obj?.Z2K2) obj = obj.Z2K2;
-  return interpretTopLevel(obj);
+  const z2 = obj?.Z1K1 === "Z2" ? obj : null;
+  if (z2) obj = obj.Z2K2;
+  return interpretTopLevel(obj, { sourceZid: null, rootZ2: z2 });
 }
 
 // Returns { shell, state }. state is the Blockly workspace state
 // ready to hand to workspace.load(); shell is either null or
-// { zid, outputType, args }.
-async function interpretTopLevel(obj) {
+// { zid, outputType, args, label?, sourceZid? }.
+async function interpretTopLevel(obj, { sourceZid = null, rootZ2 = null } = {}) {
   if (!obj || typeof obj !== "object") {
     throw new ImportError("Top-level value isn't a Z-object.");
   }
@@ -58,6 +58,7 @@ async function interpretTopLevel(obj) {
     if (!composition) throw new ImportError("Z14 has no Z14K2 composition to import.");
     const targetZid = typeof obj.Z14K1 === "string" ? obj.Z14K1 : obj.Z14K1?.Z6K1;
     const shell = targetZid ? await fetchShellFromZ8(targetZid) : null;
+    if (shell) shell.sourceZid = sourceZid;
     const state = await compositionToState(composition, shell);
     return { shell, state };
   }
@@ -66,7 +67,7 @@ async function interpretTopLevel(obj) {
   return { shell: null, state };
 }
 
-async function fetchUnwrapped(zid) {
+async function fetchFullZ2(zid) {
   if (!/^Z\d+$/.test(zid)) throw new ImportError(`Invalid ZID: ${zid}`);
   const params = new URLSearchParams({
     action: "wikilambda_fetch", zids: zid, format: "json", origin: "*",
@@ -78,11 +79,12 @@ async function fetchUnwrapped(zid) {
   const rawStr = data?.[zid]?.wikilambda_fetch;
   if (!rawStr) throw new ImportError(`${zid}: empty wikilambda_fetch payload`);
   const z2 = JSON.parse(rawStr);
-  return z2?.Z1K1 === "Z2" ? z2.Z2K2 : z2;
+  const obj = z2?.Z1K1 === "Z2" ? z2.Z2K2 : z2;
+  return { z2, obj };
 }
 
 async function fetchShellFromZ8(targetZid) {
-  const z8 = await fetchUnwrapped(targetZid);
+  const { z2, obj: z8 } = await fetchFullZ2(targetZid);
   if (z8.Z1K1 !== "Z8") {
     throw new ImportError(`Target ${targetZid} is ${z8.Z1K1}, not Z8.`);
   }
@@ -100,6 +102,7 @@ async function fetchShellFromZ8(targetZid) {
     zid: targetZid,
     outputType: zidOfType(z8.Z8K2),
     args,
+    label: extractEnLabel(z2?.Z2K3) || null,
   };
 }
 

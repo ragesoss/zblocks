@@ -19,6 +19,8 @@ export const SHELL = {
   zid: "",           // empty until declared
   outputType: "Z1",
   args: [],          // [{ label, type }]
+  label: null,       // human-readable function label, when known
+  sourceZid: null,   // imported Z14 source ZID, when loaded via Import
 };
 
 // Map block type → { key, label, type }. Emitter reads this.
@@ -95,12 +97,20 @@ function saveShell() {
 }
 
 // Programmatic shell setter — used by the UI save handler and by
-// example loaders. Does NOT prompt or clear the workspace; callers
-// are responsible for that.
-export function setShell({ zid, outputType, args }) {
+// example / importer loaders. Does NOT prompt or clear the workspace;
+// callers are responsible for that.
+//   label:     optional function label so the status bar can read
+//              "frequency of pitch in 12-TET · Z33605(...) → Float64"
+//              instead of a bare ZID.
+//   sourceZid: the Z14 the composition was loaded from, displayed in
+//              the status so the user knows which implementation
+//              their export should paste back into.
+export function setShell({ zid, outputType, args, label = null, sourceZid = null }) {
   SHELL.zid = zid;
   SHELL.outputType = outputType;
   SHELL.args = args;
+  SHELL.label = label;
+  SHELL.sourceZid = sourceZid;
 
   unregisterArgRefBlocks();
   registerArgRefBlocks();
@@ -171,10 +181,25 @@ export function rebuildToolbox() {
 function updateShellStatus() {
   const el = document.getElementById("shell-status");
   if (!el) return;
-  if (SHELL.args.length === 0) {
-    el.textContent = `${SHELL.zid}: no arguments declared`;
-  } else {
-    const sig = SHELL.args.map(a => `${a.label}: ${a.type}`).join(", ");
-    el.textContent = `${SHELL.zid}(${sig}) → ${SHELL.outputType}`;
+  if (!SHELL.zid) {
+    el.textContent = "No function shell declared \u2014 click \u201CDeclare function shell\u201D or \u201CImport\u201D to begin.";
+    return;
   }
+  const signature = SHELL.args.length === 0
+    ? "no arguments declared"
+    : SHELL.args.map(a => `${a.label}: ${a.type}`).join(", ");
+  const labelPart = SHELL.label
+    ? `<b>${escapeHtml(SHELL.label)}</b> \u00B7 `
+    : "";
+  const sigPart = `${escapeHtml(SHELL.zid)}(${escapeHtml(signature)}) \u2192 ${escapeHtml(SHELL.outputType)}`;
+  const sourcePart = SHELL.sourceZid
+    ? ` \u2014 editing impl <b>${escapeHtml(SHELL.sourceZid)}</b>`
+    : "";
+  el.innerHTML = labelPart + sigPart + sourcePart;
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, ch => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]
+  ));
 }
