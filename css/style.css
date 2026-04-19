@@ -37,14 +37,85 @@ header select {
 header button:hover,
 header select:hover { background: #ebf4ff; }
 header select { padding: 0.4rem 0.5rem; }
-header #language-picker {
-  margin-left: auto;
+
+/* Language picker — typeahead combobox */
+#language-picker-container { margin-left: auto; position: relative; }
+.lang-combobox { position: relative; }
+.lang-input {
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
   font-size: 0.85rem;
+  width: 10rem;
+  font-family: inherit;
 }
-header #language-picker option { color: #1a202c; background: #fff; }
+.lang-input:focus {
+  outline: 2px solid #bee3f8;
+  outline-offset: -1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.lang-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+.lang-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: #fff;
+  color: #1a202c;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  max-height: 22rem;
+  overflow-y: auto;
+  min-width: 18rem;
+  z-index: 1000;
+  font-size: 0.9rem;
+}
+.lang-list[hidden] { display: none; }
+.lang-list li {
+  padding: 0.35rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+.lang-list li:hover,
+.lang-list li[aria-selected="true"] { background: #ebf4ff; }
+.lang-badge {
+  color: #38a169;
+  font-weight: 700;
+  width: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+.lang-native { flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
+.lang-en {
+  color: #718096;
+  font-size: 0.82rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lang-code {
+  margin-left: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: #a0aec0;
+  padding-left: 0.5rem;
+}
+.lang-empty {
+  padding: 0.5rem;
+  text-align: center;
+  color: #718096;
+  font-style: italic;
+  cursor: default;
+}
 #shell-status b { color: #fff; font-weight: 600; }
 #shell-status {
   flex: 1;

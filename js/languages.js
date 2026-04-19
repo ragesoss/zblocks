@@ -1,28 +1,21 @@
 // Language registry + detection.
 //
-// Each entry maps:
-//   iso     — ISO-639 code used as filename stem (i18n/<iso>.json) and as
-//             the localStorage key + URL ?lang= param
-//   native  — the language's own name (used in the picker)
-//   wfZid   — Wikifunctions Z60 language ZID. Used when extracting labels
-//             from Z12 multilingual fields on fetched Z-objects. ZIDs
-//             verified against the live catalog via wikilambdasearch_labels.
-//   rtl     — right-to-left
-//   apiCode — ISO code the wikilambdasearch_functions_language API parameter
-//             accepts. Almost always matches `iso`.
+// The language list itself lives in js/languages-data.js, auto-generated
+// by scripts/build-languages.mjs from the Wikifunctions Z60 catalogue.
+// Re-run that script periodically to pick up new languages.
 //
-// Adding a language is entirely a data change here; no code edits.
+// This module holds the small amount of logic that needs to stay
+// hand-written: detection chain, localStorage persistence, lookup.
 
-export const LANGUAGES = [
-  { iso: "en", native: "English",  wfZid: "Z1002", rtl: false },
-  { iso: "de", native: "Deutsch",  wfZid: "Z1430", rtl: false },
-  { iso: "fr", native: "Français", wfZid: "Z1004", rtl: false },
-];
+import { LANGUAGES } from "./languages-data.js";
+
+export { LANGUAGES };
 
 const STORAGE_KEY = "zblocks.lang";
 
 // Detection chain: ?lang=xx → localStorage → navigator.language → "en".
-// First candidate that's in the supported set wins.
+// First candidate that's in the supported set wins. Handles regional
+// variants like "pt-BR" by stripping to primary subtag.
 export function detectLanguage() {
   const urlParam = new URLSearchParams(location.search).get("lang");
   const stored = localStorage.getItem(STORAGE_KEY);
@@ -41,4 +34,22 @@ export function saveLanguagePreference(iso) {
 
 export function languageInfo(iso) {
   return LANGUAGES.find(l => l.iso === iso) || LANGUAGES[0];
+}
+
+// Check whether a chrome catalog exists for a language. Used by the
+// picker to mark "fully translated" vs "Wikifunctions content only".
+// Results cached in memory; re-check on a page load.
+const CATALOG_AVAILABILITY = new Map();
+
+export async function hasCatalog(iso) {
+  if (CATALOG_AVAILABILITY.has(iso)) return CATALOG_AVAILABILITY.get(iso);
+  try {
+    const resp = await fetch(`./i18n/${iso}.json`, { method: "HEAD" });
+    const ok = resp.ok;
+    CATALOG_AVAILABILITY.set(iso, ok);
+    return ok;
+  } catch {
+    CATALOG_AVAILABILITY.set(iso, false);
+    return false;
+  }
 }

@@ -13,7 +13,8 @@ import {
 } from "./runner.js";
 import { typeLabel } from "./type_labels.js";
 import { initI18n, msg } from "./i18n.js";
-import { LANGUAGES, detectLanguage, saveLanguagePreference, languageInfo } from "./languages.js";
+import { detectLanguage, languageInfo } from "./languages.js";
+import { initLanguagePicker } from "./language_picker.js";
 import {
   searchFunctions, fetchSignatureCached, cachedSignature, lookupByZid,
   fetchFunctionTests, argValueToString, fetchErrorTypeInfo, normalizeZid,
@@ -66,22 +67,6 @@ const workspace = Blockly.inject("blocklyDiv", {
 initShell(workspace);
 initSlotPicker();
 initLanguagePicker();
-
-function initLanguagePicker() {
-  const sel = document.getElementById("language-picker");
-  if (!sel) return;
-  sel.innerHTML = LANGUAGES.map(l =>
-    `<option value="${l.iso}"${l.iso === language ? " selected" : ""}>${l.native}</option>`
-  ).join("");
-  sel.addEventListener("change", (e) => {
-    const iso = e.target.value;
-    saveLanguagePreference(iso);
-    // Simplest way to switch: reload. Re-rendering the DOM walker, all
-    // block definitions (for message0 text), and Blockly state reactively
-    // is significantly more fragile than a full reload for a rare action.
-    location.reload();
-  });
-}
 initWikidataSearch();
 
 // ── Example loader ────────────────────────────────────────────────
