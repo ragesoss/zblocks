@@ -117,6 +117,15 @@
   "context_menu.run_block":            "Run this block",
   "context_menu.fill_slots_from_test": "Fill slots from test…",
   "context_menu.peek_inside":          "Peek inside…",
+  "context_menu.inline_composition":   "Inline composition",
+
+  "inline.err.not_function_block":     "That block isn't a function call — nothing to inline.",
+  "inline.err.not_z8":                 "$1 isn't a function (Z8). Nothing to inline.",
+  "inline.err.no_composition":         "$1 has no composition-based implementation to inline — it's built-in or code-only.",
+  "inline.err.empty_slot":             "Fill the \"$1\" ($2) slot before inlining — every argument needs a value so the inlined body can use it.",
+  "inline.err.signatures_failed":      "Could not fetch signatures for referenced function(s): $1.",
+  "inline.err.unexpected_argref":      "Composition references argument key $1, which isn't on the callee's shell. The implementation may be malformed.",
+  "inline.err.unexpected":             "Unexpected error while inlining: $1",
 
   "peek.loading":                      "Loading $1…",
   "peek.impl_label":                   "implementation $1",

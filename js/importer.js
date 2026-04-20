@@ -162,7 +162,7 @@ async function compositionToState(composition, shell) {
   return { blocks: { blocks: [rootSpec] } };
 }
 
-function collectFunctionZids(expr, set) {
+export function collectFunctionZids(expr, set) {
   if (typeof expr === "string") return;
   if (Array.isArray(expr)) { expr.forEach(e => collectFunctionZids(e, set)); return; }
   if (!expr || typeof expr !== "object") return;
@@ -177,15 +177,20 @@ function collectFunctionZids(expr, set) {
 // Returns a Blockly block spec (the serialisation format) or a string
 // error message. Mirrors YoshiRulz's exprToBlockSpec but produces
 // specs for *our* block types (wf_*) rather than his hardcoded library.
-export function exprToBlockSpec(expr) {
+//
+// `options.argRef`, if supplied, overrides the default Z18 → wf_arg_N
+// mapping. Called with the raw Z18 expression; returns either a block
+// spec to splice in, or a string error message. Used by inline.js to
+// substitute call-site argument blocks when inlining a function body.
+export function exprToBlockSpec(expr, options = {}) {
   if (typeof expr === "string") return parseBareString(expr);
   if (Array.isArray(expr)) return `Unexpected list at this position: ${JSON.stringify(expr).slice(0, 80)}`;
   if (!expr || typeof expr !== "object") return `Unsupported value: ${JSON.stringify(expr)}`;
 
   const t = expr.Z1K1;
   const zidType = typeof t === "string" ? t : t?.Z7K1;
-  if (zidType === "Z7")  return parseFunctionCall(expr);
-  if (zidType === "Z18") return parseArgumentRef(expr);
+  if (zidType === "Z7")  return parseFunctionCall(expr, options);
+  if (zidType === "Z18") return options.argRef ? options.argRef(expr) : parseArgumentRef(expr);
   const parser = PARSERS[zidType];
   if (parser) return parser(expr);
   return `No parser for Z-type ${JSON.stringify(zidType)}`;
@@ -260,7 +265,7 @@ function parseArgumentRef(expr) {
   return { type: entry[0] };
 }
 
-function parseFunctionCall(expr) {
+function parseFunctionCall(expr, options = {}) {
   const target = typeof expr.Z7K1 === "string" ? expr.Z7K1 : expr.Z7K1?.Z6K1;
   if (!target) return "Z7 missing Z7K1 target function";
   const fn = FUNCTIONS.find(f => f.zid === target);
@@ -282,7 +287,7 @@ function parseFunctionCall(expr) {
   for (const arg of fn.args) {
     const childExpr = expr[arg.key];
     if (childExpr === undefined) continue;  // leave slot empty → shadow fills
-    const child = exprToBlockSpec(childExpr);
+    const child = exprToBlockSpec(childExpr, options);
     if (typeof child === "string") return child;
     spec.inputs[arg.key] = { block: child };
   }

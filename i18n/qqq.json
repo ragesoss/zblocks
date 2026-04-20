@@ -43,6 +43,15 @@
 
   "context_menu.fill_slot":            "Right-click menu item on a function block with empty value inputs. $1 = argument label.",
   "context_menu.peek_inside":          "Right-click menu item on function-call blocks and Z-ref literals. Opens a read-only popover that shows the referenced function's composition so the user can drill into its internals.",
+  "context_menu.inline_composition":   "Right-click menu item on function-call blocks. Replaces the block with its own composition body, substituting the call-site arguments for the function's Z18 arg-refs. The resulting tree is semantically equivalent but one level deeper.",
+
+  "inline.err.not_function_block":     "Error shown if the block the user right-clicked isn't a function-call block. Should not normally occur because the menu item is only attached to wf_Z### blocks.",
+  "inline.err.not_z8":                 "Error shown when the referenced ZID doesn't resolve to a function definition. $1 = the ZID.",
+  "inline.err.no_composition":         "Error shown when the function has no Z14 composition implementation (all implementations are code-based). $1 = the function ZID.",
+  "inline.err.empty_slot":             "Error shown when an argument slot on the call-site block is empty. $1 = argument label, $2 = argument key (e.g. Z21216K1).",
+  "inline.err.signatures_failed":      "Error shown when the inlined composition references functions we couldn't look up. $1 = comma-separated ZIDs.",
+  "inline.err.unexpected_argref":      "Error shown when the composition contains a Z18 arg-ref whose key doesn't match any of the callee's shell arguments — indicates a malformed implementation. $1 = the offending key.",
+  "inline.err.unexpected":             "Error shown for any uncategorised failure during inlining. $1 = the raw error message.",
 
   "peek.loading":                      "Loading placeholder inside the Peek popover while a function's definition is fetched. $1 = ZID.",
   "peek.impl_label":                   "Small caption above the composition body indicating which Z14 implementation is being shown. $1 is an HTML <a> linking to the Z14's Wikifunctions page.",

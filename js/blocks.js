@@ -21,6 +21,7 @@ import { registerShellDefBlock } from "./shell_def.js";
 import { msg } from "./i18n.js";
 import { openWikidataSearch } from "./wikidata_search.js";
 import { openPeek } from "./peek.js";
+import { inlineFunctionCall, InlineError } from "./inline.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
 
@@ -215,6 +216,20 @@ function attachSlotPickerMenu(blockType) {
         text: msg("context_menu.peek_inside"),
         enabled: true,
         callback: () => openPeek({ zid, anchorRect: blockScreenRect(block) }),
+      });
+      // Inline composition: replace this call with the callee's own
+      // composition body, substituting the call-site arg blocks for
+      // the callee's Z18 arg-refs. Result is semantically equivalent
+      // but one level deeper.
+      options.push({
+        text: msg("context_menu.inline_composition"),
+        enabled: true,
+        callback: () => {
+          inlineFunctionCall(block, block.workspace).catch((err) => {
+            if (err instanceof InlineError) alert(err.message);
+            else { console.error(err); alert(msg("inline.err.unexpected", { 1: err.message || String(err) })); }
+          });
+        },
       });
     }
   };
