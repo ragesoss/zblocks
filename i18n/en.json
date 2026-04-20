@@ -142,5 +142,7 @@
   "error.no_data":                     "Unexpected API response (no data field).",
   "error.no_root_block":               "No value block at the top level — drag a function or literal block onto the workspace.",
   "error.multiple_roots":              "$1 top-level blocks. Compositions must have exactly one root — delete or nest the extras.",
-  "error.shell_def_empty":             "Function-definition frame has no composition body — connect a block to the 'body' slot."
+  "error.shell_def_empty":             "Function-definition frame has no composition body — connect a block to the 'body' slot.",
+
+  "footer.source":                     "zblocks on <a href=\"https://github.com/ragesoss/zblocks\" target=\"_blank\" rel=\"noopener\">GitHub</a>"
 }

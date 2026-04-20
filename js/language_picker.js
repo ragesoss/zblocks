@@ -18,7 +18,7 @@
 //   Escape  close without change
 //   typing  filter
 
-import { LANGUAGES, saveLanguagePreference, languageInfo, hasCatalog } from "./languages.js";
+import { LANGUAGES, saveLanguagePreference, languageInfo, AVAILABLE_CHROME_CATALOGS } from "./languages.js";
 import { currentLanguage } from "./i18n.js";
 
 const MAX_VISIBLE = 50;  // cap the dropdown; further filtering via typing
@@ -51,12 +51,10 @@ export async function initLanguagePicker() {
   const input = document.getElementById("lang-input");
   const list = document.getElementById("lang-list");
 
-  // Async-probe which languages have chrome catalogs so they can be
-  // marked as "translated" in the list. Fire-and-forget; when it
-  // resolves we re-render if the list is open.
-  probeTranslatedSet().then(() => {
-    if (!list.hidden) renderList(input.value);
-  });
+  // Which languages have chrome catalogs, so they can be marked as
+  // "translated" in the list. Read from the static manifest in
+  // languages.js — no network probing, no 404 noise.
+  translatedSet = new Set(AVAILABLE_CHROME_CATALOGS);
 
   input.addEventListener("focus", () => {
     input.select();
@@ -154,16 +152,6 @@ export async function initLanguagePicker() {
     saveLanguagePreference(iso);
     location.reload();
   }
-}
-
-async function probeTranslatedSet() {
-  // Probe each pinned language. Unpinned languages are assumed chrome-
-  // less (since we'd pin a language once its chrome ships anyway).
-  // Cheap HEAD requests per probe; ~10 requests total.
-  const pinnedCount = 12;  // matches scripts/build-languages.mjs PINNED_TOP
-  const candidates = LANGUAGES.slice(0, pinnedCount).map(l => l.iso);
-  const results = await Promise.all(candidates.map(iso => hasCatalog(iso).then(ok => [iso, ok])));
-  translatedSet = new Set(results.filter(([, ok]) => ok).map(([iso]) => iso));
 }
 
 function escapeHtml(s) {

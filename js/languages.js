@@ -36,20 +36,14 @@ export function languageInfo(iso) {
   return LANGUAGES.find(l => l.iso === iso) || LANGUAGES[0];
 }
 
-// Check whether a chrome catalog exists for a language. Used by the
-// picker to mark "fully translated" vs "Wikifunctions content only".
-// Results cached in memory; re-check on a page load.
-const CATALOG_AVAILABILITY = new Map();
+// ISO codes of chrome catalogs we actually ship under i18n/. Used by
+// the language picker to badge entries as "fully translated". Keep in
+// sync when a new <iso>.json lands under i18n/ — we maintain this
+// explicitly instead of HEAD-probing the server because probing
+// generates a console-visible 404 per unshipped language even when
+// the response is caught, which makes the Network tab very noisy.
+export const AVAILABLE_CHROME_CATALOGS = new Set(["en", "de", "fr"]);
 
-export async function hasCatalog(iso) {
-  if (CATALOG_AVAILABILITY.has(iso)) return CATALOG_AVAILABILITY.get(iso);
-  try {
-    const resp = await fetch(`./i18n/${iso}.json`, { method: "HEAD" });
-    const ok = resp.ok;
-    CATALOG_AVAILABILITY.set(iso, ok);
-    return ok;
-  } catch {
-    CATALOG_AVAILABILITY.set(iso, false);
-    return false;
-  }
+export function hasCatalog(iso) {
+  return AVAILABLE_CHROME_CATALOGS.has(iso);
 }
