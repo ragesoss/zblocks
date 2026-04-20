@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 // scripts/build-i18n.mjs — generate i18n/<iso>.json from Wikidata
-// lexemes, via Wikifunctions' Z33668 "word for concept" function.
+// lexemes, via Wikifunctions' lemma-lookup functions. The script
+// dispatches by lexical category:
+//   - verb (Q24905)                → Z33775 "word for predicate" (follows P9970)
+//   - noun (Q1084), adj (Q34698)   → Z33668 "word for concept"   (follows P5137)
+// P9970 is the predicate-sense property used on verb lexemes; P5137
+// is the substantive-concept property used on nouns/adjectives.
+// See docs/wikidata-edit-proposals.md for the verb-vs-noun-sense rule.
+//
 // Strict dogfood: no machine translation, no translatewiki, no
 // hand-written English fallback. Every string in every catalog —
 // English included — comes from this pipeline.
@@ -19,8 +26,8 @@
 //   i18n/missing-lexemes.<iso>.md    — report of unresolved keys
 //
 // The report is the point: every entry there is a gap on Wikidata
-// (a missing lexeme or a missing P5137). Closing those gaps on
-// Wikidata benefits every dogfooded tool, not just zblocks.
+// (a missing lexeme or a missing P5137/P9970). Closing each gap
+// benefits every dogfooded tool, not just zblocks.
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -33,6 +40,19 @@ const CONCURRENCY = 2;              // polite to the orchestrator
 const RETRY_MAX = 4;                // on 429 or transient failures
 const RETRY_BASE_MS = 1000;
 const DEFAULT_LANGS = ["en", "de", "fr"];
+
+// Wikifunctions lemma-lookup functions. Dispatched by category:
+// verbs go through Z33775 (P9970 "predicate for"); everything else
+// through Z33668 (P5137 "item for this sense").
+const WF_Z_WORD_FOR_CONCEPT   = "Z33668";
+const WF_Z_WORD_FOR_PREDICATE = "Z33775";
+const VERB_CATEGORY_QID       = "Q24905";
+
+function wfFunctionForCategory(categoryQid) {
+  return categoryQid === VERB_CATEGORY_QID
+    ? WF_Z_WORD_FOR_PREDICATE
+    : WF_Z_WORD_FOR_CONCEPT;
+}
 
 // Dedupe cache: many UI keys share the same (concept, lang, category)
 // triple. One call per unique triple, shared result across keys.
@@ -47,7 +67,7 @@ async function main() {
     const [, concept, category, lang] = argv;
     const l = langsData.find(x => x.iso === lang);
     if (!l) throw new Error(`Unknown language: ${lang}`);
-    const r = await callZ33668(concept, l.wfZid, category);
+    const r = await callLemmaLookup(concept, l.wfZid, category);
     console.log(JSON.stringify(r, null, 2));
     return;
   }
@@ -96,7 +116,7 @@ async function buildFor(lang, mappings) {
   const catalog = {
     "@metadata": {
       built: new Date().toISOString(),
-      source: "Z33668 word-for-concept via Wikifunctions",
+      source: "Z33668 word-for-concept + Z33775 word-for-predicate via Wikifunctions",
       lang: lang.iso,
       wfLang: lang.wfZid,
     },
@@ -108,7 +128,7 @@ async function buildFor(lang, mappings) {
   for (let i = 0; i < tasks.length; i += CONCURRENCY) {
     const chunk = tasks.slice(i, i + CONCURRENCY);
     const results = await Promise.all(chunk.map(async ({ key, m }) => {
-      const r = await callZ33668(m.concept, lang.wfZid, m.category);
+      const r = await callLemmaLookup(m.concept, lang.wfZid, m.category);
       return { key, m, r };
     }));
     for (const { key, m, r } of results) {
@@ -134,21 +154,22 @@ async function buildFor(lang, mappings) {
   console.log(`  → i18n/missing-lexemes.${lang.iso}.md (${missing.length} missing, ${errors.length} errored)`);
 }
 
-async function callZ33668(conceptQid, langZid, categoryQid) {
+async function callLemmaLookup(conceptQid, langZid, categoryQid) {
   const ck = cacheKey(conceptQid, langZid, categoryQid);
   if (callCache.has(ck)) return callCache.get(ck);
-  const result = await callZ33668Uncached(conceptQid, langZid, categoryQid);
+  const result = await callLemmaLookupUncached(conceptQid, langZid, categoryQid);
   callCache.set(ck, result);
   return result;
 }
 
-async function callZ33668Uncached(conceptQid, langZid, categoryQid) {
+async function callLemmaLookupUncached(conceptQid, langZid, categoryQid) {
+  const fnZid = wfFunctionForCategory(categoryQid);
   const call = {
     Z1K1: "Z7",
-    Z7K1: "Z33668",
-    Z33668K1: { Z1K1: "Z6091", Z6091K1: conceptQid },
-    Z33668K2: langZid,
-    Z33668K3: { Z1K1: "Z6091", Z6091K1: categoryQid },
+    Z7K1: fnZid,
+    [`${fnZid}K1`]: { Z1K1: "Z6091", Z6091K1: conceptQid },
+    [`${fnZid}K2`]: langZid,
+    [`${fnZid}K3`]: { Z1K1: "Z6091", Z6091K1: categoryQid },
   };
   const body = new URLSearchParams({
     action: "wikilambda_function_call",
@@ -216,8 +237,9 @@ async function writeReport(lang, { resolved, missing, errors, skipped, incomplet
     l.push(`## Missing lexemes`);
     l.push(``);
     l.push(`Keys below map to a Wikidata concept, but no ${lang.native} lexeme`);
-    l.push(`exists with \`P5137 → <concept>\` yet. Closing each gap means either:`);
-    l.push(`(a) finding an existing lexeme and adding \`P5137\`, or (b) creating`);
+    l.push(`exists with the right sense-link yet — P9970 for verb categories,`);
+    l.push(`P5137 for noun/adjective categories. Closing each gap means either`);
+    l.push(`(a) finding an existing lexeme and adding the claim, or (b) creating`);
     l.push(`the lexeme. Either way, the fix lives on Wikidata and benefits every`);
     l.push(`dogfooded tool, not just zblocks.`);
     l.push(``);

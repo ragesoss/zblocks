@@ -1,10 +1,10 @@
 {
   "@metadata": {
-    "built": "2026-04-19T16:36:31.371Z",
-    "source": "Z33668 word-for-concept via Wikifunctions",
+    "built": "2026-04-20T04:18:09.092Z",
+    "source": "Z33668 word-for-concept + Z33775 word-for-predicate via Wikifunctions",
     "lang": "fr",
     "wfLang": "Z1004",
-    "coverage": "3 resolved / 8 attempted (103 skipped, 5 missing, 0 errored, 0 incomplete mapping)"
+    "coverage": "3 resolved / 16 attempted (113 skipped, 13 missing, 0 errored, 0 incomplete mapping)"
   },
   "header.buttons.import": "importation",
   "import_modal.submit": "importation",

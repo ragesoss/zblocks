@@ -1,10 +1,10 @@
 {
   "@metadata": {
-    "built": "2026-04-19T16:36:30.054Z",
-    "source": "Z33668 word-for-concept via Wikifunctions",
+    "built": "2026-04-20T04:18:06.413Z",
+    "source": "Z33668 word-for-concept + Z33775 word-for-predicate via Wikifunctions",
     "lang": "de",
     "wfLang": "Z1430",
-    "coverage": "4 resolved / 8 attempted (103 skipped, 4 missing, 0 errored, 0 incomplete mapping)"
+    "coverage": "4 resolved / 16 attempted (113 skipped, 12 missing, 0 errored, 0 incomplete mapping)"
   },
   "result_modal.title_error": "Irrtum",
   "fill_slots.test_label": "Test",

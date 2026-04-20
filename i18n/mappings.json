@@ -74,7 +74,11 @@
   "shell_modal.args.name_placeholder": { "skip": "lexeme-compound", "english": "argument name" },
   "shell_modal.args.type_placeholder": { "skip": "prose", "english": "type ZID (e.g. Z20838)" },
   "shell_modal.args.remove_label":   { "skip": "lexeme-verb", "reason": "English verb 'remove' lacks P5137", "english": "Remove" },
-  "shell_modal.cancel":              { "skip": "lexeme-verb", "reason": "English verb 'cancel' L13009 lacks useful P5137", "english": "Cancel" },
+  "shell_modal.cancel": {
+    "concept": "Q139480774",
+    "category": "Q24905",
+    "english": "Cancel"
+  },
   "shell_modal.confirm_clear":       { "skip": "prose", "english": "Changing the shell will clear the workspace. Continue?" },
   "shell_modal.invalid_zid":         { "skip": "prose-template", "english": "Function ZID must look like Z123 (got: $1)" },
 
@@ -83,7 +87,11 @@
   "import_modal.zid_label":           { "skip": "lexeme-compound", "english": "Fetch by ZID:" },
   "import_modal.zid_placeholder":     { "skip": "app", "english": "Z33608 or Z33682" },
   "import_modal.json_label":          { "skip": "prose", "english": "Or paste JSON (Z2 wrapper, Z14, or bare composition):" },
-  "import_modal.cancel":              { "skip": "lexeme-verb", "english": "Cancel" },
+  "import_modal.cancel": {
+    "concept": "Q139480774",
+    "category": "Q24905",
+    "english": "Cancel"
+  },
   "import_modal.submit_busy":         { "skip": "lexeme-verb", "english": "Importing…" },
   "import_modal.need_input":          { "skip": "prose", "english": "Provide a ZID or paste composition JSON." },
   "import_modal.invalid_zid":         { "skip": "prose-template", "english": "\"$1\" doesn't look like a ZID (expected Z followed by digits)." },
@@ -99,18 +107,30 @@
   "run_modal.test_none":             { "skip": "prose", "english": "(no tests on this function)" },
   "run_modal.test_pick":             { "skip": "prose", "english": "choose a test…" },
   "run_modal.test_fetch_failed":     { "skip": "prose-template", "english": "(test fetch failed: $1)" },
-  "run_modal.cancel":                { "skip": "lexeme-verb", "english": "Cancel" },
+  "run_modal.cancel": {
+    "concept": "Q139480774",
+    "category": "Q24905",
+    "english": "Cancel"
+  },
   "run_modal.submit":                { "skip": "lexeme-verb", "reason": "English verb 'run' L279 lacks P5137", "english": "Run" },
   "run_modal.submit_busy":           { "skip": "lexeme-verb", "english": "Running…" },
 
   "result_modal.title_ok":           { "skip": "lexeme-noun", "reason": "Q2995644 'result' returns the string 'Z575' from Z33668 — appears to be a data issue on Wikifunctions or Wikidata side", "english": "Result" },
   "result_modal.raw_details":        { "skip": "lexeme-compound", "english": "Raw ZObject" },
-  "result_modal.close":              { "skip": "lexeme-verb", "english": "Close" },
+  "result_modal.close": {
+    "concept": "Q139486614",
+    "category": "Q24905",
+    "english": "Close"
+  },
   "result_modal.rerun":              { "skip": "lexeme-compound", "english": "Run again" },
 
   "export_modal.title":              { "skip": "lexeme-compound", "english": "Exported ZObject" },
   "export_modal.hint":                { "skip": "prose", "english": "Paste into the Z14K2 slot of an existing implementation via the Edit Raw JSON userscript." },
-  "export_modal.close":               { "skip": "lexeme-verb", "english": "Close" },
+  "export_modal.close": {
+    "concept": "Q139486614",
+    "category": "Q24905",
+    "english": "Close"
+  },
   "export_modal.copy_success":        { "skip": "app", "reason": "past-tense interjection", "english": "Copied!" },
 
   "search_modal.title":               { "skip": "prose", "english": "Add function from Wikifunctions" },
@@ -130,7 +150,11 @@
   "search_modal.result.unpin":         { "skip": "lexeme-verb", "english": "Unpin" },
   "search_modal.result.pin_busy":      { "skip": "lexeme-verb", "english": "Pinning…" },
   "search_modal.result.unpin_busy":    { "skip": "lexeme-verb", "english": "Unpinning…" },
-  "search_modal.close":                { "skip": "lexeme-verb", "english": "Close" },
+  "search_modal.close": {
+    "concept": "Q139486614",
+    "category": "Q24905",
+    "english": "Close"
+  },
   "search_modal.zid_is_impl":          { "skip": "prose-template", "english": "<strong>$1</strong> is an implementation (Z14) of function $2. Pin the parent function below, or use <b>Import</b>…" },
   "search_modal.zid_is_other":         { "skip": "prose-template", "english": "<strong>$1</strong> is a <code>$2</code>, not a function. Only Z8 functions can be pinned." },
 
@@ -139,7 +163,11 @@
   "fill_slots.loading":                { "skip": "lexeme-verb", "english": "loading…" },
   "fill_slots.none":                   { "skip": "prose", "english": "(no tests on this function)" },
   "fill_slots.pick":                   { "skip": "prose", "english": "choose a test…" },
-  "fill_slots.cancel":                 { "skip": "lexeme-verb", "english": "Cancel" },
+  "fill_slots.cancel": {
+    "concept": "Q139480774",
+    "category": "Q24905",
+    "english": "Cancel"
+  },
   "fill_slots.apply":                  { "skip": "lexeme-verb", "english": "Apply" },
   "fill_slots.fetch_failed":           { "skip": "prose-template", "english": "Couldn't load tests: $1" },
   "fill_slots.fate.will":              { "skip": "prose", "english": "will set" },
@@ -150,7 +178,11 @@
   "slot_picker.title":                 { "skip": "prose-template", "english": "Fill \"$1\"" },
   "slot_picker.hint":                  { "skip": "prose-template", "english": "Slot expects <code>$1</code>. Compatible blocks below…" },
   "slot_picker.filter_placeholder":    { "skip": "prose", "english": "Filter by label or ZID…" },
-  "slot_picker.close":                 { "skip": "lexeme-verb", "english": "Close" },
+  "slot_picker.close": {
+    "concept": "Q139486614",
+    "category": "Q24905",
+    "english": "Close"
+  },
   "slot_picker.empty":                 { "skip": "prose", "english": "No compatible blocks." },
   "slot_picker.empty_filtered":        { "skip": "prose", "english": "No compatible blocks match that query." },
 
