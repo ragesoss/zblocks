@@ -1,0 +1,24 @@
+{
+  "@metadata": {
+    "built": "2026-04-20T04:42:11.765Z",
+    "source": "Z33668 word-for-concept + Z33775 word-for-predicate via Wikifunctions",
+    "lang": "en",
+    "wfLang": "Z1002",
+    "coverage": "15 resolved / 16 attempted (113 skipped, 1 missing, 0 errored, 0 incomplete mapping)"
+  },
+  "result_modal.title_error": "error",
+  "fill_slots.test_label": "test",
+  "run_modal.test_label": "test",
+  "header.buttons.import": "import",
+  "import_modal.submit": "import",
+  "export_modal.copy": "copy",
+  "shell_modal.args.legend": "argument",
+  "shell_modal.cancel": "cancel",
+  "import_modal.cancel": "cancel",
+  "run_modal.cancel": "cancel",
+  "result_modal.close": "close",
+  "export_modal.close": "close",
+  "search_modal.close": "close",
+  "fill_slots.cancel": "cancel",
+  "slot_picker.close": "close"
+}

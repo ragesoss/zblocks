@@ -9,8 +9,7 @@
 // See docs/wikidata-edit-proposals.md for the verb-vs-noun-sense rule.
 //
 // Strict dogfood: no machine translation, no translatewiki, no
-// hand-written English fallback. Every string in every catalog —
-// English included — comes from this pipeline.
+// hand-written fallback. Every string comes from this pipeline.
 //
 // Usage:
 //   node scripts/build-i18n.mjs --lang en                # one language
@@ -22,8 +21,16 @@
 //                        or { skip: true, reason: "…" }
 //
 // Outputs:
-//   i18n/<iso>.json                  — catalog (generated; committed)
+//   i18n/en.dogfood.json             — English pipeline catalog (dogfood-only;
+//                                      never overwrites the hand-written en.json)
+//   i18n/<iso>.json                  — other languages' catalogs
 //   i18n/missing-lexemes.<iso>.md    — report of unresolved keys
+//
+// The en/other split exists because English is the reference
+// catalog the live site falls back to; we don't want the build to
+// trash that usable fallback while we're still filling Wikidata
+// gaps. The UI loads en.dogfood.json only when `?dogfood=1` is in
+// the URL (see js/i18n.js isDogfoodMode).
 //
 // The report is the point: every entry there is a gap on Wikidata
 // (a missing lexeme or a missing P5137/P9970). Closing each gap
@@ -144,13 +151,17 @@ async function buildFor(lang, mappings) {
     `${resolved} resolved / ${tasks.length} attempted ` +
     `(${skipped} skipped, ${missing.length} missing, ${errors.length} errored, ${incomplete.length} incomplete mapping)`;
 
+  // English lands in a dogfood-only artifact so the hand-written
+  // en.json stays intact. Other languages overwrite their own
+  // (only) catalog — there's no hand-written version to protect.
+  const outFile = lang.iso === "en" ? `i18n/en.dogfood.json` : `i18n/${lang.iso}.json`;
   await fs.writeFile(
-    path.join(REPO, `i18n/${lang.iso}.json`),
+    path.join(REPO, outFile),
     JSON.stringify(catalog, null, 2) + "\n"
   );
   await writeReport(lang, { resolved, missing, errors, skipped, incomplete, total: tasks.length });
 
-  console.log(`  → i18n/${lang.iso}.json (${resolved} keys)`);
+  console.log(`  → ${outFile} (${resolved} keys)`);
   console.log(`  → i18n/missing-lexemes.${lang.iso}.md (${missing.length} missing, ${errors.length} errored)`);
 }
 

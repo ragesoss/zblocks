@@ -25,10 +25,41 @@ let messages = {};
 let fallbackMessages = {};   // always en, used when a key is missing from `messages`
 let language = "en";
 
+// Dogfood mode — URL `?dogfood=1`. In dogfood mode we render the
+// Z33668/Z33775-resolved catalog instead of the hand-written one,
+// and we DROP the English fallback entirely. Any string the
+// Wikidata pipeline can't produce surfaces as its raw i18n key —
+// the intentional nag that shows the remaining lexeme/sense gaps.
+function isDogfoodMode() {
+  try {
+    return new URLSearchParams(window.location.search).get("dogfood") === "1";
+  } catch { return false; }
+}
+
 export async function initI18n(lang) {
   language = lang || "en";
-  // Always load English as the fallback pool so partial translations
-  // (common during language ramp-up) don't show raw keys in the UI.
+  const dogfood = isDogfoodMode();
+
+  if (dogfood) {
+    // Strict pipeline mode: no fallbacks. For English specifically,
+    // the pipeline output lives in en.dogfood.json (the build writes
+    // there so the hand-written en.json stays intact for normal use).
+    try {
+      messages = await loadCatalog(language, { dogfood: true });
+    } catch (e) {
+      console.warn(`i18n: couldn't load ${language} dogfood catalog:`, e);
+      messages = {};
+    }
+    fallbackMessages = {};
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-i18n-dogfood", "1");
+    }
+    applyDomTranslations(document);
+    return;
+  }
+
+  // Normal mode: always load hand-written en.json as fallback so
+  // partial translations don't show raw keys.
   if (language !== "en") {
     try { fallbackMessages = await loadCatalog("en"); }
     catch (e) { console.warn("i18n: couldn't load en.json fallback:", e); }
@@ -42,8 +73,12 @@ export async function initI18n(lang) {
   applyDomTranslations(document);
 }
 
-async function loadCatalog(iso) {
-  const resp = await fetch(`./i18n/${iso}.json`);
+async function loadCatalog(iso, { dogfood = false } = {}) {
+  // English has a separate dogfood artifact (the build writes there).
+  // Other languages have only one catalog — their hand-free .json is
+  // already the pipeline output.
+  const file = dogfood && iso === "en" ? "en.dogfood.json" : `${iso}.json`;
+  const resp = await fetch(`./i18n/${file}`);
   if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
   return resp.json();
 }
