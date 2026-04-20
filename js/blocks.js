@@ -20,6 +20,7 @@ import { openSlotPicker } from "./slot_picker.js";
 import { registerShellDefBlock } from "./shell_def.js";
 import { msg } from "./i18n.js";
 import { openWikidataSearch } from "./wikidata_search.js";
+import { openPeek } from "./peek.js";
 
 const SHADOW_EXTENSION = "wf_attach_shadows";
 
@@ -110,6 +111,9 @@ export function registerAllBlocks() {
   // users can look up a Q/P number by label instead of typing it.
   attachWikidataSearchMenu("wf_item_ref", "item");
   attachWikidataSearchMenu("wf_property_ref", "property");
+  // Bare Z-ref literals get a "Peek inside" entry so the user can
+  // drill into the referenced function's composition.
+  attachZidRefPeekMenu("wf_zid_ref");
 
   // Function blocks, coloured by category.
   const defs = FUNCTIONS.map(fn => {
@@ -202,6 +206,51 @@ function attachSlotPickerMenu(blockType) {
         },
       });
     }
+    // Peek inside: show the target function's composition as a read-only
+    // popover. Only meaningful for function-call blocks (wf_Z###) — the
+    // zid identifies the Z8 to open.
+    if (zid) {
+      const block = this;
+      options.push({
+        text: msg("context_menu.peek_inside"),
+        enabled: true,
+        callback: () => openPeek({ zid, anchorRect: blockScreenRect(block) }),
+      });
+    }
+  };
+}
+
+// Map a Blockly block to a screen-space DOMRect suitable for anchoring
+// a popover. Falls back to the workspace's bounding rect if the block
+// doesn't expose an SVG node (shouldn't happen for rendered blocks).
+function blockScreenRect(block) {
+  try {
+    const svg = block.getSvgRoot?.();
+    if (svg && typeof svg.getBoundingClientRect === "function") {
+      return svg.getBoundingClientRect();
+    }
+  } catch { /* fall through */ }
+  return null;
+}
+
+// Context-menu "Peek inside" for wf_zid_ref — pulls the current VALUE
+// field and opens the peek popover against the block's on-screen rect.
+// Disabled when the field isn't a valid ZID.
+function attachZidRefPeekMenu(blockType) {
+  const blockDef = Blockly.Blocks[blockType];
+  if (!blockDef) return;
+  blockDef.customContextMenu = function (options) {
+    const block = this;
+    const zidRaw = (block.getFieldValue("VALUE") || "").trim();
+    const zid = /^Z\d+$/.test(zidRaw) ? zidRaw : null;
+    options.push({
+      text: msg("context_menu.peek_inside"),
+      enabled: Boolean(zid),
+      callback: () => {
+        if (!zid) return;
+        openPeek({ zid, anchorRect: blockScreenRect(block) });
+      },
+    });
   };
 }
 

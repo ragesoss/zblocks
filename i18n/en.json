@@ -116,6 +116,15 @@
   "context_menu.fill_slot":            "Fill \"$1\"…",
   "context_menu.run_block":            "Run this block",
   "context_menu.fill_slots_from_test": "Fill slots from test…",
+  "context_menu.peek_inside":          "Peek inside…",
+
+  "peek.loading":                      "Loading $1…",
+  "peek.impl_label":                   "implementation $1",
+  "peek.no_composition":               "Built-in or code-based implementation — no composition to show.",
+  "peek.is_z14":                       "That ZID is an implementation (Z14), not a function definition.",
+  "peek.not_function":                 "That ZID is $1, not a function (Z8).",
+  "peek.empty_list":                   "(empty list)",
+  "peek.drill_title":                  "Show this function's composition",
 
   "error.unknown_title":               "Unknown error",
   "error.no_errors_entry":             "No Z22K2.errors entry in response.",

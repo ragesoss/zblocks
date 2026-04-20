@@ -42,6 +42,15 @@
   "slot_picker.hint":                  "Explains the filter rule. $1 = human-readable type + ZID combo.",
 
   "context_menu.fill_slot":            "Right-click menu item on a function block with empty value inputs. $1 = argument label.",
+  "context_menu.peek_inside":          "Right-click menu item on function-call blocks and Z-ref literals. Opens a read-only popover that shows the referenced function's composition so the user can drill into its internals.",
+
+  "peek.loading":                      "Loading placeholder inside the Peek popover while a function's definition is fetched. $1 = ZID.",
+  "peek.impl_label":                   "Small caption above the composition body indicating which Z14 implementation is being shown. $1 is an HTML <a> linking to the Z14's Wikifunctions page.",
+  "peek.no_composition":               "Shown when the function has only code-based implementations (no Z14 composition).",
+  "peek.is_z14":                       "Shown when the user tries to Peek into a ZID that is itself an implementation (Z14) rather than a function definition (Z8).",
+  "peek.not_function":                 "Shown when the ZID resolves to something other than a Z8. $1 = the Z-type ZID found.",
+  "peek.empty_list":                   "Placeholder shown in the tree for an empty typed list (just the type-head marker, no items).",
+  "peek.drill_title":                  "Hover tooltip on the small ▸ button next to each function-call node. Clicking expands that callee's own composition inline.",
 
   "error.no_root_block":               "Emission error: workspace is empty or has nothing that outputs a value.",
   "error.multiple_roots":              "Emission error: user has multiple unattached value blocks. $1 = the count.",

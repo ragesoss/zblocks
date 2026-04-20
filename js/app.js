@@ -24,6 +24,7 @@ import { SHELL } from "./shell.js";
 import { importByZid, importFromJson, ImportError, exprToBlockSpec } from "./importer.js";
 import { initSlotPicker } from "./slot_picker.js";
 import { initWikidataSearch } from "./wikidata_search.js";
+import { initPeek } from "./peek.js";
 import {
   pinFunction, unpinFunction, isPinned,
   rehydratePinnedFunctions, seedStarterKitIfFirstRun,
@@ -77,6 +78,7 @@ initShell(workspace);
 initSlotPicker();
 initLanguagePicker();
 initWikidataSearch();
+initPeek();
 
 // ── Example loader ────────────────────────────────────────────────
 const exampleSelect = document.getElementById("load-example-select");
