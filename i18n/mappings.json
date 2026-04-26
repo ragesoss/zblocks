@@ -77,7 +77,11 @@
   "shell_modal.args.add":            { "skip": "lexeme-compound", "english": "+ Add argument" },
   "shell_modal.args.name_placeholder": { "skip": "lexeme-compound", "english": "argument name" },
   "shell_modal.args.type_placeholder": { "skip": "prose", "english": "type ZID (e.g. Z20838)" },
-  "shell_modal.args.remove_label":   { "skip": "lexeme-verb", "reason": "English verb 'remove' lacks P5137", "english": "Remove" },
+  "shell_modal.args.remove_label": {
+    "concept": "Q23009442",
+    "category": "Q24905",
+    "english": "Remove"
+  },
   "shell_modal.cancel": {
     "concept": "Q139480774",
     "category": "Q24905",
