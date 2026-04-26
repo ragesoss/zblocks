@@ -57,7 +57,11 @@
   "header.buttons.add_function_title": { "skip": "prose", "english": "Search Wikifunctions and pin a function to the sidebar" },
   "header.buttons.import_title":     { "skip": "prose", "english": "Import an existing Z14 composition into the workspace" },
   "header.buttons.declare_shell":    { "skip": "lexeme-compound", "english": "Declare function shell" },
-  "header.buttons.run":              { "skip": "lexeme-verb", "reason": "English verb 'run' L279 lacks P5137", "english": "Run" },
+  "header.buttons.run": {
+    "concept": "Q1077724",
+    "category": "Q24905",
+    "english": "Run"
+  },
   "header.buttons.run_title":        { "skip": "prose", "english": "Execute the composition via the Wikifunctions API" },
   "header.buttons.export":           { "skip": "lexeme-compound", "english": "Export ZObject" },
   "header.status.empty":             { "skip": "prose", "english": "No function shell declared — click Declare function shell or Import to begin." },
@@ -112,7 +116,11 @@
     "category": "Q24905",
     "english": "Cancel"
   },
-  "run_modal.submit":                { "skip": "lexeme-verb", "reason": "English verb 'run' L279 lacks P5137", "english": "Run" },
+  "run_modal.submit": {
+    "concept": "Q1077724",
+    "category": "Q24905",
+    "english": "Run"
+  },
   "run_modal.submit_busy":           { "skip": "lexeme-verb", "english": "Running…" },
 
   "result_modal.title_ok":           { "skip": "lexeme-noun", "reason": "Q2995644 'result' returns the string 'Z575' from Z33668 — appears to be a data issue on Wikifunctions or Wikidata side", "english": "Result" },
