@@ -96,6 +96,7 @@ English, in rough order of screen-space:
 | **Prose hints** ("Executes via wikilambda_function_call. Values replace Z18 arg references…") | Not representable as a constructor/renderer in any current Wikimedia data model. | No dogfood path. Stays English. |
 | **Internal emitter / importer / runner error strings** | Throw-site English. Not extracted to i18n. | Extract to `i18n/en.json`, then Z33668-build pass on top. Lower priority — most users shouldn't hit these. |
 | **Shell-def frame templates** — "def / takes / returns / body / source" | Set in `SHELL_DEF_SPEC.message0/1/2/3/4` at block-registration. | Use `msg()` at registration time — same pattern as the rehydrate-on-init commit. Chrome-catalog commit would cover this too if those keys are added. |
+| **Blockly built-in chrome** — right-click menu (Duplicate, Delete Block, Add Comment, Collapse / Expand, …), trashcan tooltip, flyout category labels, warning bubbles | Set on `Blockly.Msg.*` inside the Blockly bundle; we don't override today, so it stays English and doesn't even surface as a nag in dogfood mode. | Overwrite `Blockly.Msg.*` from our catalog at init, with a `blockly.*` namespace in `mappings.json`. Details in §6. |
 | **RTL layout** — Arabic, Hebrew, Farsi languages filtered out in the build-languages harvest | No CSS logical-property pass yet. | Single-commit CSS audit + unfilter RTL in the build-languages script. Independent of translation. |
 
 ## 4. Things we learned during implementation
@@ -154,7 +155,67 @@ hand-translating `i18n/de.json` would ship higher-quality coverage
 faster, but violates the dogfood principle unless we use the
 speaker as a Wikidata-lexeme contributor instead.
 
-## 6. Constraints that remain open
+## 6. Blockly's own chrome is a second pipeline
+
+Blockly ships its own i18n separate from ours. Every built-in
+string — context-menu items (Duplicate, Delete Block, Add Comment,
+Collapse / Expand, Help, Disable, Inline Inputs, Clean Up Blocks,
+Delete N Blocks, …), trashcan tooltip, flyout category labels,
+warning bubbles, field-editor buttons — lives on a global
+`Blockly.Msg` object. Core defaults to English; locale files at
+`blockly/msg/<lang>.js` overwrite `Blockly.Msg.*` for ~50 languages
+(Blockly-community-maintained).
+
+We don't load any locale file today, so those strings stay English
+and don't even surface as nags in dogfood mode — the nag pipeline
+only catches keys routed through our own `msg()`.
+
+**The plan** is to bring these into the Z33668 pipeline rather than
+load Blockly's locale files, so the dogfood principle in §1 holds
+for every pixel of chrome.
+
+Two mechanisms, in increasing order of invasiveness:
+
+1. **Global `Blockly.Msg` overwrite (covers ~95%).** After
+   `initI18n`, walk `Object.keys(Blockly.Msg)` and assign each from
+   a `blockly.<key>` entry in our catalog. Blockly reads
+   `Blockly.Msg.*` lazily at render, so the next menu open picks up
+   the translation. Add a `blockly.*` namespace to
+   `i18n/mappings.json` so the build resolves them alongside our
+   own chrome. Small loop in `initI18n`, preserves Blockly
+   behaviour, flows into the missing-lexemes report.
+
+2. **`ContextMenuRegistry` replacement (for divergence).**
+   Unregister built-in items by id (`blocklyDelete`,
+   `blocklyDuplicate`, `blocklyBlockComment`, …) and re-register
+   our own with a `displayText` callback from our catalog and a
+   `callback` that replicates the original action. Same pattern as
+   our per-block `customContextMenu` for Fill-Slot / Run-This, one
+   tier up. Reach for this only when we want to reorder, hide, or
+   reskin a built-in item — not for plain translation.
+
+**Gotchas specific to this pipeline:**
+
+- **Placeholder syntax.** Blockly interpolates with `%1`, `%2`;
+  banana-i18n uses `$1`, `$2`. Strings like `DELETE_X_BLOCKS`
+  ("Delete %1 Blocks") must preserve the `%N` tokens literally —
+  Blockly substitutes, not us. Catalog stores them verbatim.
+- **Community-translated locales are the trade-off.** Blockly's
+  ~50 locale files are community-translated for free. Routing
+  through Z33668 re-translates those strings via Wikidata lexemes.
+  For the dogfood principle that's a feature; if pipeline coverage
+  lags, a hybrid (load `blockly/msg/<lang>.js` as baseline, let our
+  overwrite win where lexemes resolve) is available as an escape
+  hatch, but defeats the principle.
+- **Surface audit.** We don't expose variables, procedures, or
+  math blocks, so many `Blockly.Msg` keys are unreachable. Count
+  only reachable keys toward dogfood coverage percentages.
+- **Language switching.** The picker reloads the page today, so no
+  re-overwrite needed. If we ever switch in-place, re-run the loop
+  after the catalog swap; rendered flyout category headers may
+  also need a toolbox refresh.
+
+## 7. Constraints that remain open
 
 - **Plural rules.** Our minimal runtime hardcodes
   `{{PLURAL:$1|one|many}}` as `n === 1 ? one : many`. Correct for
@@ -171,7 +232,7 @@ speaker as a Wikidata-lexeme contributor instead.
   text need translatable `aria-label`s. Every iconification commit
   adds keys back. Manageable but a known trade-off.
 
-## 7. The endgame: AW renderers
+## 8. The endgame: AW renderers
 
 Today's compound phrases ("Prefill from test: $1", "Editing impl
 $1 of $2") can't be assembled from single lexemes — the words
