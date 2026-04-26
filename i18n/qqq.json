@@ -37,6 +37,7 @@
 
   "fill_slots.title":                  "Title of the fill-slots-from-test modal. $1 = function label.",
   "fill_slots.hint":                   "Explains that the modal pulls values from the function's attached Z20 testers. $1 = function ZID.",
+  "fill_slots.fill":                   "Primary action button on the fill-slots-from-test modal. Commits the previewed test values into the empty slots and closes the modal. Verb form, parallel to 'cancel'/'close'.",
 
   "slot_picker.title":                 "Title of the slot-picker. $1 = argument label of the target slot.",
   "slot_picker.hint":                  "Explains the filter rule. $1 = human-readable type + ZID combo.",

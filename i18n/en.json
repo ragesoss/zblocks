@@ -99,7 +99,7 @@
   "fill_slots.none":                   "(no tests on this function)",
   "fill_slots.pick":                   "choose a test…",
   "fill_slots.cancel":                 "Cancel",
-  "fill_slots.apply":                  "Apply",
+  "fill_slots.fill":                   "Fill",
   "fill_slots.fetch_failed":           "Couldn't load tests: $1",
   "fill_slots.fate.will":              "will set",
   "fill_slots.fate.skip_no_value":     "skip (no test value)",

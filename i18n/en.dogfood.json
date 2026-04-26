@@ -1,10 +1,10 @@
 {
   "@metadata": {
-    "built": "2026-04-26T15:58:05.913Z",
+    "built": "2026-04-26T16:07:17.933Z",
     "source": "Z33668 word-for-concept + Z33775 word-for-predicate via Wikifunctions",
     "lang": "en",
     "wfLang": "Z1002",
-    "coverage": "18 resolved / 19 attempted (110 skipped, 1 missing, 0 errored, 0 incomplete mapping)"
+    "coverage": "19 resolved / 20 attempted (109 skipped, 1 missing, 0 errored, 0 incomplete mapping)"
   },
   "result_modal.title_error": "error",
   "fill_slots.test_label": "test",
@@ -23,5 +23,6 @@
   "export_modal.close": "close",
   "search_modal.close": "close",
   "fill_slots.cancel": "cancel",
+  "fill_slots.fill": "fill",
   "slot_picker.close": "close"
 }

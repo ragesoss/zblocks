@@ -180,7 +180,11 @@
     "category": "Q24905",
     "english": "Cancel"
   },
-  "fill_slots.apply":                  { "skip": "lexeme-verb", "english": "Apply" },
+  "fill_slots.fill": {
+    "concept": "Q62069734",
+    "category": "Q24905",
+    "english": "Fill"
+  },
   "fill_slots.fetch_failed":           { "skip": "prose-template", "english": "Couldn't load tests: $1" },
   "fill_slots.fate.will":              { "skip": "prose", "english": "will set" },
   "fill_slots.fate.skip_no_value":     { "skip": "prose", "english": "skip (no test value)" },
